@@ -180,7 +180,7 @@
     .group_item {
         .spr-badge {
             .rating {
-                margin-bottom: 9px;
+                margin-bottom: 15px;
                 width: 100%;
                 display: block;
 
@@ -196,6 +196,21 @@
                     display: none;
                 }
             }
+        }
+    }
+
+    .product-custombox {
+        padding: 0.875rem 1.5625rem;
+        border: 2px dashed #d7d7d7;
+        margin: 0px 0px 20px;
+
+        div {
+            font-size: 13px;
+            color: #666666;
+            font-style: italic;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 0.25rem;
         }
     }
 
@@ -413,7 +428,7 @@
         }
 
         .tab-content {
-            #product-tab1 {
+            #product-tab1, #product-tab3 {
                 ul, ol {
                     padding-left: 30px;
                 }

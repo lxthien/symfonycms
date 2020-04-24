@@ -129,7 +129,7 @@
                                                                     <span>{{ row.getName() }}</span>
                                                                 </a>
                                                             </h5>
-                                                            {{ 4|rating }}
+                                                            {{ row.ratingNumber|rating }}
                                                             <div class="price-box">
                                                                 {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
                                                                     <div class="price-regular">
@@ -137,94 +137,12 @@
                                                                     </div>
                                                                 {% elseif row.getRegularPrice() > 0 and row.getSalePrice() > 0 %}
                                                                     <div class="price-sale">
-                                                                        <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
-                                                                        <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }}</span></span>
+                                                                        <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
+                                                                        <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }} vnđ</span></span>
                                                                     </div>
                                                                 {% elseif row.getRegularPrice() > 0 and row.getSalePrice() is empty %}
                                                                     <div class="price-regular">
-                                                                        <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
-                                                                    </div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                            {% for row in pagination %}
-                                            <div class="grid-item col-6 col-md-4 col-lg-3">
-                                                <div class="products-item">
-                                                    <div class="products-item-wrapper">
-                                                        <div class="media-thumb">
-                                                            <picture>
-                                                                <img
-                                                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_220_220') }}"
-                                                                    class="mr-3 img-thumbnail lazyload"
-                                                                    alt="{{ row.getName() }}" />
-                                                            </picture>
-                                                        </div>
-                                                        <div class="media-body">
-                                                            <h5 class="mt-0 mb-1">
-                                                                <a href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="{{ row.getName() }}">
-                                                                    <span>{{ row.getName() }}</span>
-                                                                </a>
-                                                            </h5>
-                                                            {{ 4|rating }}
-                                                            <div class="price-box">
-                                                                {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
-                                                                    <div class="price-regular">
-                                                                        <span><span class="money">Liên hệ</span></span>
-                                                                    </div>
-                                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() > 0 %}
-                                                                    <div class="price-sale">
-                                                                        <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
-                                                                        <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }}</span></span>
-                                                                    </div>
-                                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() is empty %}
-                                                                    <div class="price-regular">
-                                                                        <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
-                                                                    </div>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                            {% for row in pagination %}
-                                            <div class="grid-item col-6 col-md-4 col-lg-3">
-                                                <div class="products-item">
-                                                    <div class="products-item-wrapper">
-                                                        <div class="media-thumb">
-                                                            <picture>
-                                                                <img
-                                                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_220_220') }}"
-                                                                    class="mr-3 img-thumbnail lazyload"
-                                                                    alt="{{ row.getName() }}" />
-                                                            </picture>
-                                                        </div>
-                                                        <div class="media-body">
-                                                            <h5 class="mt-0 mb-1">
-                                                                <a href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="{{ row.getName() }}">
-                                                                    <span>{{ row.getName() }}</span>
-                                                                </a>
-                                                            </h5>
-                                                            {{ 4|rating }}
-                                                            <div class="price-box">
-                                                                {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
-                                                                    <div class="price-regular">
-                                                                        <span><span class="money">Liên hệ</span></span>
-                                                                    </div>
-                                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() > 0 %}
-                                                                    <div class="price-sale">
-                                                                        <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
-                                                                        <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }}</span></span>
-                                                                    </div>
-                                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() is empty %}
-                                                                    <div class="price-regular">
-                                                                        <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
+                                                                        <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
                                                                     </div>
                                                                 {% endif %}
                                                             </div>

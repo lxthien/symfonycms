@@ -92,6 +92,20 @@ class ProductController extends Controller
             $this->get('settings_manager')->get('numberRecordOnPage') ? $this->get('settings_manager')->get('numberRecordOnPage') : 10
         );
 
+        foreach ($pagination as $row) {
+            $repositoryRating = $this->getDoctrine()->getManager();
+            $queryRating = $repositoryRating->createQuery(
+                'SELECT AVG(r.rating) as ratingValue
+                FROM AppBundle:Rating r
+                WHERE r.product = :product_id'
+            )->setParameter('product_id', $row->getId());
+            $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
+
+            $ratingValue = !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0;
+
+            $row->ratingNumber = $ratingValue;
+        }
+
         if (!empty($level1)) {
             return $this->render('product/list.html.twig', [
                 'category' => $category,

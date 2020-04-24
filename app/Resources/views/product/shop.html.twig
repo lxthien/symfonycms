@@ -116,7 +116,7 @@
                                                                         <span>{{ row.getName() }}</span>
                                                                     </a>
                                                                 </h5>
-                                                                {{ 4|rating }}
+                                                                {{ row.ratingNumber|rating }}
                                                                 <div class="price-box">
                                                                     {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
                                                                         <div class="price-regular">
@@ -124,12 +124,12 @@
                                                                         </div>
                                                                     {% elseif row.getRegularPrice() > 0 and row.getSalePrice() > 0 %}
                                                                         <div class="price-sale">
-                                                                            <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
-                                                                            <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }}</span></span>
+                                                                            <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
+                                                                            <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }} vnđ</span></span>
                                                                         </div>
                                                                     {% elseif row.getRegularPrice() > 0 and row.getSalePrice() is empty %}
                                                                         <div class="price-regular">
-                                                                            <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }}</span></span>
+                                                                            <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
                                                                         </div>
                                                                     {% endif %}
                                                                 </div>
