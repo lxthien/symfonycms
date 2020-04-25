@@ -1,26 +1,20 @@
-.bxslider-wrapper {
-    visibility: hidden;
-}
+.partner {
+    margin-bottom: 40px;
 
-.bx-wrapper {
-    box-shadow: none;
+    .wrapper-partner {
+        border: 1px solid #d7d7d7;
+        padding: 20px 10px;
 
-    .bx-viewport {
-        .bxslider {
-            display: flex;
-            flex-wrap: nowrap;
-            flex-direction: row;
-
-            .item {
-                
-            }
+        @media only screen and (max-width : 768px) {
+            margin-bottom: 20px;
         }
-    }
 
-    .bx-controls.bx-has-controls-auto.bx-has-pager {
-        .bx-pager {
-            width: 100%;
-            text-align: center
+        h3 {
+            font-size: 20px;
+        }
+
+        p {
+            color: #555;
         }
     }
 }

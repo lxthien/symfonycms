@@ -18,11 +18,11 @@ class Builder implements ContainerAwareInterface
             ),
         ));
 
-        $menu->addChild('<i class="fa fa-home"></i>', [
+        /* $menu->addChild('<i class="fa fa-home"></i>', [
             'route' => 'homepage',
             'extras' => ['safe_label' => true]
         ])
-        ->setLinkAttribute('class', 'home');
+        ->setLinkAttribute('class', 'home'); */
 
         $menu->addChild('Giới thiệu', [
             'route' => 'news_show',

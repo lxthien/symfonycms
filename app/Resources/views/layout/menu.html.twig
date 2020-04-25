@@ -1,20 +1,58 @@
+<div class="w_top d-none hidden-xs hidden-sm">
+    <div class="margin-auto">
+        <div class="flex_top">
+            <div class="l_top">
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>118/10B Đông Hưng Thuận 5, Tân Hưng Thuận, Quận 12, HCM</span>
+                </p>
+                <p>
+                    <i class="fas fa-mobile"></i>Hỗ trợ 24/7:
+                    <span>0909 356 718</span>
+                </p>
+                <p>
+                    <i class="fas fa-envelope"></i>E-mail:
+                    <span>lilyhouse.hotro@gmail.com</span>
+                </p>
+            </div>
+
+            <div class="r_top">
+                <div class="lienket">
+                    <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Minh Duy trên Facebook">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Xây Dựng Minh Duy trên Twitter">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Xây Dựng Minh Duy trên Youtube">
+                        <i class="fa fa-youtube"></i>
+                    </a>
+                    <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Xây Dựng Minh Duy trên Linkedin">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="nav">
     <div class="nav-container">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <nav class="navbar navbar-default">
+                    <nav class="navbar navbar-expand-lg">
                         <div class="navbar-header">
+                            <a class="navbar-brand" href="{{ path('homepage') }}">
+                                <img alt="{{ get_setting('siteName') }}" src="{{ asset('assets/images/logo.png') }}">
+                            </a>
+
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-
-                            <a class="navbar-brand hidden-sm hidden-md hidden-lg" href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                                <img src="{{ asset('assets/images/logo.png') }}" class="d-inline-block" alt="{{ get_setting('siteName') }}">
-                            </a>
                         </div>
 
                         <div class="collapse navbar-collapse" id="navbar-collapse">

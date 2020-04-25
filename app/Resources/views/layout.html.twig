@@ -78,12 +78,12 @@
     </head>
     <body>
         <div class="container-fluid wrapper">
-            {{ include('layout/header.html.twig') }}
             {{ include('layout/menu.html.twig') }}
             {{ include('layout/slide.html.twig') }}
 
             {% block body %}{% endblock %}
 
+            {{ include('layout/partner.html.twig') }}
             {{ include('layout/footer.html.twig') }}
             {{ include('layout/footer_UI.html.twig') }}
 

@@ -5,7 +5,6 @@ footer {
     color: $white;
 
     h3.text-uppercase {
-        font-family: $robotoCondesed;
         margin-bottom: 20px;
         font-size: 22px;
 
@@ -15,6 +14,12 @@ footer {
     }
 
     .footer-top {
+        .col-12 {
+            @media (max-width: 767.98px) {
+                margin-bottom: 30px;
+            }
+        }
+
         .about-us {
             li a {
                 color: $white;

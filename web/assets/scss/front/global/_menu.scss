@@ -1,3 +1,63 @@
+.w_top {
+    background: #333333;
+    padding: 0px 0px;
+    font-family: var(--font-r);
+    font-size: 13px;
+    color: #888888;
+
+    .margin-auto {
+        max-width: 1170px;
+        margin: 0 auto;
+        padding: 0px 10px;
+
+        .flex_top {
+            display: flex;
+            justify-content: space-between;
+
+            .l_top {
+                display: flex;
+                align-items: center;
+
+                p {
+                    margin: 0 25px 0 0;
+                    line-height: 35px;
+                    color: $white;
+
+                    i {
+                        font-size: 14px;
+                        color: $white;
+                        margin-right: 5px;
+                    }
+
+                    span {
+                        color: $white;
+                    }
+                }
+            }
+
+            .r_top {
+                display: flex;
+
+                .lienket {
+                    display: flex;
+                    align-items: center;
+
+                    a {
+                        padding: 0px 5px;
+                        float: left;
+                        color: $white;
+
+                        i {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 #nav {
     background-color: $white;
     z-index: 10000;
@@ -38,10 +98,11 @@
                     }
     
                     img {
-                        width: 100px;
+                        width: 215px;
     
                         @media only screen and (max-width : 768px) {
                             height: 45px;
+                            width: auto;
                             margin: 0 auto;
                             vertical-align: middle;
                         }
@@ -64,8 +125,6 @@
                 border-width: 0px;
                 box-shadow: none;
                 padding: 0;
-                position: relative;
-                text-align: center;
     
                 @media only screen and (max-width: 767.98px) {
                     width: 100%;
@@ -74,9 +133,7 @@
                 }
     
                 .navbar-nav {
-                    display: inline-block;
-                    float: none;
-                    vertical-align: top;
+                    float: right;
 
                     @media only screen and (max-width: 767.98px) {
                         margin: 0;
@@ -116,7 +173,7 @@
                     }
     
                     a {
-                        padding: 12px 15px;
+                        padding: 28px 15px;
                         font-weight: 500;
                         font-size: 16px;
                         text-transform: uppercase;
@@ -263,13 +320,14 @@
                 padding: 10px 0 0;
 
                 img {
-                    height: 45px;
+                    height: 67px;
+                    width: auto;
                 }
             }
 
             .navbar-collapse {
                 ul li a {
-                    padding: 12px 15px;
+                    padding: 28px 15px;
 
                     @media only screen and (max-width: 767.98px) {
                         padding: 10px;
