@@ -130,49 +130,14 @@
                                     <div class="products-item-wrapper">
                                         <div class="media-thumb">
                                             <picture>
+                                                <!--[if IE 9]><video style="display: none"><![endif]-->
+                                                <source
+                                                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_686_600') }} 2x"
+                                                    media="(max-width: 800px)" />
                                                 <img
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_220_220') }}"
-                                                    class="mr-3 img-thumbnail lazyload"
-                                                    alt="{{ row.getName() }}" />
-                                            </picture>
-                                        </div>
-                                        <div class="media-body">
-                                            <h5 class="mt-0 mb-1">
-                                                <a href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="{{ row.getName() }}">
-                                                    <span>{{ row.getName() }}</span>
-                                                </a>
-                                            </h5>
-                                            {{ row.ratingNumber|rating }}
-                                            <div class="price-box">
-                                                {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
-                                                    <div class="price-regular">
-                                                        <span><span class="money">Liên hệ</span></span>
-                                                    </div>
-                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() > 0 %}
-                                                    <div class="price-sale">
-                                                        <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
-                                                        <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }} vnđ</span></span>
-                                                    </div>
-                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() is empty %}
-                                                    <div class="price-regular">
-                                                        <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            {% for row in productsNew %}
-                                <div class="products-item">
-                                    <div class="products-item-wrapper">
-                                        <div class="media-thumb">
-                                            <picture>
-                                                <img
-                                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_220_220') }}"
-                                                    class="mr-3 img-thumbnail lazyload"
+                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_220_220') }} 2x"
+                                                    class="img-thumbnail lazyload"
                                                     alt="{{ row.getName() }}" />
                                             </picture>
                                         </div>
@@ -229,48 +194,20 @@
                                     <div class="products-item-wrapper">
                                         <div class="media-thumb">
                                             <picture>
+                                                <!--[if IE 9]><video style="display: none"><![endif]-->
+                                                <source
+                                                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_686_600') }}"
+                                                    media="(max-width: 639px) 100vw" />
+                                                <source
+                                                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_220_220') }}"
+                                                    media="(min-width: 640px) and (max-width: 1023px) 50vw" />
+                                                <source
+                                                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_220_220') }}"
+                                                    media="(min-width: 1024px) 25vw" />
+                                                <!--[if IE 9]></video><![endif]-->
                                                 <img
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_220_220') }}"
-                                                    class="mr-3 img-thumbnail lazyload"
-                                                    alt="{{ row.getName() }}" />
-                                            </picture>
-                                        </div>
-                                        <div class="media-body">
-                                            <h5 class="mt-0 mb-1">
-                                                <a href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="{{ row.getName() }}">
-                                                    <span>{{ row.getName() }}</span>
-                                                </a>
-                                            </h5>
-                                            {{ row.ratingNumber|rating }}
-                                            <div class="price-box">
-                                                {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
-                                                    <div class="price-regular">
-                                                        <span><span class="money">Liên hệ</span></span>
-                                                    </div>
-                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() > 0 %}
-                                                    <div class="price-sale">
-                                                        <span class="old-price"><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
-                                                        <span class="special-price"><span class="money">{{ row.getSalePrice()|number_format(0, ',', '.') }} vnđ</span></span>
-                                                    </div>
-                                                {% elseif row.getRegularPrice() > 0 and row.getSalePrice() is empty %}
-                                                    <div class="price-regular">
-                                                        <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            {% for row in productsHot %}
-                                <div class="products-item">
-                                    <div class="products-item-wrapper">
-                                        <div class="media-thumb">
-                                            <picture>
-                                                <img
-                                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_220_220') }}"
+                                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_220_220') }}"
                                                     class="mr-3 img-thumbnail lazyload"
                                                     alt="{{ row.getName() }}" />
                                             </picture>

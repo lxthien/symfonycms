@@ -194,6 +194,10 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [450, 450], mode: outbound }
+        product_518_450:
+            quality: 100
+            filters:
+                thumbnail: { size: [518, 450], mode: outbound }
         product_84_70:
             quality: 100
             filters:
@@ -206,6 +210,14 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [247, 247], mode: outbound }
+        product_220_220:
+            quality: 100
+            filters:
+                thumbnail: { size: [220, 220], mode: outbound }
+        product_686_600:
+            quality: 100
+            filters:
+                thumbnail: { size: [686, 600], mode: outbound }
         news_220_220:
             quality: 100
             filters:

@@ -12,10 +12,11 @@
     {% endif %}
     <meta property="og:description" content="{{ product.getPageDescription() is not null ? product.getPageDescription() : product.getDescription() }}" />
     <meta property="og:image" content="{{ vich_uploader_asset(product, 'imageFile') ? app.request.getUriForPath(vich_uploader_asset(product, 'imageFile')) : absolute_url(asset('assets/images/no-image.png')) }}" />
-    <meta property="og:image:width" content="{{ imageSize[0] }}" />
-    <meta property="og:image:height" content="{{ imageSize[1] }}" />
+    <meta property="og:image:width" content="{{ imageSize ? imageSize[0] : '526' }}" />
+    <meta property="og:image:height" content="{{ imageSize ? imageSize[1] : '275' }}" />
     <meta property="product:plural_title" content="{{ product.getName() }}" />
 
+    {% if product.getRegularPrice() > 0 or product.getSalePrice() > 0 %}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
@@ -48,8 +49,24 @@
             "reviewCount": "{{ ratingCount }}"
         }
         {% endif %}
+        {% if product.getRegularPrice() > 0 and product.getSalePrice() > 0 %}
+        ,"offers": {
+            "@type": "Offer",
+            "priceCurrency": "VND",
+            "price": "{{ product.getSalePrice()|number_format(0, ',', '.') }}",
+            "availability": "https://schema.org/InStock"
+        }
+        {% elseif product.getRegularPrice() > 0 and product.getSalePrice() is empty %}
+        ,"offers": {
+            "@type": "Offer",
+            "priceCurrency": "VND",
+            "price": "{{ product.getRegularPrice()|number_format(0, ',', '.') }}",
+            "availability": "https://schema.org/InStock"
+        }
+        {% endif %}
     }
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block twitterImage %}
@@ -140,25 +157,49 @@
                                     <div id="ProductSection-product-template-default">
                                         <div class="product product-default">
                                             <div class="row product_top horizontal-tabs">
-                                                <div class="col-md-6 product-photos">
+                                                <div class="col-md-6 col-lg-7 product-photos">
                                                     <div class="product-img-box horizontal-moreview">
                                                         <div class="wrapper-images">
                                                             <div class="slider slider-for">
-                                                                <div><img src="{{ (vich_uploader_asset(product, 'imageFile') ? vich_uploader_asset(product, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_450_450') }}" /></div>
+                                                                <div>
+                                                                    <img
+                                                                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                                                        class="lazyload"
+                                                                        data-src="{{ (vich_uploader_asset(product, 'imageFile') ? vich_uploader_asset(product, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_518_450') }}"
+                                                                        alt="{{ product.getName() }}" />
+                                                                    </div>
                                                                 {% for productImage in productImages %}
-                                                                <div><img src="{{ asset('uploads/images/productimages/' ~ productImage.getName()) | imagine_filter('product_450_450') }}"/></div>
+                                                                <div>
+                                                                    <img
+                                                                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                                                        class="lazyload"
+                                                                        data-src="{{ asset('uploads/images/productimages/' ~ productImage.getName()) | imagine_filter('product_518_450') }}"
+                                                                        alt="{{ product.getName() }}" />
+                                                                    </div>
                                                                 {% endfor %}
                                                             </div>
                                                         </div>
                                                         <div class="slider slider-nav">
-                                                            <div><img src="{{ (vich_uploader_asset(product, 'imageFile') ? vich_uploader_asset(product, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_84_70') }}"/></div>
+                                                            <div>
+                                                                <img
+                                                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                                                    class="lazyload"
+                                                                    data-src="{{ (vich_uploader_asset(product, 'imageFile') ? vich_uploader_asset(product, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('product_84_70') }}"
+                                                                    alt="{{ product.getName() }}" />
+                                                                </div>
                                                             {% for productImage in productImages %}
-                                                            <div><img src="{{ asset('uploads/images/productimages/' ~ productImage.getName()) | imagine_filter('product_84_70') }}"/></div>
+                                                            <div>
+                                                                <img
+                                                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                                                    class="lazyload"
+                                                                    data-src="{{ asset('uploads/images/productimages/' ~ productImage.getName()) | imagine_filter('product_84_70') }}"
+                                                                    alt="{{ product.getName() }}" />
+                                                            </div>
                                                             {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 product-shop">
+                                                <div class="col-md-6 col-lg-5 product-shop">
                                                     <h1 class="product-title">
                                                         <span>
                                                             {{ product.getName() }}

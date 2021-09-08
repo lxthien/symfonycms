@@ -241,7 +241,7 @@ class ProductController extends Controller
 
         $imagePath = $this->helper->asset($product, 'imageFile');
         $imagePath = substr($imagePath, 1);
-        $imageSize = getimagesize($imagePath);
+        $imageSize = @getimagesize($imagePath);
 
         return $this->render('product/show.html.twig', [
             'product' => $product,

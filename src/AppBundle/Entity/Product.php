@@ -598,6 +598,22 @@ class Product
     }
 
     /**
+     * @param \AppBundle\Entity\Rating $rating
+     */
+    public function removeRating(\AppBundle\Entity\Rating $rating)
+    {
+        $this->rating->removeElement($rating);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt

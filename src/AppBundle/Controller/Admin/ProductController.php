@@ -49,16 +49,32 @@ class ProductController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($object);
+                $em->flush();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($object);
-            $em->flush();
+                $this->addFlash('success', 'action.created_successfully');
 
-            $this->addFlash('success', 'action.created_successfully');
+                return $this->redirectToRoute('admin_product_edit', array(
+                    'id' => $object->getId()
+                ));
+            } catch (\DBALException $e) {
+                $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\PDOException $e) {
+                $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\ORMException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
+            }
 
-            return $this->redirectToRoute('admin_product_edit', array(
-                'id' => $object->getId()
-            ));
+            $this->addFlash('error', $message);
+
+            return $this->render('admin/product/new.html.twig', [
+                'object' => $object,
+                'form' => $form->createView(),
+            ]);
         }
 
         return $this->render('admin/product/new.html.twig', [
@@ -77,13 +93,29 @@ class ProductController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', 'action.updated_successfully');
 
-            $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'action.updated_successfully');
+                return $this->redirectToRoute('admin_product_edit', array(
+                    'id' => $object->getId()
+                ));
+            } catch (\DBALException $e) {
+                $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\PDOException $e) {
+                $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\ORMException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
+            }
 
-            return $this->redirectToRoute('admin_product_edit', array(
-                'id' => $object->getId()
-            ));
+            $this->addFlash('error', $message);
+
+            return $this->render('admin/product/edit.html.twig', [
+                'object' => $object,
+                'form' => $form->createView(),
+            ]);
         }
 
         return $this->render('admin/product/edit.html.twig', [
@@ -101,11 +133,28 @@ class ProductController extends Controller
             return $this->redirectToRoute('admin_product_index');
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($object);
-        $em->flush();
+        try {
+            $object->getProductImages()->clear();
+            $object->getRating()->clear();
 
-        $this->addFlash('success', 'action.deleted_successfully');
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($object);
+            $em->flush();
+
+            $this->addFlash('success', 'action.deleted_successfully');
+
+            return $this->redirectToRoute('admin_product_index');
+        } catch (\DBALException $e) {
+            $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+        } catch (\PDOException $e) {
+            $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+        } catch (\ORMException $e) {
+            $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+        } catch (\Exception $e) {
+            $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
+        }
+
+        $this->addFlash('error', $message);
 
         return $this->redirectToRoute('admin_product_index');
     }
