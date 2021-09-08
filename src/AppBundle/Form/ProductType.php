@@ -39,7 +39,7 @@ class ProductType extends AbstractType
             ])
             ->add('isHot', CheckboxType::class, [
                 'required' => false,
-                'label' => 'label.isHot',
+                'label' => 'Sản phẩm nội bật',
             ])
             ->add('productCat', null, [
                 'required' => false,
@@ -50,10 +50,11 @@ class ProductType extends AbstractType
                 'allow_delete' => true,
             ])
             ->add('description', TextareaType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'label.description',
             ])
             ->add('contents', TextareaType::class, [
+                'required' => true,
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '500'],
                 'label' => 'label.contents',
             ])
@@ -68,11 +69,11 @@ class ProductType extends AbstractType
             ))
             ->add('regularPrice', null, [
                 'required' => false,
-                'label' => 'label.regularPrice',
+                'label' => 'Giá',
             ])
             ->add('salePrice', null, [
                 'required' => false,
-                'label' => 'label.salePrice',
+                'label' => 'Giá sau giảm',
             ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,

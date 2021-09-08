@@ -6,7 +6,7 @@
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="og:product" />
-    <meta property="og:title" content="{{ product.getPageTitle() is not null ? post.getPageTitle() : product.getName() }}" />
+    <meta property="og:title" content="{{ product.getPageTitle() is not null ? product.getPageTitle() : product.getName() }}" />
     {% if app.request.attributes.get('_route') is not null %}
     <meta property="og:url" content="{{ app.request.uri }}" />
     {% endif %}

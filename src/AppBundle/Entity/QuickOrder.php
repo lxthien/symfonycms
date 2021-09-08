@@ -28,8 +28,8 @@ class QuickOrder
     /**
      * @var AppBundle\Entity\Product;
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", inversedBy="product")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", inversedBy="product", cascade={"persist"})
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     private $product;
 

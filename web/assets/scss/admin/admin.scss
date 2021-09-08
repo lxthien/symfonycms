@@ -49,3 +49,19 @@
 /*===========================================================================
  * 
 ============================================================================*/
+form {
+    .form-group span.help-block {
+        color: red;
+    }
+
+    .product-images-upload {
+        .control-label {
+            display: none;
+        }
+    }
+
+    .row-product-image {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}

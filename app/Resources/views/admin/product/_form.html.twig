@@ -19,11 +19,13 @@
             {% set pos = 0 %}
                 {% for doc in form.productImages %}
 
-                <div class="row">
-                    <div class="col col-xs-1" id="jsRemove{{ pos }}" style="">
+                <div class="row row-product-image">
+                    <div class="col col-md-1" id="jsRemove{{ pos }}" style="">
                         <button type="button" class="btn btn-danger" onclick="removeFile($(this));"><i class="fa fa-times" aria-hidden="true"></i></button>
                     </div>
-                    <div class="col col-xs-11" id="jsPreview{{ pos }}">{{ doc.vars.value.name }}</div>
+                    <div class="col col-md-11" id="jsPreview{{ pos }}">
+                        <img src="{{ asset('uploads/images/productimages/' ~ doc.vars.value.name) | imagine_filter('admin_thumb') }}" />
+                    </div>
 
                     <div style="display:none">
                         {{ form_widget(doc) }}
@@ -70,17 +72,17 @@
         newWidget = newWidget.replace(/__name__/g, fileCount);
         newWidget = "<div style='display:none'>" + newWidget + "</div>";
         hideStuff = "";
-        hideStuff += "<div class='col col-xs-1' id='jsRemove" + fileCount + "' style='display: none;'>";
+        hideStuff += "<div class='col col-md-1' id='jsRemove" + fileCount + "' style='display: none;'>";
         hideStuff += removeButton;
         hideStuff += "</div>";
-        hideStuff += "<div class='col col-xs-11' id='jsPreview" + fileCount + "'>";
+        hideStuff += "<div class='col col-md-11' id='jsPreview" + fileCount + "'>";
         hideStuff += "</div>";
-        hideStuff += "<div class='col col-xs-12'>";
+        hideStuff += "<div class='col col-md-12'>";
         hideStuff += "<button type='button' id='jsBtnUpload" + fileCount + "' class='btn btn-warning'>";
-        hideStuff += "<i class='fa fa-plus'></i>    {{ 'document' | trans }}";
+        hideStuff += "<i class='fa fa-plus'></i> Hình ảnh";
         hideStuff += "</button>";
         hideStuff += "</div>";
-        $("#filesBox").append("<div class='row'>" + hideStuff + newWidget + "</div>");
+        $("#filesBox").append("<div class='row row-product-image'>" + hideStuff + newWidget + "</div>");
         // On click => Simulate file behaviour
         $("#jsBtnUpload" + fileCount).on('click', function(e) {
             $('#product_productImages_' + fileCount + '_file').trigger('click');

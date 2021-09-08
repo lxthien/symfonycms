@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -15,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="products")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
+ * @UniqueEntity("url")
  * @Vich\Uploadable
  */
 class Product
@@ -56,7 +59,7 @@ class Product
      *
      * @Assert\NotBlank()
      * @Assert\Length(
-     *      min = 10,
+     *      min = 5,
      *      max = 255,
      *      minMessage = "The name must be at least {{ limit }} characters long",
      *      maxMessage = "The name cannot be longer than {{ limit }} characters"
