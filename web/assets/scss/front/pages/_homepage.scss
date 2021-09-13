@@ -143,58 +143,30 @@
 
     .box-title {
         color: #141414;
-        font-size: 24px;
+        font-size: 26px;
         letter-spacing: .02em;
         font-weight: 600;
         text-transform: uppercase;
         position: relative;
-        margin-bottom: 12px;
+        margin-top: 15px;
+        margin-bottom: 10px;
         padding: 0 25px;
         display: inline-block;
-        font-family: $arimo;
+        font-family: $quicksand;
 
         @media only screen and (max-width: 767.98px) {
             padding: 0 10px;
-        }
-
-        &::before,
-        &::after {
-            top: 50%;
-            width: 120px;
-            height: 2px;
-            position: absolute;
-            background-color: #141414;
-            content: "";
-
-            @media only screen and (max-width: 767.98px) {
-                width: 50px;
-            }
-        }
-
-        &::before {
-            left: -120px;
-            -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-
-            @media only screen and (max-width: 767.98px) {
-                left: -50px;
-            }
-        }
-
-        &::after {
-            right: -120px;
-            -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-
-            @media only screen and (max-width: 767.98px) {
-                right: -50px;
-            }
         }
     }
 }
 
 .home-new-product-tab {
     margin-bottom: 30px;
+
+    &.home-second-banner {
+        margin-bottom: 0px;
+        margin-top: 45px;
+    }
 
     .products-items {
         .bx-wrapper {
@@ -216,6 +188,34 @@
                         width: initial !important;
                     }
 
+                    &:hover {
+                        &:before {
+                            display: block;
+                        }
+
+                        .products-item-wrapper {
+                            position: relative;
+                            z-index: 2;
+                        }
+
+                        .products-item-wrapper .media-body .add-to-cart {
+                            display: block;
+                        }
+                    }
+
+                    &:before {
+                        position: absolute;
+                        content: '';
+                        display: none;
+                        z-index: 1;
+                        top: 0px;
+                        right: -9px;
+                        bottom: 0;
+                        left: -9px;
+                        box-shadow: 0 1px 3px #cccccc;
+                        border-radius: 3px;
+                    }
+
                     .products-item-wrapper {
                         width: 234px !important;
                         position: relative;
@@ -225,13 +225,14 @@
                         }
     
                         @media (min-width: 768px) and (max-width: 979.98px) {
-                            width: 220px !important;
+                            width: 200px !important;
                         }
 
                         .media-thumb {
+                            padding: 15px;
+
                             img {
                                 border: none;
-                                padding: 7px;
 
                                 @media only screen and (max-width : 768px) {
                                     padding: 0;
@@ -243,45 +244,47 @@
                         }
 
                         .media-body {
-                            h5 {
-                                margin-top: 10px;
+                            .product-name {
+                                margin-top: 20px;
                                 margin-bottom: 5px;
+                                color: $black;
+                                font-size: 15px;
+                                line-height: 20px;
+                                font-weight: 600;
+                                text-align: center;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
+
+                                &:hover {
+                                    text-decoration: none;
+                                }
 
                                 @media only screen and (max-width: 767.98px) {
+                                    font-size: 18px;
+                                    line-height: 26px;
+                                    margin-bottom: 10px;
                                     margin-top: 20px;
                                     min-height: auto;
-                                }
-    
-                                a {
-                                    color: $black;
-                                    font-size: 15px;
-                                    line-height: 20px;
-                                    font-weight: 500;
-                                    text-align: center;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    display: -webkit-box;
-                                    -webkit-line-clamp: 2;
-                                    -webkit-box-orient: vertical;
-    
-                                    &:hover {
-                                        text-decoration: none;
-                                    }
-
-                                    @media only screen and (max-width: 767.98px) {
-                                        font-size: 16px;
-                                    }
+                                    padding-left: 10px;
+                                    padding-right: 10px;
                                 }
                             }
-    
+
                             .rating {
                                 margin-bottom: 9px;
                                 width: 100%;
                                 display: block;
                                 text-align: center;
     
-                                .star-full, .star  {
-                                    font-size: 18px;
+                                .star-full, .star-empty, .star  {
+                                    font-size: 16px;
+
+                                    @media only screen and (max-width: 767.98px) {
+                                        font-size: 18px;
+                                    }
 
                                     &::before {
                                         padding-right: 0;;
@@ -299,9 +302,13 @@
                                 font-size: 14px;
                                 font-weight: bold;
                                 text-align: center;
+
+                                @media only screen and (max-width: 767.98px) {
+                                    font-size: 18px;
+                                }
     
                                 .price-regular {
-                                    color: #000;
+                                    color: $black;
                                 }
     
                                 .price-sale {
@@ -313,6 +320,17 @@
     
                                     .special-price {
                                         color: #e7040f;
+                                    }
+                                }
+                            }
+
+                            .add-to-cart {
+                                display: block;
+                                margin-bottom: 10px;
+
+                                i {
+                                    @media only screen and (max-width: 767.98px) {
+                                        font-size: 18px;
                                     }
                                 }
                             }

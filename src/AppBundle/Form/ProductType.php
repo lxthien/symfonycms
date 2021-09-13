@@ -39,7 +39,7 @@ class ProductType extends AbstractType
             ])
             ->add('isHot', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Sản phẩm nội bật',
+                'label' => 'Sản phẩm nổi bật',
             ])
             ->add('productCat', null, [
                 'required' => false,

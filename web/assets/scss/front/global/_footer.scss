@@ -1,19 +1,25 @@
 footer {
-    padding-top: 45px;
     position: relative;
-    background-color: #141414;
-    color: $white;
+    background-color: $white;
+    color: $black;
+    font-family: $quicksand;
 
     h3.text-uppercase {
         margin-bottom: 20px;
         font-size: 22px;
+        font-family: $quicksand;
+        font-weight: bold;
 
         @media (max-width: 767.98px) {
             margin-top: 20px;
+            font-size: 25px;
         }
     }
 
     .footer-top {
+        padding-top: 50px;
+        border-top: 1px solid #e7e7e7;
+
         .col-12 {
             @media (max-width: 767.98px) {
                 margin-bottom: 30px;
@@ -22,7 +28,7 @@ footer {
 
         .about-us {
             li a {
-                color: $white;
+                color: $black;
             }
         }
 
@@ -33,7 +39,7 @@ footer {
                 list-style: none;
 
                 i {
-                    color: $white;
+                    color: $black;
                 }
             }
         }
@@ -44,12 +50,13 @@ footer {
             height: 45px;
             line-height: 30px;
             color: $white;
-            border-top: 1px solid $gray94;
+            border-top: 1px solid #e7e7e7;
             margin-top: 45px;
             padding-top: 8px;
+            font-style: italic;
     
             p, a {
-                color: $white;
+                color: $black;
                 font-size: 15px;
                 margin-bottom: 0;
     

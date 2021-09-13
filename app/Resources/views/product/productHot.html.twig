@@ -20,11 +20,9 @@
                             </picture>
                         </div>
                         <div class="media-body">
-                            <h5 class="mt-0 mb-1">
-                                <a href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="{{ row.getName() }}">
-                                    <span>{{ row.getName() }}</span>
-                                </a>
-                            </h5>
+                            <a class="product-name" href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="{{ row.getName() }}">
+                                <span>{{ row.getName() }}</span>
+                            </a>
                             {{ row.ratingNumber|rating }}
                             <div class="price-box">
                                 {% if row.getRegularPrice() is empty and row.getSalePrice() is empty %}
@@ -41,6 +39,11 @@
                                         <span><span class="money">{{ row.getRegularPrice()|number_format(0, ',', '.') }} vnđ</span></span>
                                     </div>
                                 {% endif %}
+                            </div>
+                            <div class="add-to-cart text-center">
+                                <a href="{{ path('product_show', {'slug': row.getUrl() }) }}" title="Thêm vào giỏ hàng">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </a>
                             </div>
                         </div>
                     </div>

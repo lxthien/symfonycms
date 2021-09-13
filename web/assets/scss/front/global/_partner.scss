@@ -1,20 +1,58 @@
 .partner {
-    margin-bottom: 40px;
+    margin-bottom: 45px;
+    border-top: 1px solid #e7e7e7;
+    margin-top: 20px;
+    padding-top: 45px;
+
+    @media only screen and (max-width: 767.98px) {
+        padding-top: 35px;
+        margin-bottom: 35px;
+    }
 
     .wrapper-partner {
-        border: 1px solid #d7d7d7;
         padding: 20px 10px;
+        font-family: $arimo;
 
         @media only screen and (max-width : 768px) {
-            margin-bottom: 20px;
+            margin-bottom: 0;
+        }
+
+        i {
+            display: block;
+            text-align: center;
+            margin-bottom: 3.2rem;
+            font-size: 3.5rem;
         }
 
         h3 {
-            font-size: 20px;
+            font-size: 22px;
+            margin-bottom: 5px;
+
+            @media only screen and (max-width : 768px) {
+                font-size: 25px;
+            }
+        }
+
+        span {
+            text-align: center;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #555;
+            font-weight: 600;
+
+            @media only screen and (max-width : 768px) {
+                font-size: 16px;
+            }
         }
 
         p {
             color: #555;
+            font-size: 15px;
+
+            @media only screen and (max-width : 768px) {
+                font-size: 16px;
+            }
         }
     }
 }
