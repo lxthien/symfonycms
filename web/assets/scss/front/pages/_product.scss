@@ -50,7 +50,7 @@
             font-size: 20px;
             text-transform: uppercase;
             font-weight: 600;
-            font-family: $quicksand;
+            font-family: $openSans;
             line-height: 22px;
             color: $black;
             border-bottom: 2px solid #efefef;
@@ -95,9 +95,9 @@
 
                         a {
                             display: inline-block;
-                            font-family: $quicksand;
+                            font-family: $openSans;
                             color: $black;
-                            padding: 7px 0px 6px 0;
+                            padding: 10px 0px;
                             line-height: 22px;
                             position: relative;
                             -webkit-transition: padding-left 0.3s linear;
@@ -146,12 +146,12 @@
 
     .collection-wrapper {
         h1 {
-            font-family: $quicksand;
+            font-family: $openSans;
         }
 
         .collection-des {
-            font-family: $quicksand;
-            margin-bottom: 45px;
+            font-family: $openSans;
+            margin-bottom: 50px;
         }
     }
 }
@@ -171,7 +171,7 @@
 
 .product-shop {
     .product-title {
-        font-family: $arimo;
+        font-family: $openSans;
         font-size: 22px;
         letter-spacing: normal;
         line-height: 30px;
@@ -181,6 +181,7 @@
 
         @media only screen and (max-width: 767.98px) {
             margin-top: 15px;
+            font-size: 23px;
         }
     }
 
@@ -218,6 +219,10 @@
             font-weight: 600;
             line-height: 1.6;
             margin-bottom: 0.25rem;
+
+            @media only screen and (max-width: 767.98px) {
+                font-size: 16px;
+            }
         }
     }
 
@@ -226,6 +231,10 @@
         margin-bottom: 15px;
         font-size: 18px;
         font-weight: bold;
+
+        @media only screen and (max-width: 767.98px) {
+            font-size: 20px;
+        }
 
         .price-regular {
             color: $black;
@@ -246,7 +255,6 @@
 
     .short-description {
         margin-bottom: 25px;
-        font-size: 15px;
     }
 
     .groups-btn {
@@ -340,14 +348,14 @@
 
         .media-body {
             .product-name {
-                margin-top: 20px;
-                margin-bottom: 9px;
+                margin: 20px 0 9px 0;
+                padding: 0 15px;
                 min-height: 40px;
                 color: $black;
-                font-size: 15px;
-                line-height: 20px;
+                font-size: 16px;
+                line-height: 22px;
                 font-weight: 500;
-                font-family: $arimo;
+                font-family: $openSans;
                 font-weight: 600;
                 text-align: center;
                 overflow: hidden;
@@ -473,7 +481,6 @@
                     margin-right: 0;
                     border-radius: 0;
                     text-transform: uppercase;
-                    font-family: $robotoCondesed;
                     font-size: 16px;
                     font-weight: 600;
 
@@ -518,7 +525,6 @@
 
         #form-rating-review {
             .spr-form-title {
-                font-family: $robotoCondesed;
                 font-size: 18px;
                 font-weight: 500;
                 text-transform: uppercase;
@@ -617,7 +623,6 @@
                 border-bottom: 1px solid #efefef;
                 margin: 0;
                 padding-bottom: 8px;
-                font-family: $robotoCondesed;
 
                 span {
                     position: relative;

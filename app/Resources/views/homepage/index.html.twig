@@ -56,17 +56,17 @@
                 <div class="item col-6 col-sm-4 three-blocks">
                     <div class="sub-banner banner-item">
                         <div class="img-box">
-                            <a href="" class="animate-scale">
+                            <a href="{{ path('shop_category', {'level1': 'cham-soc-da' }) }}" class="animate-scale">
                                 <img
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                    alt="Kem trị nám"
+                                    alt="Chăm sóc da"
                                     class="lazyload"
-                                    data-src="{{ asset('assets/images/kem-tri-nam-tot-nhat-hien-nay.jpg') }}">
+                                    data-src="{{ asset('assets/images/cham-soc-da.jpg') | imagine_filter('news_370_272') }}">
                             </a>
                         </div>
                         <div class="content-box">
-                            <h3 class="banner-title" style="color: #fff;">
-                                <span class="text-uppercase">Kem trị nám</span>
+                            <h3 class="banner-title" style="color: #fff; font-size: 28px;">
+                                <span class="text-uppercase">Chăm sóc da</span>
                             </h3>
                         </div>
                     </div>
@@ -74,17 +74,17 @@
                 <div class="item col-6 col-sm-4 three-blocks">
                     <div class="sub-banner banner-item">
                         <div class="img-box">
-                            <a href="" class="animate-scale">
+                            <a href="{{ path('shop_category', {'level1': 'cham-soc-toc' }) }}" class="animate-scale">
                                 <img
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                    alt="Kem dưỡng trắng da"
+                                    alt="Chăm sóc tóc"
                                     class="lazyload"
-                                    data-src="{{ asset('assets/images/kem-duong-trang-da-toan-than-nao-tot.jpg') }}">
+                                    data-src="{{ asset('assets/images/cham-soc-toc.jpg') | imagine_filter('news_370_272') }}">
                             </a>
                         </div>
                         <div class="content-box">
-                            <h3 class="banner-title" style="color: #fff;">
-                                <span class="text-uppercase">Kem dưỡng trắng da</span>
+                            <h3 class="banner-title" style="color: #fff; font-size: 28px;">
+                                <span class="text-uppercase">Chăm sóc tóc</span>
                             </h3>
                         </div>
                     </div>
@@ -92,17 +92,17 @@
                 <div class="item col-6 col-sm-4 three-blocks">
                     <div class="sub-banner banner-item">
                         <div class="img-box">
-                            <a href="" class="animate-scale">
+                            <a href="{{ path('shop_category', {'level1': 'cham-soc-suc-khoe' }) }}" class="animate-scale">
                                 <img
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                    alt="cospora-theme"
+                                    alt="Chăm sóc sức khỏe"
                                     class="lazyload"
-                                    data-src="{{ asset('assets/images/kem-tri-mun-hieu-qua-gia-re.jpg') }}">
+                                    data-src="{{ asset('assets/images/cham-soc-suc-khoe.jpg') | imagine_filter('news_370_272') }}">
                             </a>
                         </div>
                         <div class="content-box">
-                            <h3 class="banner-title" style="color: #fff;">
-                                <span class="text-uppercase">Kem trị mun</span>
+                            <h3 class="banner-title" style="color: #fff; font-size: 28px;">
+                                <span class="text-uppercase">Chăm sóc sức khỏe</span>
                             </h3>
                         </div>
                     </div>
@@ -275,7 +275,7 @@
                     <div class="clearfix"></div>
                     <div class="row">
                         {% for row in blockOnHomepage.posts %}
-                        <div class="col-12 col-md-6 col-lg-4">
+                        <div class="col-12 col-md-6 col-lg-3">
                             <div class="spotlight-item">
                                 <div class="img-box">
                                     <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="animate-scale">

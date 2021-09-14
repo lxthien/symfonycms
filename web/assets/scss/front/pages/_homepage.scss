@@ -152,7 +152,7 @@
         margin-bottom: 10px;
         padding: 0 25px;
         display: inline-block;
-        font-family: $quicksand;
+        font-family: $openSans;
 
         @media only screen and (max-width: 767.98px) {
             padding: 0 10px;
@@ -191,6 +191,10 @@
                     &:hover {
                         &:before {
                             display: block;
+
+                            @media only screen and (max-width: 767.98px) {
+                                display: none;
+                            }
                         }
 
                         .products-item-wrapper {
@@ -245,11 +249,12 @@
 
                         .media-body {
                             .product-name {
-                                margin-top: 20px;
-                                margin-bottom: 5px;
+                                margin: 20px 0 9px 0;
+                                padding: 0 15px;
                                 color: $black;
-                                font-size: 15px;
-                                line-height: 20px;
+                                font-family: $openSans;
+                                font-size: 16px;
+                                line-height: 22px;
                                 font-weight: 600;
                                 text-align: center;
                                 overflow: hidden;
@@ -386,32 +391,13 @@
         .img-box {
             text-align: center;
             position: relative;
+            height: 233px;
+            overflow: hidden;
 
             .animate-scale {
                 position: relative;
                 display: block;
                 overflow: hidden;
-                height: 385px;
-
-                &::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: #232323;
-                    overflow: hidden;
-                    opacity: 0;
-                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(opacity=0)";
-                    filter: alpha(opacity=0);
-                    z-index: 2;
-                    -webkit-transition: all 0.5s ease;
-                    -moz-transition: all 0.5s ease;
-                    -ms-transition: all 0.5s ease;
-                    -o-transition: all 0.5s ease;
-                    transition: all 0.5s ease;
-                }
 
                 img {
                     -webkit-transition: all 0.7s ease;
@@ -443,33 +429,34 @@
         .content.spotlight-inner {
             position: relative;
             padding: 0 0 23px;
-            margin-top: -40px;
             box-shadow: 0 2px 2px rgba(0,0,0,0.07);
             -webkit-box-shadow: 0 2px 2px rgba(0,0,0,0.07);
             -moz-box-shadow: 0 2px 2px rgba(0,0,0,0.07);
             -ms-box-shadow: 0 2px 2px rgba(0,0,0,0.07);
             z-index: 2;
             margin-bottom: 5px;
-            text-align: center;
 
             .content-title {
                 background: $white;
-                max-width: 85%;
+                max-width: 90%;
                 margin: 0 auto;
-                padding: 15px 5px;
+                padding: 15px 0;
 
                 h4 {
-                    text-transform: uppercase;
                     font-weight: 500;
                     line-height: 24px;
                     font-size: 15px;
-                    margin-bottom: 5px;
-                    font-family: $helvetica;
+                    margin-bottom: 8px;
+                    font-family: $quicksand;
                     letter-spacing: -0.5px;
+
+                    @media only screen and (max-width: 767.98px) {
+                        font-size: 17px;
+                    }
                 }
 
                 h3.title {
-                    font-size: 20px;
+                    font-size: 18px;
                     font-family: $quicksand;
                     font-weight: 600;
                     letter-spacing: -0.5px;
@@ -480,6 +467,10 @@
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
+
+                    @media only screen and (max-width: 767.98px) {
+                        font-size: 20px;
+                    }
 
                     a {
                         &:hover {
@@ -502,6 +493,10 @@
                 display: -webkit-box;
                 -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
+
+                @media only screen and (max-width: 767.98px) {
+                    font-size: 17px;
+                }
             }
         }
     }

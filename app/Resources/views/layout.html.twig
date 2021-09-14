@@ -11,6 +11,8 @@
         <link rel="dns-prefetch" href="//www.youtube.com/">
         <link rel="dns-prefetch" href="//s7.addthis.com/">
         <link rel="dns-prefetch" href="https://fonts.gstatic.com/" >
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         
         <!-- https://realfavicongenerator.net -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
@@ -72,8 +74,8 @@
         {{ get_setting('googleAnalytic')|raw }}
 
         <!-- Custom css -->
-        <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
         {% endblock %}

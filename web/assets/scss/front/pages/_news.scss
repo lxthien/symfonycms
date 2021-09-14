@@ -13,6 +13,11 @@
                 .content-title {
                     h4.title {
                         font-size: 14px;
+
+                        @media only screen and (max-width: 767.98px) {
+                            font-size: 17px;
+                            margin-bottom: 10px;
+                        }
                     }
                     
                     h3.title {
@@ -22,6 +27,7 @@
 
                         @media only screen and (max-width: 767.98px) {
                             min-height: auto;
+                            font-size: 20px;
                         }
                     }
                 }
@@ -151,7 +157,6 @@
         border-bottom: 1px solid #efefef;
         margin: 0;
         padding-bottom: 8px;
-        font-family: $robotoCondesed;
 
         span {
             position: relative;
@@ -190,7 +195,6 @@
         border-bottom: 1px solid #efefef;
         margin: 0;
         padding-bottom: 8px;
-        font-family: $robotoCondesed;
 
         span {
             position: relative;
@@ -270,7 +274,6 @@
         border-bottom: 1px solid #efefef;
         margin: 0;
         padding-bottom: 8px;
-        font-family: $robotoCondesed;
 
         span {
             position: relative;

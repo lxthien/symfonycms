@@ -186,6 +186,10 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [224, 169], mode: outbound }
+        news_370_272:
+            quality: 100
+            filters:
+                thumbnail: { size: [370, 272], mode: outbound }
         product_cat_930_310:
             quality: 100
             filters:
