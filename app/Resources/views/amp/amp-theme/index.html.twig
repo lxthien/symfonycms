@@ -234,8 +234,7 @@
                         <div class="col-12 col-md-12 col-lg-6">
                             <h3 class="text-uppercase">Về chúng tôi</h3>
                             <div class="footer-text-wrap">
-                                <p>Xây Dựng Minh Duy với kinh nghiệm thi công nhiều công trình lớn nhỏ tại TP Hồ Chí Minh và các tỉnh thành lân cận: Củ Chi, Long An, Bình Dương, Đồng Nai, ... Chúng tôi tự tin mang đến sự hài lòng đến toàn thể quý khách hàng khi tin tưởng đến tất cả các dịch vụ xây dựng của chúng tôi.</p>
-                                <p>Uy tín, chất lượng và chuyên nghiệp là những gì chúng tôi sẽ và luôn mang đến cho khách hàng!</p>
+                                {{ get_setting('siteNameDescription')|raw }}
                             </div>
                         </div>
                         <div class="col-12 col-md-12 col-lg-3">
@@ -268,20 +267,20 @@
                             <div class="event-footer row">
                                 <div class="col-12 col-sm-12 col-md-12">
                                     <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                                        <meta content="➊ Bảng giá sửa nhà trọn gói tại TP HCM" itemprop="name">
-                                        <meta content="➊ Bảng giá sửa nhà trọn gói tại TP HCM" itemprop="description">
+                                        <meta content="➊ Sửa nhà trọn gói" itemprop="name">
+                                        <meta content="➊ Sửa nhà trọn gói" itemprop="description">
                                         <h6>
                                             <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}" itemprop="url">
-                                                <span>➊ Bảng giá sửa nhà trọn gói tại TP HCM</span>
+                                                <span>➊ Sửa nhà trọn gói</span>
                                             </a>
                                         </h6>
-                                        <meta content="2021-01-01T4:00-05:00" itemprop="startDate">
-                                        <meta content="2022-01-01T4:00-05:00" itemprop="endDate">
+                                        <meta content="2022-01-01T4:00-05:00" itemprop="startDate">
+                                        <meta content="2023-01-01T4:00-05:00" itemprop="endDate">
                                         <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
                                         <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
                                         <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
                                         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                            <meta content="☎️ Báo Giá 0982.969.379" itemprop="name">
+                                            <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
                                             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                                                 <meta content="10E3 Đường 30, P. Tân Phong, Quận 7" itemprop="streetAddress">
                                                 <meta content="Ho Chi Minh" itemprop="addressLocality">
@@ -305,20 +304,20 @@
                                         </div>
                                     </div>
                                     <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                                        <meta content="➋ Bảng giá xây nhà trọn gói tại TP HCM" itemprop="name">
-                                        <meta content="➋ Bảng giá xây nhà trọn gói tại TP HCM" itemprop="description">
+                                        <meta content="➋ Xây nhà trọn gói" itemprop="name">
+                                        <meta content="➋ Xây nhà trọn gói" itemprop="description">
                                         <h6>
                                             <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}" itemprop="url">
-                                                <span>➋ Bảng giá xây nhà trọn gói tại TP HCM</span>
+                                                <span>➋ Xây nhà trọn gói</span>
                                             </a>
                                         </h6>
-                                        <meta content="2021-02-02T5:00-05:00" itemprop="startDate">
-                                        <meta content="2022-02-02T5:00-05:00" itemprop="endDate">
+                                        <meta content="2022-02-02T5:00-05:00" itemprop="startDate">
+                                        <meta content="2023-02-02T5:00-05:00" itemprop="endDate">
                                         <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
                                         <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
                                         <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
                                         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                            <meta content="☎️ Báo Giá 0982.969.379" itemprop="name">
+                                            <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
                                             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                                                 <meta content="10E3 Đường 30, P. Tân Phong, Quận 7" itemprop="streetAddress">
                                                 <meta content="Ho Chi Minh" itemprop="addressLocality">
@@ -342,20 +341,20 @@
                                         </div>
                                     </div>
                                     <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                                        <meta content="➌ Dịch vụ xây nhà trọn gói tại TP HCM" itemprop="name">
-                                        <meta content="➌ Dịch vụ xây nhà trọn gói tại TP HCM" itemprop="description">
+                                        <meta content="➌ Thi công quán cafe" itemprop="name">
+                                        <meta content="➌ Thi công quán cafe" itemprop="description">
                                         <h6>
-                                            <a href="{{ path('news_show', {'slug': 'xay-nha-tron-goi' }) }}" itemprop="url">
-                                                <span>➌ Dịch vụ xây nhà trọn gói tại TP HCM</span>
+                                            <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}" itemprop="url">
+                                                <span>➌ Thi công quán cafe</span>
                                             </a>
                                         </h6>
-                                        <meta content="2021-03-03T6:00-05:00" itemprop="startDate">
-                                        <meta content="2022-03-03T6:00-05:00" itemprop="endDate">
+                                        <meta content="2022-03-03T6:00-05:00" itemprop="startDate">
+                                        <meta content="2023-03-03T6:00-05:00" itemprop="endDate">
                                         <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
                                         <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
                                         <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
                                         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                            <meta content="☎️ Báo Giá 0982.969.379" itemprop="name">
+                                            <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
                                             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                                                 <meta content="10E3 Đường 30, P. Tân Phong, Quận 7" itemprop="streetAddress">
                                                 <meta content="Ho Chi Minh" itemprop="addressLocality">
@@ -364,7 +363,7 @@
                                             </div>
                                         </div>
                                         <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                            <meta content="{{ path('news_show', {'slug': 'xay-nha-tron-goi' }) }}" itemprop="url">
+                                            <meta content="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}" itemprop="url">
                                             <meta content="4300000" itemprop="price">
                                             <meta content="VND" itemprop="priceCurrency">
                                             <meta content="https://schema.org/InStock" itemprop="availability">

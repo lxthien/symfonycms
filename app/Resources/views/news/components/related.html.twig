@@ -6,10 +6,13 @@
                 <div class="col-xs-12 col-sm-4 col-md-3">
                     <div class="related-wrapper">
                         <div class="related-img">
-                            <img class="img-thumbnail lazyload"
+                            <img
+                                width="212"
+                                height="150"
+                                class="img-thumbnail lazyload"
                                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                 data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_280') }}"
-                                alt="{{row.getTitle()}}">
+                                alt="{{row.getTitle()}}" >
                             <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
                                 <i class="fa fa-link"></i>
                             </a>

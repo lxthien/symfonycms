@@ -2,7 +2,13 @@
     <div class="row bang-gia">
         <div class="one col-12 col-sm-12 col-md-3">
             <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                <img alt="{{ get_setting('siteName') }}" src="{{ asset('assets/images/logo.png') }}">
+                <img
+                    width="234"
+                    height="47"
+                    alt="{{ get_setting('siteName') }}"
+                    class="lazyload"
+                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                    data-src="{{ asset('assets/images/logo.png') }}" >
             </a>
         </div>
         <div class="two col-xs-12 col-sm-4 col-md-3">

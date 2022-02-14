@@ -231,6 +231,7 @@ class NewsController extends Controller
 
             return $this->render('news/page.html.twig', [
                 'post'          => $post,
+                'contentsLazy'  => $contentsLazy,
                 'form'          => $form->createView(),
                 'formRating'    => $formRating->createView(),
                 'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
@@ -278,10 +279,15 @@ class NewsController extends Controller
         foreach ( $imgs as $img) {
             $src = $img->getAttribute('src');
             $alt = $img->getAttribute('alt');
+
+            list($width, $height) = @getimagesize(substr($src, 1));
+
+            $img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
             $img->setAttribute('data-src', $src);
             $img->setAttribute('alt', $alt);
+            $img->setAttribute('width', !empty($width) ? $width : 500);
+            $img->setAttribute('height', !empty($height) ? $height : 500);
             $img->setAttribute('class', 'lazyload');
-            $img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
         }
         
         return html_entity_decode($dom->saveHTML());
@@ -561,6 +567,8 @@ class NewsController extends Controller
      */
     public function handleSearchFormAction(Request $request)
     {
+        $page = !empty($request->query->get('page')) ? $request->query->get('page') : 1;
+        
         $form = $this->createFormBuilder(null, array(
                 'csrf_protection' => false,
             ))
@@ -597,7 +605,7 @@ class NewsController extends Controller
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query->getResult(),
-            1,
+            $page,
             $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
         );
 

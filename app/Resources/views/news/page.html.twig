@@ -69,7 +69,7 @@
                     <h1 class="entry-title block-title" itemprop="headline">{{ post.getTitle() }}</h1>
                     
                     <div class="news-container" itemprop="articleBody">
-                        {{ post.getContents()|raw }}
+                        {{ contentsLazy|raw }}
                     </div>
 
                     {# Rating and Share #}
