@@ -30,11 +30,16 @@ class HomepageController extends Controller
                         if ($category->getId() != 2) {
                             $posts = $this->getDoctrine()
                                 ->getRepository(News::class)
-                                ->findBy(
-                                    array('postType' => 'post', 'enable' => 1, 'category' => $category->getId()),
-                                    array('createdAt' => 'DESC'),
-                                    $listCategoriesOnHomepage[$i]["items"]
-                                );
+                                ->createQueryBuilder('n')
+                                ->innerJoin('n.category', 't')
+                                ->where('t.id = :newscategory_id')
+                                ->andWhere('n.enable = :enable')
+                                ->setParameter('newscategory_id', $category->getId())
+                                ->setParameter('enable', 1)
+                                ->setMaxResults( $listCategoriesOnHomepage[$i]["items"] )
+                                ->orderBy('n.createdAt', 'DESC')
+                                ->getQuery()
+                                ->getResult();
                         } else {
                             $listCategoriesIds = array($category->getId());
 
@@ -51,12 +56,13 @@ class HomepageController extends Controller
 
                             $posts = $this->getDoctrine()
                                 ->getRepository(News::class)
-                                ->createQueryBuilder('p')
-                                ->where('p.category IN (:listCategoriesIds)')
-                                ->andWhere('p.enable = :enable')
+                                ->createQueryBuilder('n')
+                                ->innerJoin('n.category', 't')
+                                ->where('t.id IN (:listCategoriesIds)')
+                                ->andWhere('n.enable = :enable')
                                 ->setParameter('listCategoriesIds', $listCategoriesIds)
                                 ->setParameter('enable', 1)
-                                ->orderBy('p.viewCounts', 'DESC')
+                                ->orderBy('n.createdAt', 'DESC')
                                 ->getQuery()->getResult();
                         }
                     }

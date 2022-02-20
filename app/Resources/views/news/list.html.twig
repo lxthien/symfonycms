@@ -1,13 +1,13 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %} {{ category.getPageTitle() ~ ' - Trang ' ~ pagination.currentPageNumber }} {% endblock %}
-{% block description %} {{category.getPageDescription()}} {% endblock %}
-{% block keyword %} {{category.getPageKeyword()}} {% endblock %}
+{% block title %}{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}{% endblock %}
+{% block description %}{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}{% endblock %}
+{% block keyword %}{{ category.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
-    <meta property="og:title" content="{{ category.getPageTitle() ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
-    <meta property="og:description" content="{{ category.getPageDescription() }}" />
+    <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
+    <meta property="og:description" content="{{ category.getPageDescription() ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
 {% endblock %}
 
 {% block body %}

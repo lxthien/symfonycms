@@ -18,8 +18,9 @@
     }
 
     .title-list-news-items {
-        h1 {
+        p.p-title-news-items {
             margin: 30px 0 10px;
+            font-style: normal;
         }
 
         .block-underline {
@@ -283,22 +284,24 @@
             border: 1px solid $primaryColor;
             margin-bottom: 30px;
 
-            &:hover {
-                border: 1px solid $primaryColor2;
+            @media only screen and (min-width: 979.98px) {
+                &:hover {
+                    border: 1px solid $primaryColor2;
 
-                .related-img {
-                    .img-thumbnail {
-                        transform: scale(1.5);
-                    }
+                    .related-img {
+                        .img-thumbnail {
+                            transform: scale(1.5);
+                        }
 
-                    a {
-                        opacity: 1;
+                        a {
+                            opacity: 1;
 
-                        i {
-                            -webkit-transform: translate(-50%, -50%) rotate(0);
-                            -moz-transform: translate(-50%, -50%) rotate(0);
-                            -ms-transform: translate(-50%, -50%) rotate(0);
-                            transform: translate(-50%, -50%) rotate(0);
+                            i {
+                                -webkit-transform: translate(-50%, -50%) rotate(0);
+                                -moz-transform: translate(-50%, -50%) rotate(0);
+                                -ms-transform: translate(-50%, -50%) rotate(0);
+                                transform: translate(-50%, -50%) rotate(0);
+                            }
                         }
                     }
                 }
@@ -366,11 +369,11 @@
     
             a.related-title {
                 margin: 10px 0px;
-                padding: 0 5px;
-                font-size: 16px;
-                line-height: 22px;
-                height: 45px;
-                max-height: 45px;
+                padding: 0 8px;
+                font-size: 18px;
+                line-height: 25px;
+                height: 47px;
+                max-height: 47px;
                 color: $primaryColor;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -386,7 +389,8 @@
                 }
 
                 @media only screen and (max-width: 767.98px) {
-                    font-size: 18px;
+                    font-size: 22px;
+                    line-height: 30px;
                     padding: 10px 10px 5px;
                     max-height: max-content;
                     height: auto;
@@ -394,13 +398,15 @@
             }
 
             p {
-                padding: 0 5px;
+                padding: 0 8px;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
                 -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
+                font-size: 16px;
+                line-height: 25px;
 
                 @media only screen and (max-width: 767.98px) {
                     padding: 0px 10px;
@@ -425,15 +431,16 @@
     & > h4 {
         font-size: 26px;
         position: relative;
+        border-bottom: 3px solid $primaryColor;
 
         &:before {
             position: absolute;
             bottom: -3px;
             left: 0;
             content: "";
-            width: 90px;
+            width: 150px;
             height: 3px;
-            background: $primaryColor;
+            background: $primaryColor2;
         }
     }
 
@@ -493,16 +500,16 @@
 
     .comment-reply-title {
         position: relative;
-        border-bottom: 3px solid $mercury;
+        border-bottom: 3px solid $primaryColor;
 
         &:before {
             position: absolute;
             bottom: -3px;
             left: 0;
             content: "";
-            width: 90px;
+            width: 150px;
             height: 3px;
-            background: $primaryColor;
+            background: $primaryColor2;
         }
     }
 
@@ -511,8 +518,14 @@
             .form-control,
             input {
                 border-width: 1px;
-                height: 40px;
+                height: 38px;
                 padding: 5px 15px;
+                width: 350px;
+                box-shadow: 0;
+
+                @media only screen and (max-width: 767.98px) {
+                    width: 100%;
+                }
 
                 &.error {
                     border: 1px solid $red;
@@ -521,7 +534,12 @@
             }
 
             textarea.form-control {
-                height: 100px;
+                height: 150px;
+                width: 600px;
+
+                @media only screen and (max-width: 767.98px) {
+                    width: 100%;
+                }
             }
 
             label.error {

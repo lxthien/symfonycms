@@ -50,7 +50,11 @@
                                             </div>
                                         </td>
                                         <td><a class="btn-link" href="{{ path('admin_news_edit', {id: row.id}) }}">{{ row.getTitle() }}</a></td>
-                                        <td>{{ row.getCategory() }}</td>
+                                        <td>
+                                            {% for category in row.getCategory() %}
+                                                {{ category.getName() }}{{ loop.last == false ? ', ' : '' }}
+                                            {% endfor %}
+                                        </td>
                                         <td>
                                             <label class="switch switch-text switch-primary switch-pill">
                                                 <input type="checkbox" class="switch-input" {{ row.getEnable() ? 'checked="true"' : '' }}>

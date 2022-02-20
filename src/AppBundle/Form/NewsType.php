@@ -4,12 +4,13 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
-use AppBundle\Form\Type\DateTimePickerType;
 use AppBundle\Form\Type\TagsInputType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,9 +48,15 @@ class NewsType extends AbstractType
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '500'],
                 'label' => 'label.contents',
             ])
-            ->add('category', null, [
+            ->add('categoryPrimary', HiddenType::class, [
+                'required' => false
+            ])
+            ->add('category', EntityType::class, [
                 'required' => false,
                 'label' => 'label.category',
+                'class' => 'AppBundle:NewsCategory',
+                'multiple' => true,
+                'expanded' => true,
             ])
             ->add('tags', TagsInputType::class, [
                 'attr' => ['data-role' => 'tagsinput'],

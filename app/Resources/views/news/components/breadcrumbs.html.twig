@@ -4,6 +4,14 @@
             <div class="col-md-12">
                 {# Breadcrum #}
                 {{ wo_render_breadcrumbs() }}
+
+                {% if type is defined and type is not null %}
+                    <h1 class="title">{{ title }}</h1>
+
+                    <div class="description">
+                        <p>{{ description|raw }}</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
