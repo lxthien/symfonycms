@@ -31,8 +31,16 @@ class News
     /**
      * @var AppBundle\Entity\NewsCategory;
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NewsCategory", inversedBy="news")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\NewsCategory", inversedBy="news")
+     * @ORM\JoinTable(
+     *  name="news_newscategory",
+     *  joinColumns={
+     *      @ORM\JoinColumn(name="news_id", referencedColumnName="id")
+     *  },
+     *  inverseJoinColumns={
+     *      @ORM\JoinColumn(name="newscategory_id", referencedColumnName="id")
+     *  }
+     * )
      */
     private $category;
 
@@ -128,6 +136,13 @@ class News
      * @ORM\Column(name="viewCounts", type="integer")
      */
     private $viewCounts = 0;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="categoryPrimary", type="integer")
+     */
+    private $categoryPrimary = 0;
 
     /**
      * @var \DateTime
@@ -255,7 +270,25 @@ class News
     /**
      * Get category
      *
-     * @return \AppBundle\Entity\NewsCategory 
+     * @return NewsCategory[]
+     */
+    public function addCategory(NewsCategory $newsCategory)
+    {
+        if (!$this->category->contains($newsCategory)) {
+            $this->category->add($newsCategory);
+        }
+    }
+
+    /**
+     * @return NewsCategory[]
+     */
+    public function removeCategory(NewsCategory $newsCategory)
+    {
+        $this->category->removeElement($newsCategory);
+    }
+
+    /**
+     * @return \AppBundle\Entity\NewsCategory
      */
     public function getCategory()
     {
@@ -530,6 +563,18 @@ class News
     public function getViewCounts()
     {
         return $this->viewCounts;
+    }
+
+    public function setCategoryPrimary($categoryPrimary)
+    {
+        $this->categoryPrimary = $categoryPrimary;
+
+        return $this;
+    }
+
+    public function getCategoryPrimary()
+    {
+        return $this->categoryPrimary;
     }
 
     /**

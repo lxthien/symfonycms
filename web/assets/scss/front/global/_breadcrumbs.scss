@@ -33,6 +33,7 @@
 
     .description {
         width: 70%;
+        margin-bottom: 30px;
 
         @media only screen and (max-width: 768px) {
             width: 100%;
@@ -47,6 +48,7 @@
     &:after {
         content : "";
         background-image: url("../../assets/images/background-breadcrumb.jpg");
+        background-size: cover;
         opacity: 0.3;
         position: absolute;
         top: 0;

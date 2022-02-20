@@ -2,6 +2,10 @@
     .company {
         margin-bottom: 30px;
 
+        h1.h1-title-contact {
+            font-size: 28px;
+        }
+
         ul {
             padding-left: 0;
 
@@ -17,14 +21,31 @@
 
     #form {
         .form-group {
+            label.control-label {
+                margin-bottom: 3px;
+                font-weight: bold;
+                font-size: 15px;
+            }
+
             .form-control, input {
                 border-width: 1px;
                 height: 40px;
                 padding: 5px 15px;
+                width: 350px;
+                box-shadow: 0;
+
+                @media only screen and (max-width: 767.98px) {
+                    width: 100%;
+                }
             }
 
             textarea.form-control {
-                height: 100px;
+                height: 150px;
+                width: 600px;
+
+                @media only screen and (max-width: 767.98px) {
+                    width: 100%;
+                }
             }
 
             button.btn {

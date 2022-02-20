@@ -46,5 +46,31 @@
 }
 
 /*===========================================================================
- * 
+ * News
 ============================================================================*/
+
+#news {
+    .form-group {
+        label.control-label {
+            font-weight: 600;
+        }
+    }
+
+    #news_category {
+        height: 200px;
+        padding-left: 20px;
+        overflow-y: scroll;
+
+        .checkbox {
+            a {
+                font-style: italic;
+                text-decoration: underline;
+            }
+
+            label.label-primary {
+                margin-left: 50px;
+                font-size: 16px;
+            }
+        }
+    }
+}

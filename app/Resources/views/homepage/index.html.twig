@@ -185,11 +185,11 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 title-list-news-items">
-                                <h1 class="text-center text-uppercase">
-                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" />
+                                <p class="text-center text-uppercase p-title-news-items">
+                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="30" height="25" />
                                     <i class="fas fa-angle-right"></i>
-                                    {{ blockOnHomepage.category.getName() }}
-                                </h1>
+                                    <a href="{{ path('news_category', {'level1': blockOnHomepage.category.getUrl() }) }}" title="{{ blockOnHomepage.category.getName() }}">{{ blockOnHomepage.category.getName() }}</a>
+                                </p>
                                 <span class="text-center block-underline"></span>
                                 <p>{{ blockOnHomepage.description }}</p>
                             </div>
@@ -209,11 +209,11 @@
                     <div class="container">
                         <div class="row project-hot">
                             <div class="col-md-12 title-list-news-items">
-                                <h1 class="text-center text-uppercase">
-                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" />
+                                <p class="text-center text-uppercase p-title-news-items">
+                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="30" height="25" />
                                     <i class="fas fa-angle-right"></i>
-                                    Dự án {{ blockOnHomepage.category.getName() }}
-                                </h1>
+                                    <a href="{{ path('list_category', {'level1':'du-an', 'level2': blockOnHomepage.category.getUrl() }) }}" title="Dự án {{ blockOnHomepage.category.getName() }}">Dự án {{ blockOnHomepage.category.getName() }}</a>
+                                </p>
                                 <span class="text-center block-underline"></span>
                                 <p>{{ blockOnHomepage.description }}</p>
                             </div>

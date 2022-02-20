@@ -308,7 +308,7 @@ article {
         ul {
             padding-left: 5px;
             margin-bottom: 15px;
-            margin-left: 10px
+            margin-left: 15px
         }
 
         ol li,
@@ -404,7 +404,8 @@ article {
                 }
 
                 @media only screen and (max-width: 767.98px) {
-                    font-size: 18px;
+                    font-size: 20px;
+                    line-height: 28px;
                     padding: 10px 10px 5px;
                     max-height: max-content;
                     height: auto;

@@ -21,11 +21,11 @@
                 {{ include('news/components/breadcrumbs.html.twig') }}
                 
                 <div class="company">
-                    <h3 class="text-uppercase">Xây Dựng Minh Duy</h3>
+                    <h1 class="text-uppercase h1-title-contact">Xây Dựng Minh Duy</h1>
                     <ul>
                         <li>
                             <i class="fa fa-map-marker"></i>
-                            <span><strong>VPGD: 10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM</strong></span>
+                            <span><strong>VPGD: 10E3 Đường 30, P. Tân Phong, Quận 7, TP HCM</strong></span>
                         </li>
                         <li>
                             <i class="fa fa-phone"></i>
@@ -56,6 +56,10 @@
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
                 {{ form_end(form) }}
+
+                {{ render(controller(
+                    'AppBundle:News:listNewsByCategory', { 'categoryId': 2 }
+                )) }}
             </div>
         </div>
     </div>

@@ -111,7 +111,9 @@ class NewsCategory
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\News", mappedBy="category")
+     * @var News[]|ArrayCollection
+     * 
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\News", mappedBy="category")
      */
     private $news;
 

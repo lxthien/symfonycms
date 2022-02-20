@@ -213,6 +213,7 @@
                 .marketing-container {
                     font-size: 16px;
                     line-height: 24px;
+                    margin-bottom: 25px;
                 }
             }
         }
@@ -233,22 +234,24 @@
             border: 1px solid $black;
             display: block;
 
-            &:hover {
-                border: 1px solid $primaryColor2;
+            @media only screen and (min-width: 979.98px) {
+                &:hover {
+                    border: 1px solid $primaryColor2;
 
-                .media-thumb {
-                    .img-thumbnail {
-                        transform: scale(1.5);
-                    }
+                    .media-thumb {
+                        .img-thumbnail {
+                            transform: scale(1.5);
+                        }
 
-                    a {
-                        opacity: 1;
+                        a {
+                            opacity: 1;
 
-                        i {
-                            -webkit-transform: translate(-50%, -50%) rotate(0);
-                            -moz-transform: translate(-50%, -50%) rotate(0);
-                            -ms-transform: translate(-50%, -50%) rotate(0);
-                            transform: translate(-50%, -50%) rotate(0);
+                            i {
+                                -webkit-transform: translate(-50%, -50%) rotate(0);
+                                -moz-transform: translate(-50%, -50%) rotate(0);
+                                -ms-transform: translate(-50%, -50%) rotate(0);
+                                transform: translate(-50%, -50%) rotate(0);
+                            }
                         }
                     }
                 }
@@ -333,7 +336,7 @@
                     font-size: 20px;
                     min-height: 65px;
                     margin: 0;
-                    padding: 7px 0;
+                    padding: 7px 10px;
                     text-align: center;
 
                     @media only screen and (max-width: 767.98px) {
@@ -386,10 +389,11 @@
 }
 
 .title-list-news-items {
-    h1 {
+    p.p-title-news-items {
         font-size: 35px;
         margin: 30px 0 5px;
         color: $primaryColor2;
+        line-height: 45px;
 
         img {
             height: 25px;
@@ -403,10 +407,19 @@
             margin-right: 0;
             color: $primaryColor2;
         }
+
+        a {
+            color: $primaryColor2;
+            font-style: normal;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
     }
 
     .block-underline {
-        width: 220px;
+        width: 250px;
         height: 3px;
         background: $primaryColor;
         display: block;
