@@ -37,19 +37,19 @@
                 <ul class="footer-company">
                     <li>
                         <i class="fa fa-map-marker"></i>
-                        <span>10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM</span>
+                        <span>{{ get_setting('companyAddress') }}</span>
                     </li>
                     <li>
                         <i class="fa fa-phone"></i>
-                        <span>0982.969.379</span>
+                        <span>{{ get_setting('hotLine1') }}</span>
                     </li>
                     <li>
                         <i class="fas fa-envelope"></i>
-                        <span>xaydungminhduy@gmail.com</span>
+                        <span>{{ get_setting('emailContact') }}</span>
                     </li>
                     <li>
                         <i class="fab fa-internet-explorer"></i>
-                        <span>www.xaydungminhduy.com</span>
+                        <span>{{ get_setting('companyWebsite') }}</span>
                     </li>
                 </ul>
                 <br>

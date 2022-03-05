@@ -103,6 +103,13 @@ class News
     private $enable = true;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="autoFulfillAddress", type="boolean")
+     */
+    private $autoFulfillAddress = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="postType", type="string", length=255)
@@ -189,21 +196,11 @@ class News
         $this->comments = new ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Add tag for the news
-     *
-     * @return Tag[]
-     */
     public function addTag(Tag $tag)
     {
         if (!$this->tags->contains($tag)) {
@@ -211,33 +208,16 @@ class News
         }
     }
 
-    /**
-     * Remove tag for the news
-     *
-     * @return Tag[]
-     */
     public function removeTag(Tag $tag)
     {
         $this->tags->removeElement($tag);
     }
 
-    /**
-     * Get the list of tag associated to the news.
-     *
-     * @return \AppBundle\Entity\Tag
-     */
     public function getTags()
     {
         return $this->tags;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $title
-     *
-     * @return News
-     */
     public function setTitle($title)
     {
         $this->title = $title;
@@ -245,22 +225,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
     public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * Set category
-     *
-     * @param \AppBundle\Entity\NewsCategory $category
-     * @return NewsCategory
-     */
     public function setCategory(\AppBundle\Entity\NewsCategory $category = null)
     {
         $this->category = $category;
@@ -268,9 +237,6 @@ class News
         return $this;
     }
 
-    /**
-     * @return NewsCategory[]
-     */
     public function addCategory(NewsCategory $newsCategory)
     {
         if (!$this->category->contains($newsCategory)) {
@@ -278,29 +244,16 @@ class News
         }
     }
 
-    /**
-     * @return NewsCategory[]
-     */
     public function removeCategory(NewsCategory $newsCategory)
     {
         $this->category->removeElement($newsCategory);
     }
 
-    /**
-     * @return \AppBundle\Entity\NewsCategory
-     */
     public function getCategory()
     {
         return $this->category;
     }
 
-    /**
-     * Set url
-     *
-     * @param string $url
-     *
-     * @return News
-     */
     public function setUrl($url)
     {
         $this->url = $url;
@@ -308,22 +261,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get url
-     *
-     * @return string
-     */
     public function getUrl()
     {
         return $this->url;
     }
 
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return News
-     */
     public function setDescription($description)
     {
         $this->description = $description;
@@ -331,22 +273,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get description
-     *
-     * @return string
-     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * Set contents
-     *
-     * @param string $contents
-     * @return News
-     */
     public function setContents($contents)
     {
         $this->contents = $contents;
@@ -354,22 +285,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get contents
-     *
-     * @return string
-     */
     public function getContents()
     {
         return $this->contents;
     }
 
-    /**
-     * Set images file
-     *
-     * @param File $images
-     * @return News
-     */
     public function setImageFile(File $images = null)
     {
         $this->imageFile = $images;
@@ -382,22 +302,11 @@ class News
         }
     }
 
-    /**
-     * Get images file
-     *
-     * @return string
-     */
     public function getImageFile()
     {
         return $this->imageFile;
     }
 
-    /**
-     * Set images
-     *
-     * @param string $images
-     * @return News
-     */
     public function setImages($images)
     {
         $this->images = $images;
@@ -405,22 +314,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get images
-     *
-     * @return string
-     */
     public function getImages()
     {
         return $this->images;
     }
 
-    /**
-     * Set enable
-     *
-     * @param bool $enable
-     * @return News
-     */
     public function setEnable($enable)
     {
         $this->enable = $enable;
@@ -428,23 +326,23 @@ class News
         return $this;
     }
 
-    /**
-     * Get enable
-     *
-     * @return bool
-     */
     public function getEnable()
     {
         return $this->enable;
     }
 
-    /**
-     * Set postType
-     *
-     * @param string $postType
-     *
-     * @return News
-     */
+    public function setAutoFulfillAddress($autoFulfillAddress)
+    {
+        $this->autoFulfillAddress = $autoFulfillAddress;
+
+        return $this;
+    }
+
+    public function getAutoFulfillAddress()
+    {
+        return $this->autoFulfillAddress;
+    }
+
     public function setPostType($postType)
     {
         $this->postType = $postType;
@@ -452,32 +350,16 @@ class News
         return $this;
     }
 
-    /**
-     * Get postType
-     *
-     * @return string
-     */
     public function getPostType()
     {
         return $this->postType;
     }
 
-    /**
-     * Is Page
-     *
-     * @return boolean
-     */
     public function isPage()
     {
         return ($this->postType == 'page') ? true : false;
     }
 
-    /**
-     * Set pageTitle
-     *
-     * @param string $pageTitle
-     * @return News
-     */
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $pageTitle;
@@ -485,22 +367,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get pageTitle
-     *
-     * @return string
-     */
     public function getPageTitle()
     {
         return $this->pageTitle;
     }
 
-    /**
-     * Set pageDescription
-     *
-     * @param string $pageDescription
-     * @return News
-     */
     public function setPageDescription($pageDescription)
     {
         $this->pageDescription = $pageDescription;
@@ -508,22 +379,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get pageDescription
-     *
-     * @return string
-     */
     public function getPageDescription()
     {
         return $this->pageDescription;
     }
 
-    /**
-     * Set pageKeyword
-     *
-     * @param string $pageKeyword
-     * @return News
-     */
     public function setPageKeyword($pageKeyword)
     {
         $this->pageKeyword = $pageKeyword;
@@ -531,22 +391,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get pageKeyword
-     *
-     * @return string
-     */
     public function getPageKeyword()
     {
         return $this->pageKeyword;
     }
 
-    /**
-     * Set viewCounts
-     *
-     * @param \int $viewCounts
-     * @return News
-     */
     public function setViewCounts($viewCounts)
     {
         $this->viewCounts = $viewCounts;
@@ -554,11 +403,6 @@ class News
         return $this;
     }
 
-    /**
-     * Get viewCounts
-     *
-     * @return int
-     */
     public function getViewCounts()
     {
         return $this->viewCounts;
@@ -576,12 +420,6 @@ class News
         return $this->categoryPrimary;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     * @return News
-     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
@@ -589,22 +427,11 @@ class News
         return $this;
     }
 
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
     
-    /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
-     * @return News
-     */
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
@@ -612,53 +439,26 @@ class News
         return $this;
     }
 
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
-    /**
-     * Get author
-     *
-     * @return User
-     */
     public function getAuthor()
     {
         return $this->author;
     }
 
-    /**
-     * Set author
-     *
-     * @param User $author
-     *
-     * @return News
-     */
     public function setAuthor(User $author)
     {
         $this->author = $author;
     }
 
-    /**
-     * Get comment
-     *
-     * @return Collection|Comment[]
-     */
     public function getComments()
     {
         return $this->comments;
     }
 
-    /**
-     * Add comment for news
-     *
-     * @return News
-     */
     public function addComment(Comment $comment)
     {
         $comment->setNews($this);
@@ -667,11 +467,6 @@ class News
         }
     }
 
-    /**
-     * Remove comment from news
-     *
-     * @return News
-     */
     public function removeComment(Comment $comment)
     {
         $comment->setNews(null);

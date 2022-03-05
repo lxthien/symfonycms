@@ -74,6 +74,9 @@
                     
                     <div class="news-container" itemprop="articleBody">
                         {{ contentsLazy|raw }}
+                        {% if post.getAutoFulfillAddress() %}
+                            {{ get_setting('addressInPost')|raw }}
+                        {% endif %}
                     </div>
 
                     {# List tags #}

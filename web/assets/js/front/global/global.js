@@ -192,7 +192,7 @@ function initTypewriterEffect() {
         isParagraph = false;
 
     var textArray = [
-        "MINH DUY CONSTRUCTION|10E3 ĐƯỜNG 30, PHƯỜNG TÂN PHONG, QUẬN 7, TP HCM"
+        "MINH DUY CONSTRUCTION|A45 ĐƯỜNG SỐ 2, KDC KIM SƠN, P.TÂN PHONG, Q.7, TP.HCM"
     ];
 
     // Speed (in milliseconds) of typing.

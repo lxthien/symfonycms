@@ -339,6 +339,16 @@ article {
         a {
             color: #211e1f;
         }
+
+        blockquote {
+            border-left: 3px solid #e94724;
+            padding: 10.5px 21px;
+            margin: 0 0 21px;
+
+            p {
+                margin-bottom: 0;
+            }
+        }
     }
 
     .related-news {

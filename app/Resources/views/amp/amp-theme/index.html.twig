@@ -201,19 +201,19 @@
                             <ul class="footer-company">
                                 <li>
                                     <i class="fa fa-map-marker"></i>
-                                    <span>10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM</span>
+                                    <span>{{ get_setting('companyAddress') }}</span>
                                 </li>
                                 <li>
                                     <i class="fa fa-phone"></i>
-                                    <span>0982.969.379</span>
+                                    <span>{{ get_setting('hotLine1') }}</span>
                                 </li>
                                 <li>
                                     <i class="fa fa-envelope-o"></i>
-                                    <span>xaydungminhduy@gmail.com</span>
+                                    <span>{{ get_setting('emailContact') }}</span>
                                 </li>
                                 <li>
                                     <i class="fa fa-internet-explorer"></i>
-                                    <span>www.xaydungminhduy.com</span>
+                                    <span>{{ get_setting('companyWebsite') }}</span>
                                 </li>
                             </ul>
                         </div>
@@ -394,14 +394,14 @@
 
                 <aside class="floating container hidden-sm hidden-md hidden-lg">
                     <section class="row inside cover">
-                        <a class="call-now col-xs-6" href="tel:0982969379" title="Hotline: 0982969379">
+                        <a class="call-now col-xs-6" href="tel:{{ get_setting('hotLine1')|replace({'.': ''}) }}" title="Hotline: {{ get_setting('hotLine1') }}">
                             <div>
                                 <i class="fa fa-phone" aria-hidden="true"></i>
                                 <span>Hotline</span>
-                                <strong>0982.969.379</strong>
+                                <strong>{{ get_setting('hotLine1') }}</strong>
                             </div>
                         </a>
-                        <a class="chat-us col-xs-6" href="mailto:xaydungminhduy@gmail.com">
+                        <a class="chat-us col-xs-6" href="{{ path('contact') }}">
                             <div>
                                 <i class="fa fa-envelope" aria-hidden="true"></i>
                                 <span>Gửi yêu cầu</span>

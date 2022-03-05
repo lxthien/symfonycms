@@ -1,5 +1,5 @@
 <div class="hotline">
     <div class="inner">
-        <a href="tel:0982969379"><div class="phonering-alo-ph-img-circle"></div>0982.96.93.79</a>
+        <a href="tel:{{ get_setting('hotLine1')|replace({'.': ''}) }}"><div class="phonering-alo-ph-img-circle"></div>{{ get_setting('hotLine1') }}</a>
     </div>
 </div>

@@ -10,11 +10,11 @@
                 <div class="header-social-wrapper">
                     <span class="text-left">
                         <i class="fa fa-phone"></i>
-                        <a href="tel:0982969379">0982.969.379</a>
+                        <a href="tel:{{ get_setting('hotLine1')|replace({'.': ''}) }}">{{ get_setting('hotLine1') }}</a>
                     </span>
                     <span class="text-left">
                         <i class="fa fa-envelope-o"></i>
-                        <a href="mailto:xaydungminhduy@gmail.com">xaydungminhduy@gmail.com</a>
+                        <a href="mailto:{{ get_setting('emailContact') }}">{{ get_setting('emailContact') }}</a>
                     </span>
                     <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Minh Duy trên Facebook">
                         <i class="fab fa-facebook"></i>
@@ -60,7 +60,7 @@
                 <div class="info-top hotline-top">
                     <div class="wp90 pull-right">
                         <div class="info-nd">
-                            <p class="tel text-uppercase"><i class="fas fa-mobile-alt"></i> <a href="tel:0982969379">0982.969.379</a></p>
+                            <p class="tel text-uppercase"><i class="fas fa-mobile-alt"></i> <a href="tel:{{ get_setting('hotLine1')|replace({'.': ''}) }}">{{ get_setting('hotLine1') }}</a></p>
                         </div>
                     </div>
                 </div>

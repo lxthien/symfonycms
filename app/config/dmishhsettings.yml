@@ -38,6 +38,14 @@ dmishh_settings:
             type: Symfony\Component\Form\Extension\Core\Type\NumberType
             options:
                 required: true
+        companyAddress:
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
+            options:
+                required: false
+        companyWebsite:
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
+            options:
+                required: false
         emailContact:
             type: Symfony\Component\Form\Extension\Core\Type\EmailType
             options:
@@ -110,3 +118,9 @@ dmishh_settings:
                 required: false
                 attr:
                     rows: 5
+        addressInPost:
+            type: Symfony\Component\Form\Extension\Core\Type\TextareaType
+            options:
+                required: false
+                attr:
+                    rows: 7

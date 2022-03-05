@@ -101,14 +101,15 @@ class Slugger
         
         $count = 10;
         $a = 0;
-        $str = null;
         while ($count != 0) {
-            $str = str_replace($marTViet, $marKoDau, $str, $count);	
+            $string = str_replace($marTViet, $marKoDau, $string, $count);	
         }
 
-        if (substr($str, 0, 1) == "-") $str[0] = " ";
-        if (substr($str, -1) == "-") $str[strlen($str)-1] = " ";
+        if (substr($string, 0, 1) == "-")
+            $string[0] = " ";
+        if (substr($string, -1) == "-")
+            $string[strlen($string)-1] = " ";
         
-        return strtolower(trim($str));
+        return strtolower(trim($string));
     }
 }

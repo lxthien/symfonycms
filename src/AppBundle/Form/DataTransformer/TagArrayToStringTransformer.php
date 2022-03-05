@@ -63,11 +63,23 @@ class TagArrayToStringTransformer implements DataTransformerInterface
         $tags = $this->manager->getRepository(Tag::class)->findBy([
             'name' => $names,
         ]);
+
         $newNames = array_diff($names, $tags);
+
         foreach ($newNames as $name) {
-            $tag = new Tag();
-            $tag->setName($name);
-            $tag->setUrl($slugger->slugifyVn($name));
+            $tagByUrl = $this->manager->getRepository(Tag::class)->findBy([
+                'url' => $slugger->slugifyVn($name),
+            ]);
+            
+            if (!$tagByUrl) {
+                $tag = new Tag();
+                $tag->setName($name);
+                $tag->setUrl($slugger->slugifyVn($name));
+            } else {
+                $tag = $tagByUrl[0];
+                $tag->setName($name);
+            }
+
             $tags[] = $tag;
 
             // There's no need to persist these new tags because Doctrine does that automatically

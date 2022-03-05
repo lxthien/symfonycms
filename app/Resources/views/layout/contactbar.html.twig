@@ -4,11 +4,11 @@
 
 <aside class="floating container hidden-sm hidden-md hidden-lg">
     <section class="row inside cover">
-        <a class="call-now col-xs-6" href="tel:0982969379" title="Hotline: 0982969379">
+        <a class="call-now col-xs-6" href="tel:{{ get_setting('hotLine1')|replace({'.': ''}) }}" title="Hotline: {{ get_setting('hotLine1') }}">
             <div>
                 <i class="fas fa-mobile-alt"></i>
                 <span>Hotline</span>
-                <strong>0982.96.93.79</strong>
+                <strong>{{ get_setting('hotLine1') }}</strong>
             </div>
         </a>
         <a class="chat-us col-xs-6" href="{{ path('contact') }}">
@@ -26,6 +26,6 @@
         <a href="https://m.me/minhduyconstruction" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
     </li>
     <li class="zalo">
-        <a href="https://zalo.me/0982969379" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
+        <a href="https://zalo.me/{{ get_setting('hotLine1')|replace({'.': ''}) }}" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
     </li>
 </ul>

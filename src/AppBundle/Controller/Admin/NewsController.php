@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
+use AppBundle\Entity\Rating;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
 use AppBundle\Utils\Slugger;
@@ -54,20 +55,45 @@ class NewsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($news);
+                $em->flush();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($news);
-            $em->flush();
+                $emRating = $this->getDoctrine()->getManager();
+                    
+                $rating = new Rating();
+                $rating->setNewsId( $news->getId() );
+                $rating->setRating( 5 );
 
-            $this->addFlash('success', 'action.created_successfully');
+                $emRating->persist($rating);
+                $emRating->flush();
 
-            if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('admin_news_new');
+                $this->addFlash('success', 'action.created_successfully');
+
+                if ($form->get('saveAndCreateNew')->isClicked()) {
+                    return $this->redirectToRoute('admin_news_new');
+                }
+
+                return $this->redirectToRoute('admin_news_edit', array(
+                    'id' => $news->getId()
+                ));
+            } catch (\DBALException $e) {
+                $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\PDOException $e) {
+                $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\ORMException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
             }
 
-            return $this->redirectToRoute('admin_news_edit', array(
-                'id' => $news->getId()
-            ));
+            $this->addFlash('error', $message);
+
+            return $this->render('admin/news/new.html.twig', [
+                'news' => $news,
+                'form' => $form->createView(),
+            ]);
         }
 
         return $this->render('admin/news/new.html.twig', [
@@ -90,13 +116,29 @@ class NewsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', 'action.updated_successfully');
 
-            $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'action.updated_successfully');
+                return $this->redirectToRoute('admin_news_edit', array(
+                    'id' => $news->getId()
+                ));
+            } catch (\DBALException $e) {
+                $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\PDOException $e) {
+                $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\ORMException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
+            }
 
-            return $this->redirectToRoute('admin_news_edit', array(
-                'id' => $news->getId()
-            ));
+            $this->addFlash('error', $message);
+
+            return $this->render('admin/news/edit.html.twig', [
+                'news' => $news,
+                'form' => $form->createView(),
+            ]);
         }
 
         return $this->render('admin/news/edit.html.twig', [
