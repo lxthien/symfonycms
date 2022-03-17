@@ -145,7 +145,7 @@
             <article role="article">
                 <h1>{{ post.title }}</h1>
                 <div class="article-content">
-                    {{ contentsAmp|raw }}
+                    {{ contentsAmp|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
                 </div>
 
                 {# List tags #}
@@ -282,7 +282,7 @@
                                         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
                                             <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
                                             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                                <meta content="10E3 Đường 30, P. Tân Phong, Quận 7" itemprop="streetAddress">
+                                                <meta content="A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7" itemprop="streetAddress">
                                                 <meta content="Ho Chi Minh" itemprop="addressLocality">
                                                 <meta content="VN" itemprop="addressRegion">
                                                 <meta content="70000" itemprop="postalCode">
@@ -293,7 +293,7 @@
                                             <meta content="0" itemprop="price">
                                             <meta content="VND" itemprop="priceCurrency">
                                             <meta content="https://schema.org/InStock" itemprop="availability">
-                                            <meta content="2021-01-01T4:00" itemprop="validFrom">
+                                            <meta content="2023-01-01T4:00" itemprop="validFrom">
                                         </div>
                                         <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
                                             <meta content="Xây Dựng Minh Duy" itemprop="name">
@@ -319,7 +319,7 @@
                                         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
                                             <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
                                             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                                <meta content="10E3 Đường 30, P. Tân Phong, Quận 7" itemprop="streetAddress">
+                                                <meta content="A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7" itemprop="streetAddress">
                                                 <meta content="Ho Chi Minh" itemprop="addressLocality">
                                                 <meta content="VN" itemprop="addressRegion">
                                                 <meta content="70000" itemprop="postalCode">
@@ -330,7 +330,7 @@
                                             <meta content="4300000" itemprop="price">
                                             <meta content="VND" itemprop="priceCurrency">
                                             <meta content="https://schema.org/InStock" itemprop="availability">
-                                            <meta content="2021-02-02T5:00" itemprop="validFrom">
+                                            <meta content="2023-02-02T5:00" itemprop="validFrom">
                                         </div>
                                         <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
                                             <meta content="Xây Dựng Minh Duy" itemprop="name">
@@ -356,7 +356,7 @@
                                         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
                                             <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
                                             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                                <meta content="10E3 Đường 30, P. Tân Phong, Quận 7" itemprop="streetAddress">
+                                                <meta content="A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7" itemprop="streetAddress">
                                                 <meta content="Ho Chi Minh" itemprop="addressLocality">
                                                 <meta content="VN" itemprop="addressRegion">
                                                 <meta content="70000" itemprop="postalCode">
@@ -367,7 +367,7 @@
                                             <meta content="4300000" itemprop="price">
                                             <meta content="VND" itemprop="priceCurrency">
                                             <meta content="https://schema.org/InStock" itemprop="availability">
-                                            <meta content="2021-03-03T6:00" itemprop="validFrom">
+                                            <meta content="2023-03-03T6:00" itemprop="validFrom">
                                         </div>
                                         <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
                                             <meta content="Xây Dựng Minh Duy" itemprop="name">
@@ -394,7 +394,7 @@
 
                 <aside class="floating container hidden-sm hidden-md hidden-lg">
                     <section class="row inside cover">
-                        <a class="call-now col-xs-6" href="tel:{{ get_setting('hotLine1')|replace({'.': ''}) }}" title="Hotline: {{ get_setting('hotLine1') }}">
+                        <a class="call-now col-xs-6" href="tel:{{ get_setting('hotLine2') }}" title="Hotline: {{ get_setting('hotLine1') }}">
                             <div>
                                 <i class="fa fa-phone" aria-hidden="true"></i>
                                 <span>Hotline</span>

@@ -69,7 +69,7 @@
                     <h1 class="entry-title block-title" itemprop="headline">{{ post.getTitle() }}</h1>
                     
                     <div class="news-container" itemprop="articleBody">
-                        {{ contentsLazy|raw }}
+                        {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
                     </div>
 
                     {# Rating and Share #}
@@ -84,9 +84,17 @@
                     {# Render form comment #}
                     {{ include('news/comments/form.html.twig') }}
                 </article>
+            </div>
 
+            <div class="col-12 col-md-12">
                 {{ render(controller(
-                    'AppBundle:News:listNewsByCategory', { 'categoryId': 2 }
+                    'AppBundle:News:listNewsByCategory', { 'categoryId':11, 'description':'Tổng hợp các dự án xây nhà phố, biệt thự, nhà tiền chế, nhà cấp 4, ... nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
+                )) }}
+                {{ render(controller(
+                    'AppBundle:News:listNewsByCategory', { 'categoryId':10, 'description':'Tổng hợp các dự án sửa chữa nhà, cải tạo nhà cũ, nâng tầng, nâng nền, căn hộ chung cư, nhà cấp 4, ... nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
+                )) }}
+                {{ render(controller(
+                    'AppBundle:News:listNewsByCategory', { 'categoryId':12, 'description':'Tổng hợp các dự án xây dựng, thiết kế, trang trí quán cafe, trà sữa nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
                 )) }}
             </div>
         </div>

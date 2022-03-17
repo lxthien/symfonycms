@@ -3,9 +3,16 @@
         <p class="text-center text-uppercase p-title-news-items">
             <img alt="Xây Dựng Minh Duy" src="{{ asset('assets/images/icon-logo.png') }}" width="30" height="25" />
             <i class="fas fa-angle-right"></i>
-            Dự án nổi bật
+            {% if category is not null %}
+                {{ category.getName() }}
+            {% else %}
+                Dự án nổi bật
+            {% endif %}
         </h1>
         <span class="text-center block-underline"></span>
+        {% if description is not null %}
+            <p>{{ description }}</p>
+        {% endif %}
     </div>
     
     <div class="clearfix"></div>

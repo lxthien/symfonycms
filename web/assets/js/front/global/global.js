@@ -62,8 +62,8 @@ function initNewsSlider() {
         stopAutoOnClick: true,
         pager: false,
         controls: false,
-        minSlides: 5,
-        maxSlides: 5,
+        minSlides: 10,
+        maxSlides: 10,
         moveSlides: 1,
         slideWidth: 375,
         touchEnabled: false,
@@ -271,7 +271,6 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
-    initFixedSidebar();
     initCostConstruction();
     initFancybox();
     initTypewriterEffect();

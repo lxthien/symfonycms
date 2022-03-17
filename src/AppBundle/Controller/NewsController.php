@@ -518,7 +518,7 @@ class NewsController extends Controller
             ->findBy(
                 array('postType' => 'post', 'enable' => 1),
                 array('createdAt' => 'DESC'),
-                5
+                10
             );
 
         return $this->render('news/recent.html.twig', [
@@ -549,13 +549,14 @@ class NewsController extends Controller
      * Render list news by category
      * @return News
      */
-    public function listNewsByCategoryAction($categoryId)
+    public function listNewsByCategoryAction($categoryId, $description = null)
     {
         $category = $this->getDoctrine()
             ->getRepository(NewsCategory::class)
             ->find($categoryId);
 
         $listCategoriesIds = array($category->getId());
+
         $allSubCategories = $this->getDoctrine()
                             ->getRepository(NewsCategory::class)
                             ->createQueryBuilder('c')
@@ -582,6 +583,8 @@ class NewsController extends Controller
 
         return $this->render('news/listByCategory.html.twig', [
             'posts' => $posts,
+            'category' => $category,
+            'description' => $description
         ]);
     }
 
