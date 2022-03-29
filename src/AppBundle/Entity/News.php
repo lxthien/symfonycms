@@ -180,7 +180,7 @@ class News
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tag", inversedBy="news", cascade={"persist"})
      * @ORM\OrderBy({"name": "ASC"})
-     * @Assert\Count(max="5", maxMessage="news.too_many_tags")
+     * @Assert\Count(max="10", maxMessage="news.too_many_tags")
      */
     private $tags;
 

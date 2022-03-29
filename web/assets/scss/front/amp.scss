@@ -561,6 +561,13 @@ footer {
         margin-top: 20px;
         border-top: 1px solid $gray94;
 
+        .footer-logo {
+            amp-img {
+                width: 70%;
+                margin: 10px auto;
+            }
+        }
+
         .footer-text-wrap {
             p {
                 text-align: justify;
@@ -712,6 +719,43 @@ footer {
             .chat-us {
                 border-right: none;
             }
+        }
+    }
+
+    .giuseart-pc-contact-bar {
+        right: 10px;
+        bottom: 45%;
+        position: fixed;
+        z-index: 100;
+        margin-bottom: 0;
+        padding-left: 0;
+    
+        li {
+            width: 50px;
+            height: 46px;
+            overflow: hidden;
+            margin-bottom: 0;
+            list-style: none;
+        }
+    
+        li a {
+            display: block;
+            width: 50px;
+            height: 45px;
+        }
+    
+        li.facebook {
+            margin-bottom: 8px;
+            background: url(../../../images/fb.png);
+            background-size: 50px;
+            background-repeat: no-repeat;
+        }
+    
+        li.zalo {
+            background: url(../../../images/zl.png);
+            background-position: 7px 5px;
+            background-size: 38px;
+            background-repeat: no-repeat;
         }
     }
 }
