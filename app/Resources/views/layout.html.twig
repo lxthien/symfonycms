@@ -30,7 +30,7 @@
         <meta http-equiv="content-language" content="vi">
 
         {% if app.request.attributes.get('_route') is not null %}
-        <link rel="canonical" href="{{ app.request.uri }}"/>
+        <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"/>
         {% endif %}
         
         <!-- Open Graph data -->

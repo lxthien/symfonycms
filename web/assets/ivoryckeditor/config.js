@@ -14,6 +14,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.htmlEncodeOutput = false;
     config.entities = false;
     config.basicEntities = false;
+    config.extraPlugins = "toc";
     config.toolbar_MyEditor =
     [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
@@ -26,7 +27,7 @@ CKEDITOR.editorConfig = function( config ) {
         { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
         { name: 'insert', items : [ 'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe' ] },
         { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
-        { name: 'colors', items : [ 'TextColor','BGColor' ] }
+        { name: 'colors', items : [ 'TextColor','BGColor','toc' ] }
     ];
     config.toolbar_Full =
     [
