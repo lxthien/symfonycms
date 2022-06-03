@@ -917,6 +917,10 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
+bxslider@^4.2.14:
+  version "4.2.14"
+  resolved "https://registry.yarnpkg.com/bxslider/-/bxslider-4.2.14.tgz#5318b78b28a984fc10f3a2e6b04836c6b4b712a2"
+
 bytes@2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-2.3.0.tgz#d5b680a165b6201739acb611542aabc2d8ceb070"
@@ -2386,17 +2390,15 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-jquery-validation@^1.18.0:
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/jquery-validation/-/jquery-validation-1.18.0.tgz#69898f6cddc3e8ef5811de84ff8b23fc24d93776"
-  dependencies:
-    jquery "^1.7 || ^2.0 || ^3.1"
+jquery-validation@^1.19.4:
+  version "1.19.4"
+  resolved "https://registry.yarnpkg.com/jquery-validation/-/jquery-validation-1.19.4.tgz#a765781d954e5876fa437d5c75b7a9440bfa37a8"
 
 jquery@>=1.7, "jquery@^1.8.3 || ^2.0 || ^3.0":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
-"jquery@^1.7 || ^2.0 || ^3.1", jquery@^3.3.1:
+jquery@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 

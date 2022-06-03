@@ -23,6 +23,6 @@
     },
     "dependencies": {
         "bxslider": "^4.2.14",
-        "jquery-validation": "^1.18.0"
+        "jquery-validation": "^1.19.4"
     }
 }
