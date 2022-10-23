@@ -4,6 +4,10 @@
     {{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}
 {% endblock %}
 
+{% block robots %}
+    <meta name="robots" content="noindex,nofollow" />
+{% endblock %}
+
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
