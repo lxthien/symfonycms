@@ -6,9 +6,33 @@
             <li data-target="#myCarousel" data-slide-to="1" class=""></li>
             <li data-target="#myCarousel" data-slide-to="2" class=""></li>
             <li data-target="#myCarousel" data-slide-to="3" class=""></li>
+            <li data-target="#myCarousel" data-slide-to="4" class=""></li>
         </ol>
         <div class="carousel-inner" role="listbox">
             <div class="item active">
+                <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}">
+                    <picture>
+                        <source
+                            srcset="{{ asset('assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_768_400') }}"
+                            media="(max-width: 799px)" />
+                        <source
+                            srcset="{{ asset('assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_1360_550') }}"
+                            media="(min-width: 800px)" />
+                        <img
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                            data-src="{{ asset('assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_1360_550') }}"
+                            alt="Chuyên thi công xây nhà trọn gói tại TP HCM"
+                            class="lazyload" />
+                    </picture>
+                </a>
+                <div class="container">
+                    <div class="carousel-caption text-left">
+                        <h2 class="text-uppercase">Xây Dựng Minh Duy</h2>
+                        <p>Công ty chuyên thi công xây nhà trọn gói tại TP HCM</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
                 <picture>
                     <source
                         srcset="{{ asset('assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_768_400') }}"
