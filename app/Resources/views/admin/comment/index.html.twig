@@ -28,6 +28,7 @@
                                             <td>
                                                 <strong>{{ row.getAuthor() }}</strong><br />
                                                 <a href="mailto:{{ row.getEmail() }}"><i>{{ row.getEmail() }}</i></a><br />
+                                                <span>{{ row.getPhone() }}</span><br />
                                                 <a href="{{ path('admin_comment_edit', {id: row.id}) }}"><i>{{ row.getIp() }}</i></a>
                                             </td>
                                             <td>

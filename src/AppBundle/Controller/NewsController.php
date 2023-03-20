@@ -255,6 +255,8 @@ class NewsController extends Controller
         // Filter content to support Lazy Loading
         $contentsLazy = $this->lazyloadContent($post);
 
+        $qAs = $post->getQa();
+
         if ($post->isPage()) {
             $imagePath = $this->helper->asset($post, 'imageFile');
             $imagePath = substr($imagePath, 1);
@@ -262,6 +264,7 @@ class NewsController extends Controller
 
             return $this->render('news/page.html.twig', [
                 'post'          => $post,
+                'qAs'            => !empty($qAs) ? json_decode($qAs) : NULL,
                 'contentsLazy'  => $contentsLazy,
                 'form'          => $form->createView(),
                 'formRating'    => $formRating->createView(),
@@ -279,6 +282,7 @@ class NewsController extends Controller
 
             return $this->render('news/show.html.twig', [
                 'post'          => $post,
+                'qAs'            => !empty($qAs) ? json_decode($qAs) : NULL,
                 'contentsLazy'  => $contentsLazy,
                 'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
                 'form'          => $form->createView(),
@@ -695,6 +699,7 @@ class NewsController extends Controller
                 'attr' => array('rows' => '7')
             ))
             ->add('author', TextType::class, array('label' => 'label.author'))
+            ->add('phone', TextType::class, array('label' => 'label.phone'))
             ->add('email', EmailType::class, array('label' => 'label.author_email'))
             ->add('ip', HiddenType::class)
             ->add('news_id', HiddenType::class)
@@ -727,6 +732,7 @@ class NewsController extends Controller
             $form = $this->createFormBuilder($comment)
                 ->add('content', TextareaType::class)
                 ->add('author', TextType::class)
+                ->add('phone', TextType::class)
                 ->add('email', EmailType::class)
                 ->add('ip', HiddenType::class)
                 ->add('news_id', HiddenType::class)

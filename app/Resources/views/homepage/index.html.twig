@@ -31,23 +31,6 @@
     </script>
 {% endblock %}
 
-{% block structuredPerson %}
-    <script type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "Person",
-        "name": "Xây Dựng Minh Duy",
-        "url": "https://xaydungminhduy.com/",
-        "sameAs": [
-            "{{ get_setting('linkToFacebook') }}",
-            "{{ get_setting('linkToTwitter') }}",
-            "{{ get_setting('linkToYoutube') }}",
-            "{{ get_setting('linkToLinkedin') }}"
-        ]
-    }
-    </script>
-{% endblock %}
-
 {% block body %}
     <div class="wrapper-container">
         {{ include('news/components/listPrices.html.twig') }}

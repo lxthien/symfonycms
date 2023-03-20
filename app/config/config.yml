@@ -185,6 +185,10 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [224, 169], mode: outbound }
+        news_share_800_420:
+            quality: 100
+            filters:
+                thumbnail: { size: [800, 420], mode: outbound }
         banner_768_400:
             quality: 100
             filters:

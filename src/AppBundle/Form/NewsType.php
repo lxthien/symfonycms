@@ -80,6 +80,10 @@ class NewsType extends AbstractType
                 'label' => 'Auto Fulfill Address',
                 'attr' => ['checked' => 'checked']
             ])
+            ->add('qa', TextareaType::class, [
+                'attr' => ['rows' => '10'],
+                'label' => 'Q&A',
+            ])
         ;
     }
 

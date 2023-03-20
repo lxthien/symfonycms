@@ -138,6 +138,13 @@ class News
     private $pageKeyword = null;
 
     /**
+     * @var text
+     *
+     * @ORM\Column(name="qa", type="text")
+     */
+    private $qa;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="viewCounts", type="integer")
@@ -394,6 +401,18 @@ class News
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setQa($qa)
+    {
+        $this->qa = $qa;
+
+        return $this;
+    }
+
+    public function getQa()
+    {
+        return $this->qa;
     }
 
     public function setViewCounts($viewCounts)

@@ -1,0 +1,39 @@
+{% if qAs is not null %}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {% for qA in qAs %}
+                {
+                "@type": "Question",
+                "name": "{{ qA.question }}",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "{{ qA.answer }}"
+                }
+                }{{ loop.index == qAs|length ? '':','}}
+                {% endfor %}
+            ]
+        }
+    </script>
+    <div class="related-news">
+        <h3>Những câu hỏi thường gặp</h3>
+        <div class="row">
+            <div id="faq">
+                <ul>
+                    {% for qA in qAs %}
+                    <li>
+                        <input type="checkbox" checked>
+                        <i></i>
+                        <h2>{{ qA.question }}</h2>
+                        <p>{{ qA.answer }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+{% endif %}
