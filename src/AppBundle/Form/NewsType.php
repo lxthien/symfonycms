@@ -81,6 +81,7 @@ class NewsType extends AbstractType
                 'attr' => ['checked' => 'checked']
             ])
             ->add('qa', TextareaType::class, [
+                'required' => false,
                 'attr' => ['rows' => '10'],
                 'label' => 'Q&A',
             ])

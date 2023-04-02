@@ -44,21 +44,27 @@
                             //check if heading has id
                             if (node.hasAttribute("id")) {
                                 id = node.getText();
-                                node.setAttribute( 'id', node.getText() );
+                                node.setAttribute( 'id', node.getText().replace(/"|“|”/g, "") );
                             } else {
                                 id = text.getText().replace(/[^A-Za-z0-9\_\-]/g, "+");
-                                node.setAttribute( 'id', node.getText() );
+                                node.setAttribute( 'id', node.getText().replace(/"|“|”/g, "") );
                             }
                             //create name-attribute based on id
                             node.setAttribute( 'name', node.getText() );
                 
                             //build toc entries as divs
-                            tocItems = tocItems + '<div style="margin-left:'+level*30+'px" id="' + id.toString() + '-toc" name="tableOfContents">' + '<a href="#' + text.getText().toString() + '"><i>' + text.getText().toString() + '</i></a></div>';
+                            tocItems = tocItems + '<div style="margin-left:'+level*30+'px" id="' + id.toString().replace(/"|“|”/g, "") + '-toc" name="tableOfContents">' + '<a href="#' + text.getText().toString().replace(/"|“|”/g, "") + '"><i>' + text.getText().toString() + '</i></a></div>';
                         }
 
                         //output toc
                         var tocNode = '<div class="table-of-contents"><p name="tableOfContents" id="main-toc"><b><u>' + editor.lang.toc.ToC + '</u></b></p>' + tocItems + '<hr id="hr-toc" name="tableOfContents"/></div>';
                         editor.insertHtml(tocNode);
+
+                        // Remove element with attribute name
+                        editor.document.$.querySelectorAll('[name]').forEach(function(el){
+                            el.removeAttribute("data-cke-saved-name");
+                            el.removeAttribute("name");
+                        })
                     }
                 });
 

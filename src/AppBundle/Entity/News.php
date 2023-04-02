@@ -140,7 +140,7 @@ class News
     /**
      * @var text
      *
-     * @ORM\Column(name="qa", type="text")
+     * @ORM\Column(name="qa", type="text", nullable=true)
      */
     private $qa;
 
