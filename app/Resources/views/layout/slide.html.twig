@@ -35,6 +35,26 @@
             <div class="item">
                 <picture>
                     <source
+                        srcset="{{ asset('assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_768_400') }}"
+                        media="(max-width: 799px)" />
+                    <source
+                        srcset="{{ asset('assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_1360_550') }}"
+                        media="(min-width: 800px)" />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ asset('assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_1360_550') }}"
+                        alt="Thi công xây nhà trọn gói Quận 12"
+                        class="lazyload" />
+                </picture>
+                <div class="container">
+                    <div class="carousel-caption text-left">
+                        <h2>Thi công xây nhà trọn gói Quận 12</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <picture>
+                    <source
                         srcset="{{ asset('assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_768_400') }}"
                         media="(max-width: 799px)" />
                     <source
@@ -93,26 +113,6 @@
                 <div class="container">
                     <div class="carousel-caption text-left">
                         <h3>Công ty sửa nhà uy tín tại TPHCM</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <picture>
-                    <source
-                        srcset="{{ asset('assets/images/banner/banner-cafe-cach-coffee-1.jpg') | imagine_filter('banner_768_400') }}"
-                        media="(max-width: 799px)" />
-                    <source
-                        srcset="{{ asset('assets/images/banner/banner-cafe-cach-coffee-1.jpg') | imagine_filter('banner_1360_550') }}"
-                        media="(min-width: 800px)" />
-                    <img
-                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ asset('assets/images/banner/banner-cafe-cach-coffee-1.jpg') | imagine_filter('banner_1360_550') }}"
-                        alt="Thi công quán cafe Cách"
-                        class="lazyload" />
-                </picture>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h2>Thi công quán cafe Cách</h2>
                     </div>
                 </div>
             </div>
