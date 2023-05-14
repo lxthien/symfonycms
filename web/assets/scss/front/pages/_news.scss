@@ -692,7 +692,7 @@ ul li i:after {
 }
 
 #faq ul li i:before,
-ul li i:after {
+#faq ul li i:after {
     content: "";
     position: absolute;
     background-color: #cc071e;
@@ -723,11 +723,9 @@ ul li i:after {
 }
 
 #faq ul li input[type=checkbox]:checked~p {
-    /*margin-top: 0;*/
     max-height: 0;
     transition: .3s;
     opacity: 0;
-    /*transform: translate(0, 50%);*/
 }
 
 #faq ul li input[type=checkbox]:checked~i:before {

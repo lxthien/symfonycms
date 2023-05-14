@@ -1,13 +1,13 @@
 {% extends 'layout.html.twig' %}
 
 {% block title %}{{ 'post.archives.title'|trans({'%title%': tag.getPageTitle() is not null ? tag.getPageTitle() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}
-{% block description %}{{ tag.getPageDescription() }}{% endblock %}
+{% block description %}{{ 'post.archives.description'|trans({'%description%': tag.getPageDescription() is not null ? tag.getPageDescription() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}
 {% block keyword %}{{ tag.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': tag.getPageTitle() is not null ? tag.getPageTitle() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
-    <meta property="og:description" content="{{ tag.getPageDescription() }}" />
+    <meta property="og:description" content="{{ 'post.archives.description'|trans({'%description%': tag.getPageDescription() is not null ? tag.getPageDescription() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
 {% endblock %}
 
 {% block body %}
