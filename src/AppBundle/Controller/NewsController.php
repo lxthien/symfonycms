@@ -455,7 +455,17 @@ class NewsController extends Controller
 
             $amp_tag = '<amp-img ';
             foreach ($attributes as $attribute => $val) {
-                $amp_tag .= $attribute .'="'. $val .'" ';
+                if ($attribute == 'src') {
+                    $src = $val;
+                    if ($this->convertImages->webpFileExists($src, '')) {
+                        $src = $src . '.webp';
+                    } else {
+                        $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? '/' . $this->convertImages->webpConvert2($src, '') : $src;
+                    }
+                    $amp_tag .= $attribute .'="'. $src .'" ';
+                } else {
+                    $amp_tag .= $attribute .'="'. $val .'" ';
+                }
             }
 
             $amp_tag .= 'layout="responsive"';
