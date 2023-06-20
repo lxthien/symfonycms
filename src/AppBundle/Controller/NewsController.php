@@ -314,11 +314,7 @@ class NewsController extends Controller
 
             list($width, $height) = @getimagesize(substr($src, 1));
 
-            if ($this->convertImages->webpFileExists($src, '')) {
-                $src = $src . '.webp';
-            } else {
-                $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
-            }
+            $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
 
             $img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
             $img->setAttribute('data-src', $src);
@@ -456,12 +452,7 @@ class NewsController extends Controller
             $amp_tag = '<amp-img ';
             foreach ($attributes as $attribute => $val) {
                 if ($attribute == 'src') {
-                    $src = $val;
-                    if ($this->convertImages->webpFileExists($src, '')) {
-                        $src = $src . '.webp';
-                    } else {
-                        $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? '/' . $this->convertImages->webpConvert2($src, '') : $src;
-                    }
+                    $src = !is_bool($this->convertImages->webpConvert2($val, '')) ? '/' . $this->convertImages->webpConvert2($val, '') : $val;
                     $amp_tag .= $attribute .'="'. $src .'" ';
                 } else {
                     $amp_tag .= $attribute .'="'. $val .'" ';
