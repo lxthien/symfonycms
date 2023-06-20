@@ -3,6 +3,15 @@
         <h3>{{ 'news.news_related'|trans }}</h3>
         <div class="row">
             {% for row in relatedNews %}
+                {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
+                {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_280') %}
+                                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('news_406_280') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                {% endif %}
+
                 <div class="col-xs-12 col-sm-4 col-md-3">
                     <div class="related-wrapper">
                         <div class="related-img">
@@ -11,7 +20,7 @@
                                 height="150"
                                 class="img-thumbnail lazyload"
                                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_280') }}"
+                                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
                                 alt="{{row.getTitle()}}" >
 
                             {% if category is defined %}

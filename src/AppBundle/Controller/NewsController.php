@@ -26,21 +26,17 @@ use blackknight467\StarRatingBundle\Form\RatingType as RatingType;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue as RecaptchaTrue;
 
+use AppBundle\Utils\ConvertImages;
+
 class NewsController extends Controller
 {
-    /**
-     * @var UploaderHelper
-     */
     private $helper;
+    private $convertImages;
 
-    /**
-     * Constructs a new instance of UploaderExtension.
-     *
-     * @param UploaderHelper $helper
-     */
-    public function __construct(UploaderHelper $helper)
+    public function __construct(UploaderHelper $helper, ConvertImages $convertImages)
     {
         $this->helper = $helper;
+        $this->convertImages = $convertImages;
     }
 
     /**
@@ -317,6 +313,12 @@ class NewsController extends Controller
             $alt = $img->getAttribute('alt');
 
             list($width, $height) = @getimagesize(substr($src, 1));
+
+            if ($this->convertImages->webpFileExists($src, '')) {
+                $src = $src . '.webp';
+            } else {
+                $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
+            }
 
             $img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
             $img->setAttribute('data-src', $src);

@@ -1,21 +1,36 @@
+{% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
+{% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_290_220') %}
+{% set imagePathFilterMobile = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_382_298') %}
+{% set imagePathFilterTablet = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_224_169') %}
+                        
+{% if convert_images.fileExists(imagePath) == false %}
+    {% set imagePath = imagePath | imagine_filter('news_290_220') %}
+    {% set imagePathMobile = imagePath | imagine_filter('news_382_298') %}
+    {% set imagePathTablet = imagePath | imagine_filter('news_224_169') %}
+{% else %}
+    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+    {% set imagePathTablet = convert_images.webpConvert(imagePathFilterTablet, '', true) %}
+{% endif %}
+
 <div class="news-item">
     <div class="news-item-wrapper">
         <div class="media-thumb">
             <picture>
                 <!--[if IE 9]><video style="display: none"><![endif]-->
                 <source
-                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_382_298') }}"
+                    data-srcset="{{ imagePathMobile != false ? asset(imagePathMobile) : asset(imagePathFilterMobile) }}"
                     media="(max-width: 639px) 100vw" />
                 <source
-                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_224_169') }}"
+                    data-srcset="{{ imagePathTablet != false ? asset(imagePathTablet) : asset(imagePathFilterTablet) }}"
                     media="(min-width: 640px) and (max-width: 1023px) 50vw" />
                 <source
-                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_290_220') }}"
+                    data-srcset="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
                     media="(min-width: 1024px) 25vw" />
                 <!--[if IE 9]></video><![endif]-->
                 <img
                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_290_220') }}"
+                    data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
                     class="mr-3 img-thumbnail lazyload"
                     alt="{{row.getTitle()}}" />
             </picture>

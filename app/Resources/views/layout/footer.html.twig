@@ -59,7 +59,7 @@
         <div class="row footer-middle">
             <div class="col-12 col-md-12 col-lg-3 hidden-xs hidden-sm">
                 <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                    <img alt="{{ get_setting('siteName') }}" src="{{ asset('assets/images/logo-footer.png') }}">
+                    <img alt="{{ get_setting('siteName') }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-footer.png'), '')) }}">
                 </a>
             </div>
             <div class="col-12 col-md-12 col-lg-6">
