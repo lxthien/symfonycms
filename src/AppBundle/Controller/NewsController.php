@@ -420,8 +420,11 @@ class NewsController extends Controller
         // Filter content to support Lazy Loading
         $contentsAmp = $this->amploadContent($post);
 
+        $qAs = $post->getQa();
+
         return $this->render('amp/amp-theme/index.html.twig', [
             'post'          => $post,
+            'qAs'            => !empty($qAs) ? json_decode($qAs) : NULL,
             'contentsAmp'   => $contentsAmp,
             'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
             'category'      => !empty($category) ? $category : NULL,
