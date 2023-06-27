@@ -169,7 +169,7 @@
                         <div class="row">
                             <div class="col-md-12 title-list-news-items">
                                 <p class="text-center text-uppercase p-title-news-items">
-                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="30" height="25" />
+                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/icon-logo.png'), '')) }}" width="30" height="25" />
                                     <i class="fas fa-angle-right"></i>
                                     <a href="{{ path('news_category', {'level1': blockOnHomepage.category.getUrl() }) }}" title="{{ blockOnHomepage.category.getName() }}">{{ blockOnHomepage.category.getName() }}</a>
                                 </p>
@@ -193,7 +193,7 @@
                         <div class="row project-hot">
                             <div class="col-md-12 title-list-news-items">
                                 <p class="text-center text-uppercase p-title-news-items">
-                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="30" height="25" />
+                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/icon-logo.png'), '')) }}" width="30" height="25" />
                                     <i class="fas fa-angle-right"></i>
                                     <a href="{{ path('list_category', {'level1':'du-an', 'level2': blockOnHomepage.category.getUrl() }) }}" title="Dự án {{ blockOnHomepage.category.getName() }}">Dự án {{ blockOnHomepage.category.getName() }}</a>
                                 </p>
