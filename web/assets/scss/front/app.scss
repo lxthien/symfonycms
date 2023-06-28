@@ -4,13 +4,11 @@
 $web-font-path: 'data:text/css;base64,';
 
 @import "~bootswatch/flatly/variables";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
-@import "~bootswatch/flatly/bootswatch";
+@import "global/bootstrap";
 
 @import '~bxslider/dist/jquery.bxslider.css';
 @import '~@fancyapps/fancybox/dist/jquery.fancybox.css';
 @import '../../libs/starrating/css/rating.css';
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css');
 
 @import "global/fonts";
 @import "global/color_variables";
