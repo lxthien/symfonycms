@@ -211,14 +211,14 @@
     .rating-container {
         .rating {
             .star-empty {
-                font-family: "Font Awesome 5 Free";
+                font-family: "Font Awesome 5 Pro";
     
                 &:before {
                     content: "\F005";
                 }
             }
             .star-full {
-                font-family: "Font Awesome 5 Free";
+                font-family: "Font Awesome 5 Pro";
             }
         }
 
@@ -259,7 +259,7 @@
     .rating {
         .star,
         .star-full {
-            font-family: "Font Awesome 5 Free";
+            font-family: "Font Awesome 5 Pro";
 
             &:before {
                 content: "\F005";
