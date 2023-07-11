@@ -19,8 +19,9 @@
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
     <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
-    <meta property="og:image:width" content="{{ imageSize ? imageSize[0] : 0 }}" />
-    <meta property="og:image:height" content="{{ imageSize ? imageSize[1] : 0 }}" />
+    <meta property="og:image:alt" content="{{ post.getTitle() }}" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="420" />
 {% endblock %}
 
 {% block twitterImage %}
@@ -94,7 +95,7 @@
                     {# Rating and Share #}
                     <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
-                        {{ include('news/components/share.html.twig') }}
+                        {# {{ include('news/components/share.html.twig') }} #}
                     </div>
 
                     {# Q&A #}

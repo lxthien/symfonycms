@@ -59,7 +59,13 @@
         <div class="row footer-middle">
             <div class="col-12 col-md-12 col-lg-3 hidden-xs hidden-sm">
                 <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                    <img alt="{{ get_setting('siteName') }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-footer.png'), '')) }}" width="293" height="206">
+                    <img
+                        alt="{{ get_setting('siteName') }}"
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-footer.png'), '')) }}"
+                        width="293"
+                        height="206"
+                        class="lazyload">
                 </a>
             </div>
             <div class="col-12 col-md-12 col-lg-6">

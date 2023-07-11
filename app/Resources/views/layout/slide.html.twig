@@ -10,17 +10,28 @@
         </ol>
         <div class="carousel-inner" role="listbox">
             <div class="item active">
+                {% set imagePath = asset('/assets/images/banner/minhduy-banner-2.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_1360_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_768_400') %}
+                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
+                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+                {% endif %}
                 <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}">
                     <picture>
                         <source
-                            srcset="{{ asset('assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_768_400') }}"
+                            srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
                             media="(max-width: 799px)" />
                         <source
-                            srcset="{{ asset('assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_1360_550') }}"
+                            srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                             media="(min-width: 800px)" />
                         <img
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ asset('assets/images/banner/minhduy-banner-2.jpg') | imagine_filter('banner_1360_550') }}"
+                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                             alt="Chuyên thi công xây nhà trọn gói tại TP HCM"
                             class="lazyload" />
                     </picture>
@@ -33,16 +44,27 @@
                 </div>
             </div>
             <div class="item">
+                {% set imagePath = asset('/assets/images/banner/xaydungminhduy-banner-3.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_1360_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_768_400') %}
+                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
+                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+                {% endif %}
                 <picture>
                     <source
-                        srcset="{{ asset('assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_768_400') }}"
+                        srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
                         media="(max-width: 799px)" />
                     <source
-                        srcset="{{ asset('assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_1360_550') }}"
+                        srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                         media="(min-width: 800px)" />
                     <img
                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ asset('assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_1360_550') }}"
+                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                         alt="Thi công xây nhà trọn gói Quận 12"
                         class="lazyload" />
                 </picture>
@@ -53,16 +75,27 @@
                 </div>
             </div>
             <div class="item">
+                {% set imagePath = asset('/assets/images/banner/minhduy-banner-1.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_1360_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_768_400') %}
+                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
+                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+                {% endif %}
                 <picture>
                     <source
-                        srcset="{{ asset('assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_768_400') }}"
+                        srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
                         media="(max-width: 799px)" />
                     <source
-                        srcset="{{ asset('assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_1360_550') }}"
+                        srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                         media="(min-width: 800px)" />
                     <img
                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ asset('assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_1360_550') }}"
+                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                         alt="Công ty xây dựng uy tín, chuyên nghiệp"
                         class="lazyload" />
                 </picture>
@@ -73,17 +106,28 @@
                 </div>
             </div>
             <div class="item">
+                {% set imagePath = asset('/assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_1360_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_768_400') %}
+                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
+                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+                {% endif %}
                 <a href="{{ path('news_show', {'slug': 'thiet-ke-thi-cong-tron-goi-quan-cafe' }) }}">
                     <picture>
                         <source
-                            srcset="{{ asset('assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_768_400') }}"
+                            srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
                             media="(max-width: 799px)" />
                         <source
-                            srcset="{{ asset('assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_1360_550') }}"
+                            srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                             media="(min-width: 800px)" />
                         <img
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ asset('assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_1360_550') }}"
+                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                             alt="Xây nhà phố 3 tầng, Thầy Hạnh"
                             class="lazyload" />
                     </picture>
@@ -95,17 +139,28 @@
                 </div>
             </div>
             <div class="item">
+                {% set imagePath = asset('/assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_1360_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_768_400') %}
+                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
+                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+                {% endif %}
                 <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}">
                     <picture>
                         <source
-                            srcset="{{ asset('assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_768_400') }}"
+                            srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
                             media="(max-width: 799px)" />
                         <source
-                            srcset="{{ asset('assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_1360_550') }}"
+                            srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                             media="(min-width: 800px)" />
                         <img
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ asset('assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_1360_550') }}"
+                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
                             alt="Công ty sửa nhà uy tín tại TPHCM"
                             class="lazyload" />
                     </picture>
