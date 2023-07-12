@@ -64,13 +64,42 @@
     </head>
     <body>
         <amp-analytics config="https://www.googletagmanager.com/amp.json?id=GTM-KGN9ZTG&gtm.url=SOURCE_URL" data-credentials="include"></amp-analytics>
-        <amp-analytics type="gtag" data-credentials="include">
+        <amp-analytics type="googleanalytics" config="{{ absolute_url(asset('ga4.json')) }}" data-credentials="include">
             <script type="application/json">
             {
-                "vars" : {
-                    "gtag_id": "UA-53125909-3",
-                    "config" : {
-                        "UA-53125909-3": { "groups": "default" }
+                "vars": {
+                    "GA4_MEASUREMENT_ID": "G-4VE1NFJXGT",
+                    "GA4_ENDPOINT_HOSTNAME": "www.google-analytics.com",
+                    "DEFAULT_PAGEVIEW_ENABLED": true,
+                    "GOOGLE_CONSENT_ENABLED": false,
+                    "WEBVITALS_TRACKING": false,
+                    "PERFORMANCE_TIMING_TRACKING": false,
+                    "SEND_DOUBLECLICK_BEACON": false
+                },
+                "triggers": {
+                    "zalo": {
+                        "on": "click",
+                        "selector": ".call-zalo",
+                        "request": "ga4Event",
+                        "vars": {
+                            "ga4_event_name": "amp-zalo"
+                        }
+                    },
+                    "facebook": {
+                        "on": "click",
+                        "selector": ".call-facebook",
+                        "request": "ga4Event",
+                        "vars": {
+                            "ga4_event_name": "amp-facebook"
+                        }
+                    },
+                    "hotline": {
+                        "on": "click",
+                        "selector": ".call-now",
+                        "request": "ga4Event",
+                        "vars": {
+                            "ga4_event_name": "amp-hotline"
+                        }
                     }
                 }
             }

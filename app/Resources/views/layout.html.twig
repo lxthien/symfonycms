@@ -84,8 +84,6 @@
         {% block structuredReview %}
         {% endblock %}
 
-        {{ get_setting('googleAnalytic')|raw }}
-
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -93,6 +91,8 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-PKBMR78');</script>
         <!-- End Google Tag Manager -->
+
+        {{ get_setting('googleAnalytic')|raw }}
 
         <!-- Custom css -->
         {% block stylesheets %}
@@ -102,6 +102,10 @@
         <script src="https://kit.fontawesome.com/ff9f936e09.js" crossorigin="anonymous"></script>
     </head>
     <body>
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
         <div class="container-fluid wrapper">
             {{ include('layout/header.html.twig') }}
             {{ include('layout/menu.html.twig') }}
@@ -118,11 +122,6 @@
             {% endblock %}
 
             {{ get_setting('facebookMessenger')|raw }}
-
-            <!-- Google Tag Manager (noscript) -->
-            <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-            <!-- End Google Tag Manager (noscript) -->
         </div>
     </body>
 </html>
