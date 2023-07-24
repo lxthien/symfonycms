@@ -9,6 +9,10 @@
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
+    <meta property="og:image" content="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/xaydungminhduy-2.jpg'), '')) }}" />
+    <meta property="og:image:alt" content="{{ category.getPageTitle() }}" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="420" />
 {% endblock %}
 
 {% block body %}

@@ -8,6 +8,10 @@
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
     <meta property="og:description" content="{{ category.getPageDescription() ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
+    <meta property="og:image" content="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/xaydungminhduy-2.jpg'), '')) }}" />
+    <meta property="og:image:alt" content="{{ category.getPageTitle() }}" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="420" />
 {% endblock %}
 
 {% block body %}
