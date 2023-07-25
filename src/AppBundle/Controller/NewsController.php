@@ -301,7 +301,7 @@ class NewsController extends Controller
         // set error level
         $internalErrors = libxml_use_internal_errors(true);
 
-        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
         // Restore error level
         libxml_use_internal_errors($internalErrors);
