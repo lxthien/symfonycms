@@ -193,6 +193,17 @@ article {
     }
 
     .article-content {
+        .table-of-contents {
+            div[name="tableOfContents"] {
+                margin-bottom: 6px;
+            }
+
+            div[style="margin-left:30px"] {
+                display: list-item;
+                list-style-type: disc;
+            }
+        }
+        
         h2 {
             font-size: 28px;
             margin-bottom: 18px;
