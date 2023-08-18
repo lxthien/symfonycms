@@ -67,6 +67,10 @@ class NewsController extends Controller
         // Init breadcrum for category page
         $breadcrumbs = $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
 
+        $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
+        $orderingData = (array)(json_decode($ordering));
+        $orderingKey = array_keys($orderingData);
+
         $listCategories = array();
         
         if (empty($level2)) {
@@ -93,7 +97,7 @@ class NewsController extends Controller
                 ->andWhere('n.enable = :enable')
                 ->setParameter('listCategoriesIds', $listCategoriesIds)
                 ->setParameter('enable', 1)
-                ->orderBy('n.createdAt', 'DESC')
+                ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
 
             // No items on this page
@@ -110,7 +114,7 @@ class NewsController extends Controller
                     ->leftJoin('n.tags', 't')
                     ->where('t.id = :tags_id')
                     ->setParameter('tags_id', $tag->getId())
-                    ->orderBy('n.createdAt', 'DESC')
+                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()->getResult();
             }
         } else {
@@ -122,7 +126,7 @@ class NewsController extends Controller
                 ->andWhere('n.enable = :enable')
                 ->setParameter('newscategory_id', $subCategory->getId())
                 ->setParameter('enable', 1)
-                ->orderBy('n.createdAt', 'DESC')
+                ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
         }
 
@@ -301,7 +305,7 @@ class NewsController extends Controller
         // set error level
         $internalErrors = libxml_use_internal_errors(true);
 
-        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
 
         // Restore error level
         libxml_use_internal_errors($internalErrors);
@@ -324,7 +328,8 @@ class NewsController extends Controller
             $img->setAttribute('class', 'lazyload');
         }
         
-        return html_entity_decode($dom->saveHTML());
+        $newContent = html_entity_decode($dom->saveHTML());
+        return preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $newContent));
     }
 
     /**

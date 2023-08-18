@@ -48,6 +48,11 @@ class NewsType extends AbstractType
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '500'],
                 'label' => 'label.contents',
             ])
+            ->add('ordering', TextType::class, [
+                'required' => false,
+                'attr' => ['class' => 'ordering'],
+                'label' => 'label.ordering',
+            ])
             ->add('categoryPrimary', HiddenType::class, [
                 'required' => false
             ])

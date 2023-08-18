@@ -87,6 +87,13 @@ class NewsCategory
     private $pageKeyword = null;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="sortBy", type="string", length=255, nullable=true)
+     */
+    private $sortBy = null;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -129,22 +136,11 @@ class NewsCategory
         return $this->getName();
     }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return NewsCategory
-     */
     public function setName($name)
     {
         $this->name = $name;
@@ -152,52 +148,25 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set parentcat
-     *
-     * @param NewsCategory $parent
-     * @return NewsCategory
-     */
     public function setParentcat(\AppBundle\Entity\NewsCategory $parent = null) {
         $this->parentcat = $parent;
 
         return $this;
     }
 
-    /**
-     * Get parentcat
-     *
-     * @return NewsCategory
-     */
     public function getParentcat() {
         return $this->parentcat != null ? $this->parentcat : 'root';
     }
 
-    /**
-     * Get children
-     *
-     * @return NewsCategory
-     */
     public function getChildren() {
         return $this->children;
     }
 
-    /**
-     * Set url
-     *
-     * @param string $url
-     * @return NewsCategory
-     */
     public function setUrl($url)
     {
         $this->url = $url;
@@ -205,22 +174,11 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get url
-     *
-     * @return string
-     */
     public function getUrl()
     {
         return $this->url;
     }
 
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return NewsCategory
-     */
     public function setDescription($description)
     {
         $this->description = $description;
@@ -228,22 +186,11 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get description
-     *
-     * @return string
-     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * Set enable
-     *
-     * @param \boolean $enable
-     * @return NewsCategory
-     */
     public function setEnable($enable)
     {
         $this->enable = (bool) $enable;
@@ -251,22 +198,11 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get enable
-     *
-     * @return \boolean
-     */
     public function getEnable()
     {
         return $this->enable;
     }
 
-    /**
-     * Set pageTitle
-     *
-     * @param string $pageTitle
-     * @return NewsCategory
-     */
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $pageTitle;
@@ -274,22 +210,11 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get pageTitle
-     *
-     * @return string
-     */
     public function getPageTitle()
     {
         return $this->pageTitle;
     }
 
-    /**
-     * Set pageDescription
-     *
-     * @param string $pageDescription
-     * @return NewsCategory
-     */
     public function setPageDescription($pageDescription)
     {
         $this->pageDescription = $pageDescription;
@@ -297,22 +222,11 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get pageDescription
-     *
-     * @return string
-     */
     public function getPageDescription()
     {
         return $this->pageDescription;
     }
 
-    /**
-     * Set pageKeyword
-     *
-     * @param string $pageKeyword
-     * @return NewsCategory
-     */
     public function setPageKeyword($pageKeyword)
     {
         $this->pageKeyword = $pageKeyword;
@@ -320,22 +234,23 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get pageKeyword
-     *
-     * @return string
-     */
+    public function setSortBy($sortBy)
+    {
+        $this->sortBy = $sortBy;
+
+        return $this;
+    }
+
+    public function getSortBy()
+    {
+        return $this->sortBy;
+    }
+
     public function getPageKeyword()
     {
         return $this->pageKeyword;
     }
 
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     * @return NewsCategory
-     */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
@@ -343,22 +258,11 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
-    /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
-     * @return NewsCategory
-     */
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
@@ -366,30 +270,16 @@ class NewsCategory
         return $this;
     }
 
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
-    /**
-     * Set Author
-     * @param User $author
-     */
     public function setAuthor(User $author)
     {
         $this->author = $author;
     }
 
-    /**
-     * Get Author
-     *
-     * @return User
-     */
     public function getAuthor()
     {
         return $this->author;

@@ -37,6 +37,10 @@
         <meta name="theme-color" content="#ffffff">
 
         <title>{% block title %}{{ get_setting('pageTitle') }}{% endblock %}</title>
+        <meta name="geo.region" content="VI-VN" />
+        <meta name="geo.placename" content="Hồ Chí Minh" />
+        <meta name="geo.position" content="10.735433;106.700938" />
+        <meta name="ICBM" content="10.735433;106.700938" />
         <meta name="description" content="{% block description %}{{ get_setting('pageDescription') }}{% endblock %}">
         <meta name="keywords" content="{% block keyword %}{{ get_setting('pageKeyword') }}{% endblock %}">
         
@@ -94,12 +98,9 @@
 
         {{ get_setting('googleAnalytic')|raw }}
 
-        <!-- Custom css -->
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
-        {% endblock %}
-
         <script src="https://kit.fontawesome.com/ff9f936e09.js" crossorigin="anonymous" async defer></script>
+        <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+        <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->

@@ -69,6 +69,10 @@ class NewsController extends Controller
                 $emRating->persist($rating);
                 $emRating->flush();
 
+                // Update Ordering for post
+                $news->setOrdering( $news->getId() );
+                $this->getDoctrine()->getManager()->flush();
+
                 $this->addFlash('success', 'action.created_successfully');
 
                 if ($form->get('saveAndCreateNew')->isClicked()) {
