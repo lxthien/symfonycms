@@ -267,7 +267,7 @@ function initTypewriterEffect() {
 exports.init = function () {
     initSearchBox();
     initProjectHotSlider();
-    initNewsSlider();
+    //initNewsSlider();
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
