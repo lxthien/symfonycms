@@ -45,7 +45,7 @@
             {% endif %}
         </div>
         <div class="media-body">
-            <h5 class="mt-0 mb-1">
+            <h2 class="mt-0 mb-1">
                 {% if category is defined %}
                     <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                         <span>{{ row.getTitle() }}</span>
@@ -55,7 +55,7 @@
                         <span>{{ row.getTitle() }}</span>
                     </a>
                 {% endif %}
-            </h5>
+            </h2>
             <p>{{ row.getDescription()|slice(0, 110) }}</p>
         </div>
     </div>

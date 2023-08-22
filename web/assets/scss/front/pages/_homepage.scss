@@ -175,6 +175,22 @@
     }
 
     .row {
+        &.title_heading {
+            h1 {
+                font-size: 34px;
+                margin-bottom: 0;
+
+                @media only screen and (max-width: 768px) {
+                    margin-top: 20px;
+                }
+            }
+
+            p {
+                font-size: 18px;
+                margin-bottom: 0;
+            }
+        }
+
         .why-choose-us-title {
             padding: 30px 0;
             color: $primaryColor;
@@ -203,7 +219,7 @@
             }
     
             .media-body {
-                h2 {
+                b.media-heading {
                     font-size: 18px;
                     font-weight: 600;
                     margin-bottom: 8px;
@@ -331,7 +347,7 @@
                     padding: 10px;
                 }
 
-                h5 {
+                h2 {
                     font-size: 20px;
                     min-height: 65px;
                     margin: 0;
@@ -389,7 +405,7 @@
 }
 
 .title-list-news-items {
-    p.p-title-news-items {
+    h2.p-title-news-items {
         font-size: 35px;
         margin: 30px 0 5px;
         color: $primaryColor2;

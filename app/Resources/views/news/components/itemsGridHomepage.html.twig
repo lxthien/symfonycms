@@ -39,11 +39,11 @@
             </a>
         </div>
         <div class="media-body">
-            <h5 class="mt-0 mb-1">
+            <h2 class="mt-0 mb-1">
                 <a href="{{ path('news_show', {'slug': row.getUrl(), 'cat': blockOnHomepage.category.getUrl() }) }}" title="{{ row.getTitle() }}">
                     <span>{{ row.getTitle() }}</span>
                 </a>
-            </h5>
+            </h2>
             <p>{{ row.getDescription()|slice(0, 110) }}</p>
         </div>
     </div>

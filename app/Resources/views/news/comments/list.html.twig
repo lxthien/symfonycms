@@ -16,7 +16,7 @@
                             height="65" />
                     </div>
                     <div class="media-body">
-                        <h5 class="mt-0">{{ comment.getAuthor() }}</h5>
+                        <b class="mt-0">{{ comment.getAuthor() }}</b>
                         <div class="comment-container">{{ comment.getContent()|raw }}</div>
                         <a class="comment-reply-link" id="comment-reply" href="#" data-post-id="{{ comment.getId() }}">{{ 'comment.reply'|trans }}</a>
                         <ul class="media-list">
@@ -33,7 +33,7 @@
                                             height="65" />
                                     </div>
                                     <div class="media-body">
-                                        <h5 class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</h5>
+                                        <b class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</b>
                                         <div class="comment-container">{{ replyComment.getContent()|raw }}</div>
                                     </div>
                                 </li>
