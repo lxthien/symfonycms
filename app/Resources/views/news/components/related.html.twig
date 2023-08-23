@@ -33,6 +33,7 @@
                                 </a>
                             {% endif %}
                         </div>
+                        <h2>
                         {% if category is defined %}
                             <a class="related-title text-center" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                 <span>{{ row.getTitle() }}</span>
@@ -42,6 +43,7 @@
                                 <span>{{ row.getTitle() }}</span>
                             </a>
                         {% endif %}
+                        </h2>
                         <p>{{ row.getDescription()|slice(0, 85) }}</p>
                     </div>
                 </div>

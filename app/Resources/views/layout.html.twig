@@ -100,7 +100,9 @@
 
         <script src="https://kit.fontawesome.com/ff9f936e09.js" crossorigin="anonymous" async defer></script>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+        <link href="{{ asset('build/css/new.css?v=') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
         <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
+        <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" ></noscript>
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->

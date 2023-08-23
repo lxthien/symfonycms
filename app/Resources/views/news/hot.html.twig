@@ -14,6 +14,7 @@
                     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                 {% endif %}
                 <div class="item">
+                    <h2>
                     <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
                         <img
                             class="lazyload"
@@ -24,6 +25,7 @@
                             height="50" />
                         <span>{{ row.getTitle() }}</span>
                     </a>
+                    </h2>
                 </div>
             {% endfor %}
         </div>
