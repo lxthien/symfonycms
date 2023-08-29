@@ -51,6 +51,12 @@
                     <div class="alert alert-success" role="alert">
                         {{ message }}
                     </div>
+                    <script>
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            'event': 'subscriber'
+                        });
+                    </script>
                 {% endfor %}
 
                 {{ form_start(form) }}

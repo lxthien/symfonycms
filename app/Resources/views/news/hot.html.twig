@@ -15,16 +15,16 @@
                 {% endif %}
                 <div class="item">
                     <h2>
-                    <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
-                        <img
-                            class="lazyload"
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-                            alt="{{ row.getTitle() }}"
-                            width="70"
-                            height="50" />
-                        <span>{{ row.getTitle() }}</span>
-                    </a>
+                        <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
+                            <img
+                                class="lazyload"
+                                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                                alt="{{ row.getTitle() }}"
+                                width="70"
+                                height="50" />
+                            <span>{{ row.getTitle() }}</span>
+                        </a>
                     </h2>
                 </div>
             {% endfor %}

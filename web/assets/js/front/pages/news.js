@@ -3,6 +3,8 @@
 require('jquery-validation');
 
 function intHandleFormComment() {
+    window.dataLayer = window.dataLayer || [];
+    
     var $formComment = $('#form-comment');
 
     $formComment.on('click', '#form_send', function(e) {
@@ -15,6 +17,10 @@ function intHandleFormComment() {
                     var response = JSON.parse(data);
                     if (response.status === 'success') {
                         $('p#comment-response').html(response.message);
+
+                        window.dataLayer.push({
+                            'event': 'subscriber'
+                        });
     
                         // Clear form comment
                         $formComment[0].reset();
