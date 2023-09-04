@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}{{ get_setting('pageTitle') }}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{{ get_setting('pageDescription') }}{% endblock %}">
+        <meta name="keywords" content="{% block keyword %}{{ get_setting('pageKeyword') }}{% endblock %}">
+
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- dns prefetch -->
@@ -35,15 +39,11 @@
         <link rel="manifest" href="/site.webmanifest">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
-
-        <title>{% block title %}{{ get_setting('pageTitle') }}{% endblock %}</title>
+        
         <meta name="geo.region" content="VI-VN" />
-        <meta name="geo.placename" content="Hồ Chí Minh" />
+        <meta name="geo.placename" content="Ho Chi Minh, Viet Nam" />
         <meta name="geo.position" content="10.735433;106.700938" />
         <meta name="ICBM" content="10.735433;106.700938" />
-        <meta name="description" content="{% block description %}{{ get_setting('pageDescription') }}{% endblock %}">
-        <meta name="keywords" content="{% block keyword %}{{ get_setting('pageKeyword') }}{% endblock %}">
-        
         <meta name="robots" content="index, follow" />
         <meta name="revisit-after" content="1 days">
         <meta http-equiv="content-language" content="vi">

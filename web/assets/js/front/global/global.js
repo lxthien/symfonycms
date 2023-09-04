@@ -90,22 +90,19 @@ function initFixedMenu() {
 function initFixedSidebar() {
     $(window).scroll(function() {
         var $sidebar = $("#sidebar .sidebar"),
-            $pageDetail = $('.wrapper-post-container'),
             $pageDetailLeft = $('.wrapper-post-container-left'),
             scrollTop = $(this).scrollTop(),
-            pageDetailHeight =  $pageDetail.outerHeight(),
             pageDetailLeftHeight =  $pageDetailLeft.outerHeight(),
             sidebarHeight = $sidebar.height(),
-            parentSidebarWidth = $sidebar.parent('.col-md-12').width(),
-            positionFixedMax = pageDetailHeight - sidebarHeight,
-            positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop ;
+            positionFixedMax = pageDetailLeftHeight - sidebarHeight,
+            positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 290;
         
         if (pageDetailLeftHeight > sidebarHeight) {
             if (scrollTop > 220) {
                 $sidebar.css({
                     'top': positionFixed,
                     'position': 'fixed',
-                    'width': parentSidebarWidth
+                    'width': $sidebar.width()
                 });
             } else {
                 $sidebar.removeAttr("style");
@@ -271,6 +268,7 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
+    initFixedSidebar();
     initCostConstruction();
     initFancybox();
     initTypewriterEffect();
