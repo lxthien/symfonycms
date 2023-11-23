@@ -96,7 +96,7 @@ class Builder implements ContainerAwareInterface
         ->setLinkAttribute('data-toggle', 'dropdown')
         ->setChildrenAttribute('class', 'dropdown-menu');
 
-        $menu['Xây dựng']->addChild('Xây nhà phố', [
+        $menu['Xây dựng']->addChild('Xây dựng nhà phố', [
             'route' => 'news_category',
             'routeParameters' => ['level1' => 'xay-dung']
         ]);

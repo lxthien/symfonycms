@@ -62,25 +62,26 @@
                     <meta itemscope itemprop="mainEntityOfPage" itemType="https://schema.org/WebPage" itemid="{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}"/>
                     <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                         <meta itemprop="name" content="{{ get_setting('siteName') }}"/>
+                        <meta itemprop="url" content="https://xaydungminhduy.business.site/"/>
                     </div>
                     <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                        <meta itemprop="url" content="{{ (vich_uploader_asset(post, 'imageFile') ? app.request.getUriForPath(vich_uploader_asset(post, 'imageFile')) : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_382_285') }}">
-                        <meta itemprop="width" content="382">
-                        <meta itemprop="height" content="285">
+                        <meta itemprop="url" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}">
+                        <meta itemprop="width" content="800">
+                        <meta itemprop="height" content="420">
                     </div>
                     <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
                         <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-                            <meta itemprop="url" content="{{ absolute_url(asset('assets/images/SuaNhaMinhDuy.png')) }}">
-                            <meta itemprop="width" content="376">
-                            <meta itemprop="height" content="218">
+                            <meta itemprop="url" content="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}">
+                            <meta itemprop="width" content="308">
+                            <meta itemprop="height" content="62">
                         </div>
                         <meta itemprop="name" content="{{ get_setting('siteName') }}">
                     </div>
-                    <meta itemprop="datePublished" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") }}"/>
-                    <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") }}"/>
+                    <meta itemprop="datePublished" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+                    <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
                     {# End google snippet #}
 
-                    <h1 class="entry-title block-title" itemprop="headline">{{ post.getTitle() }}</h1>
+                    <h1 class="entry-title block-title" itemprop="headline"><a href="#">{{ post.getTitle()|upper }}</a></h1>
                     
                     <div class="news-container" itemprop="articleBody">
                         {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}

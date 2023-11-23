@@ -2,39 +2,11 @@
 <html ⚡ lang="{{ app.request.locale }}">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+        <link rel="canonical" href="{{ url('news_show', { slug: post.getUrl() }) }}">
         <title>{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}</title>
         <meta name="description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}">
         <meta name="keywords" content="{{ post.getPageKeyword() }}">
-        <link rel="canonical" href="{{ url('news_show', { slug: post.getUrl() }) }}">
-        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-        <script type="application/ld+json">
-        {
-            "@context": "http://schema.org",
-            "@type": "NewsArticle",
-            "mainEntityOfPage": {
-                "@type": "WebPage",
-                "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}"
-            },
-            "headline": "{{ post.getTitle() }}",
-            "datePublished": "{{ post.getCreatedAt()|date("Y-m-d h:m:s") }}",
-            "dateModified": "{{ post.getUpdatedAt()|date("Y-m-d h:m:s") }}",
-            "image": [
-                "{{ (vich_uploader_asset(post, 'imageFile') ? app.request.getUriForPath(vich_uploader_asset(post, 'imageFile')) : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_382_285') }}"
-            ],
-            "author": {
-                "@type": "Person",
-                "name": "{{ get_setting('siteName') }}"
-            },
-            "publisher": {
-                "@type": "Organization",
-                "name": "{{ get_setting('siteName') }}",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "{{ absolute_url(asset('assets/images/logo.png')) }}"
-                }
-            }
-        }
-        </script>
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org/",
@@ -171,19 +143,44 @@
 
             {{ include('news/components/breadcrumbs.html.twig') }}
 
-            <article role="article">
-                <h1>{{ post.title }}</h1>
-                <div class="article-content">
+            <article role="article" itemscope itemtype="http://schema.org/Article">
+                {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
+                {% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
+
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('news_share_800_420') %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                {% endif %}
+
+                <meta itemscope itemprop="mainEntityOfPage" itemType="https://schema.org/WebPage" itemid="{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}"/>
+                <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <meta itemprop="name" content="{{ get_setting('siteName') }}"/>
+                    <meta itemprop="url" content="https://xaydungminhduy.business.site/"/>
+                </div>
+                <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                    <meta itemprop="url" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}">
+                    <meta itemprop="width" content="800">
+                    <meta itemprop="height" content="420">
+                </div>
+                <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+                    <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+                        <meta itemprop="url" content="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}">
+                        <meta itemprop="width" content="308">
+                        <meta itemprop="height" content="62">
+                    </div>
+                    <meta itemprop="name" content="{{ get_setting('siteName') }}">
+                </div>
+                <meta itemprop="datePublished" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+                <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+
+                <h1 itemprop="headline">{{ post.title }}</h1>
+                <div class="article-content" itemprop="articleBody">
                     {{ contentsAmp|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
                 </div>
 
                 {# List tags #}
                 {{ include('amp/amp-theme/tags.html.twig') }}
-
-                {# Rating and Share #}
-                {# <div class="rating-share-container">
-                    {{ include('amp/amp-theme/share.html.twig') }}
-                </div> #}
 
                 {# Q&A #}
                 {{ include('news/components/qa.html.twig') }}
@@ -298,116 +295,158 @@
                             </span>
                             <div class="event-footer row">
                                 <div class="col-12 col-sm-12 col-md-12">
-                                    <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                                        <meta content="➊ Sửa nhà trọn gói" itemprop="name">
-                                        <meta content="➊ Sửa nhà trọn gói" itemprop="description">
+                                    <div class="event-footer-item">
                                         <h6>
-                                            <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}" itemprop="url">
+                                            <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}">
                                                 <span>➊ Sửa nhà trọn gói</span>
                                             </a>
                                         </h6>
-                                        <meta content="2023-01-01T4:00-05:00" itemprop="startDate">
-                                        <meta content="2026-01-01T4:00-05:00" itemprop="endDate">
-                                        <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
-                                        <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
-                                        <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
-                                        <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                            <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
-                                            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                                <meta content="A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7" itemprop="streetAddress">
-                                                <meta content="Ho Chi Minh" itemprop="addressLocality">
-                                                <meta content="VN" itemprop="addressRegion">
-                                                <meta content="70000" itemprop="postalCode">
-                                            </div>
-                                        </div>
-                                        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                            <meta content="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}" itemprop="url">
-                                            <meta content="0" itemprop="price">
-                                            <meta content="VND" itemprop="priceCurrency">
-                                            <meta content="https://schema.org/InStock" itemprop="availability">
-                                            <meta content="2023-01-01T4:00" itemprop="validFrom">
-                                        </div>
-                                        <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
-                                            <meta content="Xây Dựng Minh Duy" itemprop="name">
-                                        </div>
-                                        <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
-                                            <meta content="Xây Dựng Minh Duy" itemprop="name">
-                                            <meta content="https://xaydungminhduy.com/" itemprop="url">
-                                        </div>
+                                        <script type="application/ld+json">
+                                        {
+                                            "@context": "https://schema.org",
+                                            "@type": "Event",
+                                            "name": "➊ Sửa nhà trọn gói",
+                                            "startDate": "2023-01-01T4:00-05:00",
+                                            "endDate": "2026-01-01T4:00-05:00",
+                                            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                            "eventStatus": "https://schema.org/EventScheduled",
+                                            "location": {
+                                                "@type": "Place",
+                                                "name": "☎️ Báo Giá 0982.96.93.79",
+                                                "address": {
+                                                    "@type": "PostalAddress",
+                                                    "streetAddress": "A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7",
+                                                    "addressLocality": "Ho Chi Minh",
+                                                    "postalCode": "700000",
+                                                    "addressRegion": "VN",
+                                                    "addressCountry": "VN"
+                                                }
+                                            },
+                                            "image": [
+                                                "{{ asset('assets/images/logo.png') }}"
+                                            ],
+                                            "description": "➊ Sửa nhà trọn gói",
+                                            "offers": {
+                                                "@type": "Offer",
+                                                "url": "{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}",
+                                                "price": "0",
+                                                "priceCurrency": "VND",
+                                                "availability": "https://schema.org/InStock",
+                                                "validFrom": "2023-01-01T4:00"
+                                            },
+                                            "performer": {
+                                                "@type": "PerformingGroup",
+                                                "name": "Xây Dựng Minh Duy"
+                                            },
+                                            "organizer": {
+                                                "@type": "Organization",
+                                                "name": "Xây Dựng Minh Duy",
+                                                "url": "https://xaydungminhduy.com/"
+                                            }
+                                        }
+                                    </script>
                                     </div>
-                                    <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                                        <meta content="➋ Xây nhà trọn gói" itemprop="name">
-                                        <meta content="➋ Xây nhà trọn gói" itemprop="description">
+                                    <div class="event-footer-item">
                                         <h6>
-                                            <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}" itemprop="url">
+                                            <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}">
                                                 <span>➋ Xây nhà trọn gói</span>
                                             </a>
                                         </h6>
-                                        <meta content="2023-02-02T5:00-05:00" itemprop="startDate">
-                                        <meta content="2026-02-02T5:00-05:00" itemprop="endDate">
-                                        <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
-                                        <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
-                                        <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
-                                        <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                            <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
-                                            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                                <meta content="A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7" itemprop="streetAddress">
-                                                <meta content="Ho Chi Minh" itemprop="addressLocality">
-                                                <meta content="VN" itemprop="addressRegion">
-                                                <meta content="70000" itemprop="postalCode">
-                                            </div>
-                                        </div>
-                                        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                            <meta content="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}" itemprop="url">
-                                            <meta content="4300000" itemprop="price">
-                                            <meta content="VND" itemprop="priceCurrency">
-                                            <meta content="https://schema.org/InStock" itemprop="availability">
-                                            <meta content="2023-02-02T5:00" itemprop="validFrom">
-                                        </div>
-                                        <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
-                                            <meta content="Xây Dựng Minh Duy" itemprop="name">
-                                        </div>
-                                        <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
-                                            <meta content="Xây Dựng Minh Duy" itemprop="name">
-                                            <meta content="https://xaydungminhduy.com/" itemprop="url">
-                                        </div>
+                                        <script type="application/ld+json">
+                                        {
+                                            "@context": "https://schema.org",
+                                            "@type": "Event",
+                                            "name": "➋ Xây nhà trọn gói",
+                                            "startDate": "2023-02-02T5:00-05:00",
+                                            "endDate": "2026-02-02T5:00-05:00",
+                                            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                            "eventStatus": "https://schema.org/EventScheduled",
+                                            "location": {
+                                                "@type": "Place",
+                                                "name": "☎️ Báo Giá 0982.96.93.79",
+                                                "address": {
+                                                    "@type": "PostalAddress",
+                                                    "streetAddress": "A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7",
+                                                    "addressLocality": "Ho Chi Minh",
+                                                    "postalCode": "700000",
+                                                    "addressRegion": "VN",
+                                                    "addressCountry": "VN"
+                                                }
+                                            },
+                                            "image": [
+                                                "{{ asset('assets/images/logo.png') }}"
+                                            ],
+                                            "description": "➋ Xây nhà trọn gói",
+                                            "offers": {
+                                                "@type": "Offer",
+                                                "url": "{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}",
+                                                "price": "4500000",
+                                                "priceCurrency": "VND",
+                                                "availability": "https://schema.org/InStock",
+                                                "validFrom": "2023-02-02T5:00"
+                                            },
+                                            "performer": {
+                                                "@type": "PerformingGroup",
+                                                "name": "Xây Dựng Minh Duy"
+                                            },
+                                            "organizer": {
+                                                "@type": "Organization",
+                                                "name": "Xây Dựng Minh Duy",
+                                                "url": "https://xaydungminhduy.com/"
+                                            }
+                                        }
+                                    </script>
                                     </div>
-                                    <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                                        <meta content="➌ Thi công quán cafe" itemprop="name">
-                                        <meta content="➌ Thi công quán cafe" itemprop="description">
+                                    <div class="event-footer-item">
                                         <h6>
-                                            <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}" itemprop="url">
+                                            <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}">
                                                 <span>➌ Thi công quán cafe</span>
                                             </a>
                                         </h6>
-                                        <meta content="2023-03-03T6:00-05:00" itemprop="startDate">
-                                        <meta content="2026-03-03T6:00-05:00" itemprop="endDate">
-                                        <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
-                                        <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
-                                        <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
-                                        <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                            <meta content="☎️ Báo Giá 0982.96.93.79" itemprop="name">
-                                            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                                <meta content="A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7" itemprop="streetAddress">
-                                                <meta content="Ho Chi Minh" itemprop="addressLocality">
-                                                <meta content="VN" itemprop="addressRegion">
-                                                <meta content="70000" itemprop="postalCode">
-                                            </div>
-                                        </div>
-                                        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                            <meta content="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}" itemprop="url">
-                                            <meta content="4300000" itemprop="price">
-                                            <meta content="VND" itemprop="priceCurrency">
-                                            <meta content="https://schema.org/InStock" itemprop="availability">
-                                            <meta content="2023-03-03T6:00" itemprop="validFrom">
-                                        </div>
-                                        <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
-                                            <meta content="Xây Dựng Minh Duy" itemprop="name">
-                                        </div>
-                                        <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
-                                            <meta content="Xây Dựng Minh Duy" itemprop="name">
-                                            <meta content="https://xaydungminhduy.com/" itemprop="url">
-                                        </div>
+                                        <script type="application/ld+json">
+                                        {
+                                            "@context": "https://schema.org",
+                                            "@type": "Event",
+                                            "name": "➌ Thi công quán cafe",
+                                            "startDate": "2023-03-03T6:00-05:00",
+                                            "endDate": "2026-03-03T6:00-05:00",
+                                            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                            "eventStatus": "https://schema.org/EventScheduled",
+                                            "location": {
+                                                "@type": "Place",
+                                                "name": "☎️ Báo Giá 0982.96.93.79",
+                                                "address": {
+                                                    "@type": "PostalAddress",
+                                                    "streetAddress": "A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7",
+                                                    "addressLocality": "Ho Chi Minh",
+                                                    "postalCode": "700000",
+                                                    "addressRegion": "VN",
+                                                    "addressCountry": "VN"
+                                                }
+                                            },
+                                            "image": [
+                                                "{{ asset('assets/images/logo.png') }}"
+                                            ],
+                                            "description": "➌ Thi công quán cafe",
+                                            "offers": {
+                                                "@type": "Offer",
+                                                "url": "{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}",
+                                                "price": "4500000",
+                                                "priceCurrency": "VND",
+                                                "availability": "https://schema.org/InStock",
+                                                "validFrom": "2023-03-03T6:00"
+                                            },
+                                            "performer": {
+                                                "@type": "PerformingGroup",
+                                                "name": "Xây Dựng Minh Duy"
+                                            },
+                                            "organizer": {
+                                                "@type": "Organization",
+                                                "name": "Xây Dựng Minh Duy",
+                                                "url": "https://xaydungminhduy.com/"
+                                            }
+                                        }
+                                        </script>
                                     </div>
                                 </div>
                             </div>
