@@ -60,7 +60,7 @@
             <meta property="og:description" content="{{ block('description') }}" />
         {% endblock %}
         {% if app.request.attributes.get('_route') is not null %}
-            <meta property="og:url" content="{{ app.request.uri }}" />
+            <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
         {% endif %}
         <meta property="og:site_name" content="{{ get_setting('siteName') }}" />
         <meta property="fb:app_id" content="1384538691837107" />
