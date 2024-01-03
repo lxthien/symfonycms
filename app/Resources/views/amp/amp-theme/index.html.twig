@@ -185,8 +185,9 @@
                 {# Q&A #}
                 {{ include('news/components/qa.html.twig') }}
 
-                {# List comments #}
+                {% if post.getTemplate() != '1_column' %}
                 {{ include('amp/amp-theme/related.html.twig') }}
+                {% endif %}
 
                 {# List comments #}
                 {{ include('amp/amp-theme/list.html.twig') }}

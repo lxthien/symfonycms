@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -84,6 +85,12 @@ class NewsType extends AbstractType
                 'required' => false,
                 'label' => 'Auto Fulfill Address',
                 'attr' => ['checked' => 'checked']
+            ])
+            ->add('template', ChoiceType::class, [
+                'required' => false,
+                'label' => 'Template',
+                'choices' => ['Mặc định' => '2_columns', '1 Column' => '1_column'],
+                'empty_data' => '1_column'
             ])
             ->add('qa', TextareaType::class, [
                 'required' => false,

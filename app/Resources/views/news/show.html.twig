@@ -18,6 +18,9 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
+    <meta property="article:author" content="admin" />
+    <meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
+    <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
     <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
     <meta property="og:image:alt" content="{{ post.getTitle() }}" />
     <meta property="og:image:width" content="800" />
@@ -50,10 +53,11 @@
         {{ include('news/components/listPrices.html.twig', {hasContainer:false}) }}
 
         <div class="row post-container">
-            {# Side bar #}
+            {% if post.getTemplate() != '1_column' %}
             {{ include('layout/sidebar.html.twig') }}
+            {% endif %}
 
-            <div class="col-12 col-md-12 col-lg-9 wrapper-post-container-left">
+            <div class="col-12 col-md-12 {{ post.getTemplate() != '1_column' ? 'col-lg-9' : 'col-lg-12' }} wrapper-post-container-left">
                 {# breadcrumbs #}
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
@@ -102,8 +106,10 @@
                     {# Q&A #}
                     {{ include('news/components/qa.html.twig') }}
 
+                    {% if post.getTemplate() != '1_column' %}
                     {# Related news #}
                     {{ include('news/components/related.html.twig') }}
+                    {% endif %}
                     
                     {# List comments #}
                     {{ include('news/comments/list.html.twig') }}
@@ -112,7 +118,7 @@
                     {{ include('news/comments/form.html.twig') }}
                 </article>
             </div>
-
+            {% if post.getTemplate() != '1_column' %}
             <div class="col-12 col-md-12">
                 {{ render(controller(
                     'AppBundle:News:listNewsByCategory', { 'categoryId':11, 'description':'Tổng hợp các dự án xây nhà phố, biệt thự, nhà tiền chế, nhà cấp 4, ... nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
@@ -124,6 +130,7 @@
                     'AppBundle:News:listNewsByCategory', { 'categoryId':12, 'description':'Tổng hợp các dự án xây dựng, thiết kế, trang trí quán cafe, trà sữa nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
                 )) }}
             </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -159,6 +159,13 @@ class News
     private $ordering = null;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="template", type="string", length=255, nullable=true)
+     */
+    private $template = null;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="categoryPrimary", type="integer")
@@ -444,6 +451,18 @@ class News
     public function getOrdering()
     {
         return $this->ordering;
+    }
+
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    public function getTemplate()
+    {
+        return $this->template;
     }
 
     public function setCategoryPrimary($categoryPrimary)
