@@ -14,7 +14,6 @@
 {% endif %}
 
 {% block structuredOpenGraph %}
-    <link rel="amphtml" href="{{ url('amp_show', { slug: post.getUrl() }) }}">
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
@@ -85,7 +84,7 @@
                     <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
                     {# End google snippet #}
 
-                    <h1 class="entry-title block-title" itemprop="headline"><a href="#">{{ post.getTitle()|upper }}</a></h1>
+                    <h1 class="entry-title block-title" itemprop="headline">{{ post.getTitle() }}</h1>
                     
                     <div class="news-container" itemprop="articleBody">
                         {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
