@@ -63,7 +63,7 @@
             <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
         {% endif %}
         <meta property="og:site_name" content="{{ get_setting('siteName') }}" />
-        <meta property="fb:app_id" content="1384538691837107" />
+        <meta property="fb:app_id" content="224509460707857" />
         <!-- Open Graph data -->
 
         <!-- Twitter Card data -->
@@ -89,16 +89,39 @@
         {% endblock %}
 
         <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PKBMR78');</script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => { /** init gtm after 3500 seconds - this could be adjusted */
+                setTimeout(initGTM, 3500);
+            });
+            document.addEventListener('scroll', initGTMOnEvent);
+            document.addEventListener('mousemove', initGTMOnEvent);
+            document.addEventListener('touchstart', initGTMOnEvent);
+
+            function initGTMOnEvent(event) {
+                initGTM();
+                event.currentTarget.removeEventListener(event.type, initGTMOnEvent); // remove the event listener that got triggered
+            }
+            
+            function initGTM() {
+                if (window.gtmDidInit) {
+                    return false;
+                }
+                window.gtmDidInit = true; // flag to ensure script does not get added to DOM more than once.
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                // ensure PageViews is always tracked (on script load)
+                script.onload = () => {
+                    dataLayer.push({event: 'gtm.js', 'gtm.start': new Date().getTime(), 'gtm.uniqueEventId': 0});
+                };
+                script.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-PKBMR78';
+                document.head.appendChild(script);
+            }
+        </script>
         <!-- End Google Tag Manager -->
 
         {{ get_setting('googleAnalytic')|raw }}
 
-        <script src="https://kit.fontawesome.com/ff9f936e09.js" crossorigin="anonymous" async defer></script>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
         <link href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
         <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>

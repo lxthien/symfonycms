@@ -17,7 +17,11 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
+    <meta property="article:author" content="admin" />
+    <meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
+    <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
     <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+    <meta property="og:image:alt" content="{{ post.getTitle() }}" />
     <meta property="og:image:width" content="800" />
     <meta property="og:image:height" content="420" />
 {% endblock %}
@@ -51,47 +55,23 @@
                 {# breadcrumbs #}
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
-                <article id="post-{{ post.getId() }}" class="news hentry" itemscope itemtype="http://schema.org/Article">
-                    {# Begin google snippet #}
-                    <meta itemscope itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" itemid="{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}"/>
-                    <div itemprop="author" itemscope itemtype="https://schema.org/Person">
-                        <meta itemprop="name" content="{{ get_setting('siteName') }}"/>
-                        <meta itemprop="url" content="https://xaydungminhduy.business.site/"/>
-                    </div>
-                    <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-                        <meta itemprop="url" content="{{ (vich_uploader_asset(post, 'imageFile') ? app.request.getUriForPath(vich_uploader_asset(post, 'imageFile')) : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_382_285') }}">
-                        <meta itemprop="width" content="382">
-                        <meta itemprop="height" content="285">
-                    </div>
-                    <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
-                        <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-                            <meta itemprop="url" content="{{ absolute_url(asset('assets/images/SuaNhaMinhDuy.png')) }}">
-                            <meta itemprop="width" content="376">
-                            <meta itemprop="height" content="218">
-                        </div>
-                        <meta itemprop="name" content="{{ get_setting('siteName') }}">
-                    </div>
-                    <meta itemprop="datePublished" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") }}"/>
-                    <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") }}"/>
-                    {# End google snippet #}
-
-                    <h1 class="entry-title block-title" itemprop="headline">{{ post.getTitle() }}</h1>
+                <article id="post-{{ post.getId() }}" class="news">
+                    <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
                     
-                    <div class="news-container" itemprop="articleBody">
+                    <div class="news-container">
                         {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
                     </div>
 
                     {# Rating and Share #}
                     <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
-                        {# {{ include('news/components/share.html.twig') }} #}
                     </div>
 
                     {# List comments #}
-                    {{ include('news/comments/list.html.twig') }}
+                    {# {{ include('news/comments/list.html.twig') }} #}
                     
                     {# Render form comment #}
-                    {{ include('news/comments/form.html.twig') }}
+                    {# {{ include('news/comments/form.html.twig') }} #}
                 </article>
             </div>
 
