@@ -9,27 +9,27 @@
                 <div class="skew-divider"></div>
                 <div class="header-social-wrapper">
                     <span class="text-left">
-                        <i class="fa fa-phone"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/phone.png'), '')) }}" alt="Liên hệ Xây Dựng Minh Duy" width="14" height="14" />
                         <a href="tel:{{ get_setting('hotLine2') }}">{{ get_setting('hotLine1') }}</a>
                     </span>
                     <span class="text-left">
-                        <i class="fa fa-envelope-o"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/email.png'), '')) }}" alt="Liên hệ Xây Dựng Minh Duy" width="14" height="14" />
                         <a href="mailto:{{ get_setting('emailContact') }}">{{ get_setting('emailContact') }}</a>
                     </span>
                     <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Minh Duy trên Facebook" rel="nofollow noreferrer">
-                        <i class="fab fa-facebook"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/facebook.png'), '')) }}" alt="Xây Dựng Minh Duy trên Facebook" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Xây Dựng Minh Duy trên Twitter" rel="nofollow noreferrer">
-                        <i class="fab fa-twitter"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/twitterx.png'), '')) }}" alt="Xây Dựng Minh Duy trên Twitter" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Xây Dựng Minh Duy trên Youtube" rel="nofollow noreferrer">
-                        <i class="fab fa-youtube"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/youtube.png'), '')) }}" alt="Xây Dựng Minh Duy trên Youtube" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Xây Dựng Minh Duy trên Linkedin" rel="nofollow noreferrer">
-                        <i class="fab fa-linkedin"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/linkedin.png'), '')) }}" alt="Xây Dựng Minh Duy trên Linkedin" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToGooglePlus') }}" title="Xây Dựng Minh Duy trên Google Plus" rel="nofollow noreferrer">
-                        <i class="fab fa-google-plus"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/pinterest.png'), '')) }}" alt="Xây Dựng Minh Duy trên Pinterest" width="20" height="20" />
                     </a>
                 </div>
             </div>
@@ -60,7 +60,9 @@
                 <div class="info-top hotline-top">
                     <div class="wp90 pull-right">
                         <div class="info-nd">
-                            <p class="tel text-uppercase"><i class="fas fa-mobile-alt"></i> <a href="tel:{{ get_setting('hotLine2') }}">{{ get_setting('hotLine1') }}</a></p>
+                            <p class="tel text-uppercase">
+                                <a href="tel:{{ get_setting('hotLine2') }}"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/iphone.png'), '')) }}" alt="Liên hệ Xây Dựng Minh Duy" width="20" height="20" /> {{ get_setting('hotLine1') }}</a>
+                            </p>
                         </div>
                     </div>
                 </div>

@@ -127,7 +127,7 @@
         }
 
         .wp90 {
-            width: 90%;
+            width: 91%;
             float: left;
 
             .info-nd {
@@ -158,6 +158,10 @@
                     a {
                         &:hover {
                             text-decoration: none;
+                        }
+
+                        img {
+                            margin-top: -3px;
                         }
                     }
                 }
