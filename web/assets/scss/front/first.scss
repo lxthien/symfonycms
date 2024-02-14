@@ -1,7 +1,9 @@
 #nav {
-    overflow: hidden;
-
     @media only screen and (min-width: 979.98px) {
         max-height: 47px;
     }
+}
+
+.breadcrumb>li+li:before {
+    content: "/\A0";
 }

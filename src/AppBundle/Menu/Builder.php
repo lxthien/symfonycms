@@ -22,7 +22,8 @@ class Builder implements ContainerAwareInterface
             'route' => 'homepage',
             'extras' => ['safe_label' => true]
         ])
-        ->setLinkAttribute('class', 'home');
+        ->setLinkAttribute('class', 'home')
+        ->setLinkAttribute('aria-label', 'Xây Dựng Minh Duy');
 
         $menu->addChild('Giới thiệu', [
             'route' => 'news_show',
