@@ -4,7 +4,7 @@ namespace AppBundle\Utils;
 
 class ConvertImages
 {
-    public function webpConvert2($file, $prifexPath, $filter = false, $compression_quality = 80)
+    public function webpConvert2($file, $prifexPath, $filter = false, $compression_quality = 75)
     {
         if ($filter) {
             $strpos = strpos($file, 'media/cache');
@@ -87,7 +87,7 @@ class ConvertImages
         return false;
     }
 
-    public function webpConvert($file, $prifexPath, $filter = false, $compression_quality = 80)
+    public function webpConvert($file, $prifexPath, $filter = false, $compression_quality = 75)
     {
         if ($filter) {
             $strpos = strpos($file, 'media/cache');

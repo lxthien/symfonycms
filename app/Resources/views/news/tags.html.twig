@@ -14,6 +14,10 @@
     <meta property="og:image:height" content="420" />
 {% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex,follow" />
+{% endblock %}
+
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig', {type: 'category', title: tag.getName(), description: tag.getContents() }) }}
