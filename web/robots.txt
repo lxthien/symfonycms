@@ -2,6 +2,6 @@ User-agent: *
 
 Disallow: /admin
 Disallow: /cdn-cgi
-Disallow: /*?*
-
+Disallow: /tags/
+Disallow: /search?=*
 Sitemap: https://xaydungminhduy.com/sitemap.xml

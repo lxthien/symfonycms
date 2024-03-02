@@ -48,9 +48,11 @@
         <meta name="revisit-after" content="1 days">
         <meta http-equiv="content-language" content="vi">
 
-        {% if app.request.attributes.get('_route') is not null %}
-        <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"/>
-        {% endif %}
+        {% block canonical %}
+            {% if app.request.attributes.get('_route') is not null %}
+            <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"/>
+            {% endif %}
+        {% endblock %}
         
         <!-- Open Graph data -->
         <meta property="og:locale" content="vi_VN" />
@@ -83,9 +85,6 @@
         {% endblock %}
 
         {% block structuredPerson %}
-        {% endblock %}
-
-        {% block structuredReview %}
         {% endblock %}
 
         <!-- Google Tag Manager -->

@@ -26,23 +26,6 @@
     <meta property="og:image:height" content="420" />
 {% endblock %}
 
-{% block structuredReview %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "CreativeWorkSeries",
-        "name": "{{ post.getTitle() }}",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "{{ rating }}",
-            "ratingCount": "{{ ratingCount }}",
-            "bestRating" : "5",
-            "worstRating": "1"
-        }
-    }
-    </script>
-{% endblock %}
-
 {% block body %}
     <div class="container page wrapper-post-container">
         {{ include('news/components/listPrices.html.twig', {hasContainer:false}) }}
@@ -63,9 +46,9 @@
                     </div>
 
                     {# Rating and Share #}
-                    <div class="rating-share-container">
+                    {# <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
-                    </div>
+                    </div> #}
 
                     {# List comments #}
                     {# {{ include('news/comments/list.html.twig') }} #}

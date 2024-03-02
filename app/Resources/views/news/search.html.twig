@@ -3,7 +3,7 @@
 {% block title %}{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}
 
 {% block robots %}
-    <meta name="robots" content="noindex,nofollow" />
+    <meta name="robots" content="noindex,follow" />
 {% endblock %}
 
 {% block structuredOpenGraph %}
@@ -13,6 +13,20 @@
     <meta property="og:image:alt" content="{{ category.getPageTitle() }}" />
     <meta property="og:image:width" content="800" />
     <meta property="og:image:height" content="420" />
+    {% if pagination.currentPageNumber == 1 and pagination.pageCount > 1 %}
+        <link rel="next" href="{{ baseUrl ~ '&page=' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber > 1 and pagination.currentPageNumber < pagination.pageCount %}
+        <link rel="prev" href="{{ baseUrl ~ '&page=' ~ (pagination.currentPageNumber - 1) }}" />
+        <link rel="next" href="{{ baseUrl ~ '&page=' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber == pagination.pageCount and pagination.pageCount > 1 %}
+        <link rel="prev" href="{{ baseUrl ~ '&page=' ~ (pagination.currentPageNumber - 1) }}" />
+    {% endif %}
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{{ baseUrl }}"/>
 {% endblock %}
 
 {% block body %}

@@ -12,6 +12,16 @@
     <meta property="og:image:alt" content="{{ category.getPageTitle() }}" />
     <meta property="og:image:width" content="800" />
     <meta property="og:image:height" content="420" />
+    {% if pagination.currentPageNumber == 1 and pagination.pageCount > 1 %}
+        <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber > 1 and pagination.currentPageNumber < pagination.pageCount %}
+        <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+        <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber == pagination.pageCount and pagination.pageCount > 1 %}
+        <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+    {% endif %}
 {% endblock %}
 
 {% block robots %}
