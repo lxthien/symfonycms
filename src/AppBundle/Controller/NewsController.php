@@ -324,7 +324,7 @@ class NewsController extends Controller
 
             $img->setAttribute('src', $src);
             $img->setAttribute('loading', 'lazy');
-            $img->setAttribute('alt', $alt);
+            $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
             $img->setAttribute('width', !empty($width) ? $width > 900 ? 900 : $width : 500);
             $img->setAttribute('height', !empty($height) ? $width > 900 ? round(($height*900)/$width) : $height : 500);
         }
@@ -463,6 +463,9 @@ class NewsController extends Controller
                 if ($attribute == 'src') {
                     $src = !is_bool($this->convertImages->webpConvert2($val, '')) ? '/' . $this->convertImages->webpConvert2($val, '') : $val;
                     $amp_tag .= $attribute .'="'. $src .'" ';
+                } elseif ($attribute == 'alt') {
+                    $alt = !empty($val) ? $val : $post->getTitle();
+                    $amp_tag .= $attribute .'="'. $alt .'" ';
                 } else {
                     $amp_tag .= $attribute .'="'. $val .'" ';
                 }

@@ -14,6 +14,7 @@
 {% endif %}
 
 {% block structuredOpenGraph %}
+    <link rel="amphtml" href="{{ url('amp_show', { slug: post.getUrl() }) }}">
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
