@@ -29,7 +29,7 @@ swiftmailer:
     disable_delivery:  true
 
 twig:
-    cache: '%kernel.cache_dir%/twig'
+    cache: false
     debug:            '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes:
