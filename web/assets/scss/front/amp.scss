@@ -193,6 +193,11 @@ article {
     }
 
     .article-content {
+        .table-wrapper-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
         .table-of-contents {
             div[name="tableOfContents"] {
                 margin-bottom: 6px;
@@ -210,7 +215,7 @@ article {
         }
 
         h3 {
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 18px;
         }
 
