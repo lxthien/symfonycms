@@ -4,10 +4,10 @@
         <div class="row">
             {% for row in relatedNews %}
                 {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
-                {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_400') %}
+                {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_280') %}
                                         
                 {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('news_406_400') %}
+                    {% set imagePath = imagePath | imagine_filter('news_406_280') %}
                 {% else %}
                     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                 {% endif %}
@@ -17,7 +17,7 @@
                         <div class="related-img">
                             <img
                                 width="212"
-                                height="200"
+                                height="150"
                                 class="img-thumbnail lazyload"
                                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                 data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
@@ -33,7 +33,7 @@
                                 </a>
                             {% endif %}
                         </div>
-                        <h2>
+                        <h4>
                         {% if category is defined %}
                             <a class="related-title text-center" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                 <span>{{ row.getTitle() }}</span>
@@ -43,7 +43,7 @@
                                 <span>{{ row.getTitle() }}</span>
                             </a>
                         {% endif %}
-                        </h2>
+                        </h4>
                         <p>{{ row.getDescription()|slice(0, 85) }}</p>
                     </div>
                 </div>

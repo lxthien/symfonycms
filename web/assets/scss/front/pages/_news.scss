@@ -452,7 +452,7 @@
     margin-top: 20px;
     margin-bottom: 20px;
 
-    & > h4 {
+    & > h3 {
         font-size: 26px;
         position: relative;
         border-bottom: 3px solid $primaryColor;
@@ -596,6 +596,23 @@
 
 /* Accordion
 ------------------------------------------------------------------------- */
+.faq-news {
+    h2 {
+        position: relative;
+        border-bottom: 3px solid $primaryColor;
+
+        &:before {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 30%;
+            height: 3px;
+            background: $primaryColor2;
+        }
+    }
+}
+
 #faq {
     margin: 20px 0 30px 0;
     padding: 0 15px;
@@ -619,20 +636,13 @@ ul li i:after {
 }
 
 #faq .no-select,
-#faq h2 {
+#faq h3 {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     user-select: none;
 }
 
-#faq h1 {
-    color: #000;
-    margin-bottom: 30px;
-    margin-top: 0;
-}
-
-#faq h2 {
-    color: #cc071e;
+#faq h3 {
     font-size: 20px;
     line-height: 34px;
     text-align: left;

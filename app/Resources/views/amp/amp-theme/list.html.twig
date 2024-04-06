@@ -1,6 +1,6 @@
 {% if comments|length > 0 %}
     <div id="list-comments">
-        <h4><span>{{ 'comments.count' | trans({ '%count%': comments|length }) }} </span></h4>
+        <h3>{{ 'comments.count' | trans({ '%count%': comments|length }) }}</h3>
         <ul class="media-list">
             {% for comment in comments %}
                 {% if comment.getCommentId is null %}
@@ -16,7 +16,7 @@
                         </amp-img>
                     </div>
                     <div class="media-body">
-                        <h5 class="mt-0">{{ comment.getAuthor() }}</h5>
+                        <b class="mt-0">{{ comment.getAuthor() }}</b>
                         <div class="comment-container">{{ comment.getContent()|raw }}</div>
                         <a class="comment-reply-link" id="comment-reply" href="#" data-post-id="{{ comment.getId() }}">{{ 'comment.reply'|trans }}</a>
                         <ul class="media-list">
@@ -34,7 +34,7 @@
                                         </amp-img>
                                     </div>
                                     <div class="media-body">
-                                        <h5 class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</h5>
+                                        <b class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</b>
                                         <div class="comment-container">{{ replyComment.getContent()|raw }}</div>
                                     </div>
                                 </li>

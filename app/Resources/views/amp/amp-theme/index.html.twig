@@ -7,6 +7,20 @@
         <title>{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}</title>
         <meta name="description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}">
         <meta name="keywords" content="{{ post.getPageKeyword() }}">
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org/",
+                "@type": "CreativeWorkSeries",
+                "name": "{{ post.getTitle() }}",
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "{{ rating }}",
+                    "ratingCount": "{{ ratingCount ? ratingCount : 1 }}",
+                    "bestRating" : "5",
+                    "worstRating": "1"
+                }
+            }
+        </script>
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <style amp-boilerplate>
             {% include '@amp_theme/css/amp-boilerplate.html.twig' %}</style>
@@ -146,9 +160,6 @@
                     {% endif %}
                 </div>
 
-                {# List tags #}
-                {{ include('amp/amp-theme/tags.html.twig') }}
-
                 {# Q&A #}
                 {{ include('news/components/qa.html.twig') }}
 
@@ -164,7 +175,7 @@
                 <div class="container">
                     <div class="row footer-top">
                         <div class="col-12 col-md-12 col-lg-4">
-                            <h3 class="text-uppercase">Dịch vụ của chúng tôi</h3>
+                            <div class="wigget-title-h2 text-uppercase">Dịch vụ của chúng tôi</div>
                             <ul class="about-us">
                                 <li>
                                     <a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}">Về chúng tôi</a>
@@ -190,11 +201,11 @@
                             </ul>
                         </div>
                         <div class="col-12 col-md-12 col-lg-4">
-                            <h3 class="text-uppercase">Từ khóa</h3>
+                            <div class="wigget-title-h2 text-uppercase">Từ khóa</div>
                             {{ get_setting('topKeyword')|raw }}
                         </div>
                         <div class="col-12 col-md-12 col-lg-4">
-                            <h3 class="text-uppercase">Xây Dựng Minh Duy</h3>
+                            <div class="wigget-title-h2 text-uppercase">Xây Dựng Minh Duy</div>
                             <ul class="footer-company">
                                 <li>
                                     <i class="fa fa-map-marker"></i>
@@ -229,13 +240,13 @@
                             </a>
                         </div>
                         <div class="col-12 col-md-12 col-lg-6">
-                            <h3 class="text-uppercase">Về chúng tôi</h3>
+                            <div class="wigget-title-h2 text-uppercase">Về chúng tôi</div>
                             <div class="footer-text-wrap">
                                 {{ get_setting('siteNameDescription')|raw }}
                             </div>
                         </div>
                         <div class="col-12 col-md-12 col-lg-3">
-                            <h3 class="text-uppercase">Mạng xã hội</h3>
+                            <div class="wigget-title-h2 text-uppercase">Mạng xã hội</div>
                             <span class="td-social-icon-wrap">
                                 <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Sửa Nhà Minh Duy trên Facebook">
                                     <i class="fa fa-facebook"></i>

@@ -31,6 +31,23 @@
     <meta property="twitter:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
 {% endblock %}
 
+{% block structuredReview %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "CreativeWorkSeries",
+        "name": "{{ post.getTitle() }}",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ rating }}",
+            "ratingCount": "{{ ratingCount }}",
+            "bestRating" : "5",
+            "worstRating": "1"
+        }
+    }
+    </script>
+{% endblock %}
+
 {% block body %}
     <div class="container wrapper-container wrapper-post-container">
         {{ include('news/components/listPrices.html.twig', {hasContainer:false}) }}
@@ -55,12 +72,12 @@
                     </div>
 
                     {# List tags #}
-                    {{ include('news/components/tags.html.twig') }}
+                    {# {{ include('news/components/tags.html.twig') }} #}
 
                     {# Rating and Share #}
-                    {# <div class="rating-share-container">
+                    <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
-                    </div> #}
+                    </div>
 
                     {# Q&A #}
                     {{ include('news/components/qa.html.twig') }}
@@ -71,10 +88,10 @@
                     {% endif %}
                     
                     {# List comments #}
-                    {# {{ include('news/comments/list.html.twig') }} #}
+                    {{ include('news/comments/list.html.twig') }}
                     
                     {# Render form comment #}
-                    {# {{ include('news/comments/form.html.twig') }} #}
+                    {{ include('news/comments/form.html.twig') }}
                 </article>
             </div>
             {% if post.getTemplate() != '1_column' %}

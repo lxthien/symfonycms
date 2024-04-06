@@ -491,6 +491,8 @@ class NewsController extends Controller
      */
     public function tagAction($slug, Request $request)
     {
+        throw $this->createNotFoundException("The item does not exist");
+        
         $tag = $this->getDoctrine()
             ->getRepository(Tag::class)
             ->findOneBy(

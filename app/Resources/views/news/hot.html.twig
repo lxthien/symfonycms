@@ -1,7 +1,7 @@
 <div class="list-group">
-    <h3 class="list-group-item list-group-item-action active text-uppercase">
+    <div class="list-group-item list-group-item-action active text-uppercase">
         {{ 'news.hot'|trans }}
-    </h3>
+    </div>
     <div class="post-bxslider-wrapper">
         <div class="post-sidebar-bxslider">
             {% for row in posts %}
@@ -14,18 +14,16 @@
                     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                 {% endif %}
                 <div class="item">
-                    <h2>
-                        <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
-                            <img
-                                class="lazyload"
-                                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-                                alt="{{ row.getTitle() }}"
-                                width="70"
-                                height="50" />
-                            <span>{{ row.getTitle() }}</span>
-                        </a>
-                    </h2>
+                    <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
+                        <img
+                            class="lazyload"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                            alt="{{ row.getTitle() }}"
+                            width="70"
+                            height="50" />
+                        <span>{{ row.getTitle() }}</span>
+                    </a>
                 </div>
             {% endfor %}
         </div>

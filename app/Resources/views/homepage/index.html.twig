@@ -23,22 +23,6 @@
     </script>
 {% endblock %}
 
-{% block structuredWebSite %}
-    <script type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "WebSite",
-        "name": "Xây Dựng Minh Duy",
-        "url": "https://xaydungminhduy.com/",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://xaydungminhduy.com/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-        }
-    }
-    </script>
-{% endblock %}
-
 {% block body %}
     <div class="wrapper-container">
         {{ include('news/components/listPrices.html.twig') }}

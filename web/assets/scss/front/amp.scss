@@ -358,7 +358,7 @@ article {
         margin-bottom: 20px;
         overflow: hidden;
     
-        &>h4 {
+        &>h3 {
             font-size: 26px;
             position: relative;
             border-bottom: 3px solid $primaryColor;
@@ -433,7 +433,7 @@ footer {
     background-position: 50% 119.476px;
     color: $white;
 
-    h3.text-uppercase {
+    .wigget-title-h2.text-uppercase {
         font-size: 26px;
         margin: 0 0 15px;
         line-height: 1.4;
@@ -702,51 +702,6 @@ footer {
 
             a {
                 color: #000;
-            }
-        }
-    }
-}
-
-.tags {
-    display: flex;
-    margin: 20px 0 5px;
-    font-size: 12px;
-
-    ul {
-        padding: 0;
-        margin-left: 0;
-        margin-bottom: 10px;
-
-        li {
-            margin-bottom: 0px;
-            list-style-type: none;
-            display: inline-block;
-            
-            span {
-                background-color: $mineShaft;
-                padding: 5px 8px;
-                color: $white;
-                display: block;
-                line-height: 16px;
-                float: left;
-                height: 25px;
-            }
-
-            a {
-                display: block;
-                float: left;
-                border: 1px solid $gallery;
-                margin-left: 4px;
-                line-height: 15px;
-                padding: 5px 8px;
-                height: 25px;
-
-                &:hover {
-                    text-decoration: none;
-                    border: 1px solid $primaryColor;
-                    background: $primaryColor;
-                    color: $white;
-                }
             }
         }
     }

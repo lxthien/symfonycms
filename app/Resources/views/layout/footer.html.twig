@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row footer-top">
             <div class="col-12 col-md-12 col-lg-4">
-                <h3 class="text-uppercase">Dịch vụ của chúng tôi</h3>
+                <div class="wigget-title-h2 text-uppercase">Dịch vụ của chúng tôi</div>
                 <ul class="about-us">
                     <li>
                         <a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}">Về chúng tôi</a>
@@ -32,11 +32,11 @@
                 </ul>
             </div>
             <div class="col-12 col-md-12 col-lg-4">
-                <h3 class="text-uppercase">Từ khóa</h3>
+                <div class="wigget-title-h2 text-uppercase">Từ khóa</div>
                 {{ get_setting('topKeyword')|raw }}
             </div>
             <div class="col-12 col-md-12 col-lg-4">
-                <h3 class="text-uppercase">Xây Dựng Minh Duy</h3>
+                <div class="wigget-title-h2 text-uppercase">Xây Dựng Minh Duy</div>
                 <ul class="footer-company">
                     <li>
                         <i class="fa fa-map-marker"></i>
@@ -72,13 +72,13 @@
                 </a>
             </div>
             <div class="col-12 col-md-12 col-lg-6">
-                <h3 class="text-uppercase">Về chúng tôi</h3>
+                <div class="wigget-title-h2 text-uppercase">Về chúng tôi</div>
                 <div class="footer-text-wrap">
                     {{ get_setting('siteNameDescription')|raw }}
                 </div>
             </div>
             <div class="col-12 col-md-12 col-lg-3">
-                <h3 class="text-uppercase">Mạng xã hội</h3>
+                <div class="wigget-title-h2 text-uppercase">Mạng xã hội</div>
                 <span class="td-social-icon-wrap">
                     <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Minh Duy trên Facebook" rel="nofollow noreferrer">
                         <i class="fab fa-facebook-f"></i>
