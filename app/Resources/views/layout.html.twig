@@ -84,10 +84,25 @@
         {% block structuredWebSite %}
             <script type="application/ld+json">
             {
-                "@context": "http://schema.org",
+                "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "Xây Dựng Minh Duy",
+                "@id": "https://xaydungminhduy.com/#website",
                 "url": "https://xaydungminhduy.com/",
+                "name": "Xây Dựng Minh Duy",
+                "alternateName": "Xây Dựng Minh Duy, công ty xây dựng minh duy",
+                "inLanguage": "vi-VN",
+                "publisher": {
+                    "@type": "Organization",
+                    "@id": "https://xaydungminhduy.com/",
+                    "name": "Xây Dựng Minh Duy",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                        "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                        "width": "354",
+                        "height": "72"
+                    }
+                },
                 "potentialAction": {
                     "@type": "SearchAction",
                     "target": "https://xaydungminhduy.com/search?q={search_term_string}",

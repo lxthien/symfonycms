@@ -70,6 +70,12 @@ dmishh_settings:
                 required: false
                 attr:
                     rows: 7
+        localBusiness:
+            type: Symfony\Component\Form\Extension\Core\Type\TextareaType
+            options:
+                required: false
+                attr:
+                    rows: 7
         topKeyword:
             type: Symfony\Component\Form\Extension\Core\Type\TextareaType
             options:

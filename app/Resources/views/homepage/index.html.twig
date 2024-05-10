@@ -8,19 +8,7 @@
 {% endblock %}
 
 {% block structuredOrganization %}
-    <script type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "Organization",
-        "url": "https://xaydungminhduy.com/",
-        "logo": "https://xaydungminhduy.com/assets/images/logo.png",
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+84982969379",
-            "contactType": "customer service"
-        }
-    }
-    </script>
+    {{ get_setting('localBusiness')|raw }}
 {% endblock %}
 
 {% block body %}
