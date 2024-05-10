@@ -90,7 +90,7 @@ class NewsType extends AbstractType
                 'required' => false,
                 'label' => 'Template',
                 'choices' => ['Mặc định' => '2_columns', '1 Column' => '1_column'],
-                'empty_data' => '1_column'
+                'empty_data' => '2_column'
             ])
             ->add('qa', TextareaType::class, [
                 'required' => false,

@@ -7,6 +7,7 @@
         <title>{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}</title>
         <meta name="description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}">
         <meta name="keywords" content="{{ post.getPageKeyword() }}">
+        {% if ratingCount > 0 %}
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org/",
@@ -21,6 +22,7 @@
                 }
             }
         </script>
+        {% endif %}
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <style amp-boilerplate>
             {% include '@amp_theme/css/amp-boilerplate.html.twig' %}</style>

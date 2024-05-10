@@ -268,7 +268,7 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
-    initFixedSidebar();
+    //initFixedSidebar();
     initCostConstruction();
     initFancybox();
     initTypewriterEffect();

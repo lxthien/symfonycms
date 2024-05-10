@@ -34,27 +34,15 @@
                     class="mr-3 img-thumbnail lazyload"
                     alt="{{row.getTitle()}}" />
             </picture>
-            {% if category is defined %}
-                <a class="media-thumb" title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}">
-                    <i class="fa fa-link"></i>
-                </a>
-            {% else %}
-                <a class="media-thumb" title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
-                    <i class="fa fa-link"></i>
-                </a>
-            {% endif %}
+            <a class="media-thumb" title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
+                <i class="fa fa-link"></i>
+            </a>
         </div>
         <div class="media-body">
             <h3 class="mt-0 mb-1">
-                {% if category is defined %}
-                    <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                        <span>{{ row.getTitle() }}</span>
-                    </a>
-                {% else %}
-                    <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                        <span>{{ row.getTitle() }}</span>
-                    </a>
-                {% endif %}
+                <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
+                    <span>{{ row.getTitle() }}</span>
+                </a>
             </h3>
             <p>{{ row.getDescription()|slice(0, 110) }}</p>
         </div>

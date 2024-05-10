@@ -3,5 +3,9 @@ User-agent: *
 Disallow: /admin
 Disallow: /cdn-cgi
 Disallow: /tags/
+Disallow: /amp/
 Disallow: /search?=*
+Disallow: /*?cat=*
+Disallow: /*?filter_by=*
 Sitemap: https://xaydungminhduy.com/sitemap.xml
+Sitemap: https://xaydungminhduy.com/images_sitemap.xml

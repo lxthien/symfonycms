@@ -23,26 +23,14 @@
                                 data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
                                 alt="{{row.getTitle()}}" >
 
-                            {% if category is defined %}
-                                <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}">
-                                    <i class="fa fa-link"></i>
-                                </a>
-                            {% else %}
-                                <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
-                                    <i class="fa fa-link"></i>
-                                </a>
-                            {% endif %}
+                            <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
+                                <i class="fa fa-link"></i>
+                            </a>
                         </div>
                         <h4>
-                        {% if category is defined %}
-                            <a class="related-title text-center" href="{{ path('news_show', {'slug': row.getUrl(), 'cat': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                <span>{{ row.getTitle() }}</span>
-                            </a>
-                        {% else %}
                             <a class="related-title text-center" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
                                 <span>{{ row.getTitle() }}</span>
                             </a>
-                        {% endif %}
                         </h4>
                         <p>{{ row.getDescription()|slice(0, 85) }}</p>
                     </div>
