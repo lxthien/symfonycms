@@ -38,8 +38,10 @@ class ProfileController extends Controller
             ->createQueryBuilder('n')
             ->where('n.author = :author')
             ->andWhere('n.enable = :enable')
+            ->andWhere('n.postType = :postType')
             ->setParameter('author', $user->getId())
             ->setParameter('enable', 1)
+            ->setParameter('postType', 'post')
             ->orderBy('n.createdAt', 'DESC')
             ->getQuery()->getResult();
 

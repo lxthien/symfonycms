@@ -106,6 +106,16 @@
                     }
                 }
             }
+
+            .post-modified-info {
+                font-style: italic;
+                color: #797979;
+                font-size: 15px;
+                
+                a {
+                    color: $primaryColor2;
+                }
+            }
         
             .news-container {
                 .table-of-contents {
