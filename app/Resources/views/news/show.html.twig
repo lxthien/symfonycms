@@ -118,9 +118,9 @@
     <div class="container wrapper-container wrapper-post-container">
         {{ include('news/components/listPrices.html.twig', {hasContainer:false}) }}
 
-        <div class="row post-container">
+        <div class="row post-container {{ post.getTemplate() == '1_column' ? 'page-1-column' : 'page-2-column' }}">
             {% if post.getTemplate() != '1_column' %}
-            {{ include('layout/sidebar.html.twig') }}
+                {{ include('layout/sidebar.html.twig') }}
             {% endif %}
 
             <div class="col-12 col-md-12 {{ post.getTemplate() != '1_column' ? 'col-lg-9' : 'col-lg-12' }} wrapper-post-container-left">
@@ -149,8 +149,7 @@
                     {{ include('news/components/qa.html.twig') }}
 
                     {% if post.getTemplate() != '1_column' %}
-                    {# Related news #}
-                    {{ include('news/components/related.html.twig') }}
+                        {{ include('news/components/related.html.twig') }}
                     {% endif %}
                     
                     {# List comments #}
