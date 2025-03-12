@@ -359,7 +359,7 @@
                     font-size: 20px;
                     min-height: 65px;
                     margin: 0;
-                    padding: 7px 10px;
+                    padding: 7px 0px;
                     text-align: center;
 
                     @media only screen and (max-width: 767.98px) {
@@ -370,7 +370,7 @@
                     a {
                         color: $primaryColor;
                         font-family: $robotoCondesed;
-                        font-weight: 500;
+                        font-weight: 600;
                         line-height: 27px;
                         max-height: 50px;
                         overflow: hidden;
@@ -405,7 +405,7 @@
                     font-size: 20px;
                     min-height: 65px;
                     margin: 0;
-                    padding: 7px 10px;
+                    padding: 7px 0;
                     text-align: center;
 
                     &:hover {
@@ -504,7 +504,7 @@
     .block-underline {
         width: 250px;
         height: 3px;
-        background: $primaryColor;
+        background: $primaryColor2;
         display: block;
         margin: 0 auto 10px;
     }

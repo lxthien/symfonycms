@@ -83,8 +83,7 @@ class NewsType extends AbstractType
             ])
             ->add('autoFulfillAddress', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Auto Fulfill Address',
-                'attr' => ['checked' => 'checked']
+                'label' => 'Auto Fulfill Address'
             ])
             ->add('template', ChoiceType::class, [
                 'required' => false,

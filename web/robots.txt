@@ -7,5 +7,6 @@ Disallow: /amp/
 Disallow: /search?=*
 Disallow: /*?cat=*
 Disallow: /*?filter_by=*
+Disallow: /*.pdf$
 Sitemap: https://xaydungminhduy.com/sitemap.xml
 Sitemap: https://xaydungminhduy.com/images_sitemap.xml

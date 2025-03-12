@@ -65,8 +65,7 @@ class Comment
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     * @ORM\Column(name="email", type="text")
+     * @ORM\Column(name="email", type="string", nullable=true)
      */
     private $email;
 

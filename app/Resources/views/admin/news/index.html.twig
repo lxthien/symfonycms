@@ -38,6 +38,7 @@
                                         <th>{{ 'label.category'|trans }}</th>
                                         <th>{{ 'label.status'|trans }}</th>
                                         <th>{{ 'label.published_at'|trans }}</th>
+                                        <th>{{ 'Updated' }}</th>
                                         <th>{{ 'label.actions'|trans }}</th>
                                     </tr>
                                 </thead>
@@ -63,6 +64,7 @@
                                             </label>
                                         </td>
                                         <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                        <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                         <td>
                                             <div class="item-actions">
                                                 <a href="{{ path('admin_news_edit', {id: row.id}) }}" class="btn-sm">

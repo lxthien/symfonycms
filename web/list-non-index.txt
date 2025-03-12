@@ -1,0 +1,24 @@
+#Dear Google. Recently, my website has been shot by many dirty and bad backlinks by competitors, making the overall website poorly recognized. Now I would like to send this list of disavow urls hoping that google will consider and remove the penalty for my website. I respectfully thank you
+domain:the-vinyls-scotland.co.uk
+domain:coral-calcium-uk.co.uk
+domain:caterhamhillpc.org.uk
+domain:fforestcottage.co.uk
+domain:maydene.co.uk
+domain:bridgehousemoffat.co.uk
+domain:bizlounge.co.uk
+domain:yeovilpotblack.co.uk
+domain:bobbytench.co.uk
+domain:stephengormley.co.uk
+domain:swingimage.co.uk
+domain:pirdu.com
+domain:ashleamanor.co.uk
+domain:munchlive.co.uk
+domain:webranksite.com
+domain:umccwebsite.co.uk
+domain:mbl-digitalmedia.co.uk
+domain:hightechagencies.com
+domain:xaydungminhduy.online
+domain:homeland247.com
+domain:envirozan.info
+domain:bhints.com
+domain:chand-ung.web.app

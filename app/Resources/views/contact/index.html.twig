@@ -12,12 +12,8 @@
 
 {% block body %}
     <div class="container contacts wrapper-post-container">
-        {{ include('news/components/listPrices.html.twig', {hasContainer:false}) }}
-
-        <div class="row post-container">
-            {{ include('layout/sidebar.html.twig') }}
-            
-            <div class="col-xs-12 col-sm-12 col-md-9">
+        <div class="row post-container page-1-column">
+            <div class="col-xs-12 col-sm-12 col-md-12">
                 {{ include('news/components/breadcrumbs.html.twig') }}
                 
                 <div class="company">
@@ -62,18 +58,6 @@
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
                 {{ form_end(form) }}
-            </div>
-
-            <div class="col-12 col-md-12">
-                {{ render(controller(
-                    'AppBundle:News:listNewsByCategory', { 'categoryId':11, 'description':'Tổng hợp các dự án xây nhà phố, biệt thự, nhà tiền chế, nhà cấp 4, ... nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
-                )) }}
-                {{ render(controller(
-                    'AppBundle:News:listNewsByCategory', { 'categoryId':10, 'description':'Tổng hợp các dự án sửa chữa nhà, cải tạo nhà cũ, nâng tầng, nâng nền, căn hộ chung cư, nhà cấp 4, ... nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
-                )) }}
-                {{ render(controller(
-                    'AppBundle:News:listNewsByCategory', { 'categoryId':12, 'description':'Tổng hợp các dự án xây dựng, thiết kế, trang trí quán cafe, trà sữa nổi bật do Xây Dựng Minh Duy đã và đang thực hiện' }
-                )) }}
             </div>
         </div>
     </div>

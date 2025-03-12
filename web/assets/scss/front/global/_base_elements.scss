@@ -44,11 +44,15 @@ body {
 }
 
 .wrapper {
-    background: $white;
+    background: $grayf1;
 }
 
 .wrapper-container {
     padding-bottom: 50px;
+}
+
+.wrapper-post-container {
+    background-color: $grayf1;
 }
 
 .td-wrapper {

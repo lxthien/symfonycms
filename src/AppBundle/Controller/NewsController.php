@@ -719,7 +719,6 @@ class NewsController extends Controller
             ))
             ->add('author', TextType::class, array('label' => 'label.author'))
             ->add('phone', TextType::class, array('label' => 'label.phone'))
-            ->add('email', EmailType::class, array('label' => 'label.author_email'))
             ->add('ip', HiddenType::class)
             ->add('news_id', HiddenType::class)
             ->add('comment_id', HiddenType::class)
@@ -752,7 +751,6 @@ class NewsController extends Controller
                 ->add('content', TextareaType::class)
                 ->add('author', TextType::class)
                 ->add('phone', TextType::class)
-                ->add('email', EmailType::class)
                 ->add('ip', HiddenType::class)
                 ->add('news_id', HiddenType::class)
                 ->add('comment_id', HiddenType::class)
@@ -766,24 +764,6 @@ class NewsController extends Controller
                 $em->flush();
 
                 if (null !== $comment->getId()) {
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($this->get('translator')->trans('comment.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
-                        ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
-                        ->setTo($this->get('settings_manager')->get('emailContact'))
-                        ->setBody(
-                            $this->renderView(
-                                'Emails/comment.html.twig',
-                                array(
-                                    'name' => $request->request->get('form')['author'],
-                                    'body' => $request->request->get('form')['content']
-                                )
-                            ),
-                            'text/html'
-                        )
-                    ;
-
-                    $mailer->send($message);
-    
                     return new Response(
                         json_encode(
                             array(

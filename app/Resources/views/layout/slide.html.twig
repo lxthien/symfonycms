@@ -4,9 +4,6 @@
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
             <li data-target="#myCarousel" data-slide-to="1" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="3" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="4" class=""></li>
         </ol>
         <div class="carousel-inner" role="listbox">
             <div class="item active">
@@ -43,9 +40,9 @@
                 </div>
             </div>
             <div class="item">
-                {% set imagePath = asset('/assets/images/banner/xaydungminhduy-banner-3.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_1360_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/xaydungminhduy-banner-3.jpg') | imagine_filter('banner_768_400') %}
+                {% set imagePath = asset('/assets/images/banner/minhduy-banner-3.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/minhduy-banner-3.jpg') | imagine_filter('banner_1360_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/minhduy-banner-3.jpg') | imagine_filter('banner_768_400') %}
                         
                 {% if convert_images.fileExists(imagePath) == false %}
                     {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
@@ -63,106 +60,12 @@
                         media="(min-width: 800px)" />
                     <img
                         src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        alt="Thi công xây nhà trọn gói Quận 12"
+                        alt="Thi công nhà phố, biệt thự"
                         loading="lazy" />
                 </picture>
                 <div class="container">
                     <div class="carousel-caption text-left">
-                        <h2>Thi công xây nhà trọn gói Quận 12</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/minhduy-banner-1.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_1360_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/minhduy-banner-1.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <picture>
-                    <source
-                        srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                        media="(max-width: 799px)" />
-                    <source
-                        srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        media="(min-width: 800px)" />
-                    <img
-                        src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        alt="Công ty xây dựng uy tín, chuyên nghiệp"
-                        loading="lazy" />
-                </picture>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h2>Công ty xây dựng uy tín, chuyên nghiệp</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_1360_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/thiet-ke-thi-cong-quan-cafe-1.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <a href="{{ path('news_show', {'slug': 'thiet-ke-thi-cong-tron-goi-quan-cafe' }) }}">
-                    <picture>
-                        <source
-                            srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            alt="Xây nhà phố 3 tầng, Thầy Hạnh"
-                            loading="lazy" />
-                    </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h3>Thiết kế, thi công quán Cafe</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_1360_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/minhduy-cong-ty-sua-nha-1.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1360_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}">
-                    <picture>
-                        <source
-                            srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            alt="Công ty sửa nhà uy tín tại TPHCM"
-                            loading="lazy" />
-                    </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h3>Công ty sửa nhà uy tín tại TPHCM</h3>
+                        <h2>Thi công nhà phố, biệt thự</h2>
                     </div>
                 </div>
             </div>
