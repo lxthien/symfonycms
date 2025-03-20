@@ -80,12 +80,7 @@ class Builder implements ContainerAwareInterface
         
         $menu['Bảng giá']->addChild('Thiết kế, thi công quán cafe', [
             'route' => 'news_show',
-            'routeParameters' => ['slug' => 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm']
-        ]);
-
-        $menu['Bảng giá']->addChild('Thi công nội thất chung cư', [
-            'route' => 'news_show',
-            'routeParameters' => ['slug' => 'don-gia-thi-cong-noi-that-chung-cu']
+            'routeParameters' => ['slug' => 'thiet-ke-thi-cong-tron-goi-quan-cafe']
         ]);
 
         $menu->addChild('Xây dựng', [
@@ -145,6 +140,11 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['level1' => 'sua-chua-nha', 'level2' => 'sua-nha-chung-cu']
         ]);
 
+        $menu['Sửa chữa nhà']->addChild('Sửa nhà nâng tầng', [
+            'route' => 'list_category',
+            'routeParameters' => ['level1' => 'sua-chua-nha', 'level2' => 'sua-nha-nang-tang']
+        ]);
+
         $menu['Sửa chữa nhà']->addChild('Dự án sửa chữa nhà', [
             'route' => 'list_category',
             'routeParameters' => ['level1' => 'sua-chua-nha', 'level2' => 'sua-chua']
@@ -162,11 +162,6 @@ class Builder implements ContainerAwareInterface
         $menu['Thiết kế']->addChild('Thiết kế nhà phố', [
             'route' => 'list_category',
             'routeParameters' => ['level1' => 'thiet-ke', 'level2' => 'thiet-ke-nha-pho']
-        ]);
-        
-        $menu['Thiết kế']->addChild('Thiết kế quán cafe', [
-            'route' => 'list_category',
-            'routeParameters' => ['level1' => 'thiet-ke', 'level2' => 'thiet-ke-thi-cong-quan-cafe']
         ]);
 
         $menu->addChild('Phong thủy xây dựng', [

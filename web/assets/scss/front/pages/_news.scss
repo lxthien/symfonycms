@@ -6,6 +6,52 @@
     .description {
         margin-bottom: 30px;
     }
+
+    .category-content {
+        width: 980px;
+        margin: 0 auto;
+
+        @media only screen and (max-width: 767.98px) {
+            width: 100%;
+        }
+
+        blockquote {
+            font-size: 16px;
+            border-left: 5px solid $primaryColor;
+            font-style: italic;
+        }
+
+        table {
+            width: 100%;
+            margin-bottom: 14px;
+
+            th, td {
+                padding: 8px;
+            }
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        
+        img {
+            @media only screen and (max-width: 767.98px) {
+                height: auto !important;
+            }
+        }
+
+        a {
+            color: #0053a5;
+        }
+
+        h2 {
+            font-size: 1.8em;
+        }
+
+        h3 {
+            font-size: 1.6em;
+        }
+    }
 }
 
 /* Slide project hot

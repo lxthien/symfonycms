@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use Vich\UploaderBundle\Form\Type\VichFileType;
+
 class NewsCategoryType extends AbstractType
 {
     /**
@@ -29,13 +31,25 @@ class NewsCategoryType extends AbstractType
                 'attr' => ['class' => 'sluggable'],
                 'label' => 'label.name',
             ])
+            ->add('titleLandingPage', TextType::class, [
+                'required' => false,
+                'label' => 'Tiêu đề trang Landing',
+            ])
             ->add('url', TextType::class, [
                 'attr' => ['class' => 'url', 'readonly' => 'readonly'],
                 'label' => 'label.url',
             ])
+            ->add('imageFile', VichFileType::class, [
+                'required' => false,
+                'allow_delete' => true,
+            ])
             ->add('description', TextareaType::class, [
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '300'],
                 'label' => 'label.description',
+            ])
+            ->add('content', TextareaType::class, [
+                'attr' => ['class' => 'txt-ckeditor', 'data-height' => '600'],
+                'label' => 'Nội dung',
             ])
             ->add('enable', CheckboxType::class, [
                 'required' => false,
@@ -58,6 +72,11 @@ class NewsCategoryType extends AbstractType
             ->add('pageKeyword', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageKeyword',
+            ])
+            ->add('schemaMarkup', TextareaType::class, [
+                'attr' => ['rows' => '12'],
+                'required' => false,
+                'label' => 'Schema Markup',
             ])
         ;
     }

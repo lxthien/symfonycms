@@ -75,7 +75,9 @@ class NewsCategoryController extends Controller
                 return $this->redirectToRoute('admin_newscategory_new');
             }
 
-            return $this->redirectToRoute('admin_newscategory_index');
+            return $this->redirectToRoute('admin_newscategory_edit', array(
+                'id' => $category->getId()
+            ));
         }
 
         return $this->render('admin/newscategory/new.html.twig', [
@@ -98,7 +100,10 @@ class NewsCategoryController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'action.updated_successfully');
-            return $this->redirectToRoute('admin_newscategory_index');
+
+            return $this->redirectToRoute('admin_newscategory_edit', array(
+                'id' => $category->getId()
+            ));
         }
 
         return $this->render('admin/newscategory/edit.html.twig', [

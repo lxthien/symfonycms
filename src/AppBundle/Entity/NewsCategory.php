@@ -7,11 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * NewsCategory
  *
  * @ORM\Table(name="newscategory")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\NewsCategoryRepository")
+ * @Vich\Uploadable
  */
 class NewsCategory
 {
@@ -47,6 +50,13 @@ class NewsCategory
     /**
      * @var string
      *
+     * @ORM\Column(name="titleLandingPage", type="string", length=255, nullable=true)
+     */
+    private $titleLandingPage;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="url", type="string", length=255)
      */
     private $url;
@@ -57,6 +67,33 @@ class NewsCategory
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="content", type="text", nullable=true)
+     */
+    private $content = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="schemaMarkup", type="text", nullable=true)
+     */
+    private $schemaMarkup = null;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="images", type="string", length=255, nullable=true)
+     */
+    private $images;
+
+    /**
+     * @Vich\UploadableField(mapping="newscategory_images", fileNameProperty="images")
+     * @var File
+     */
+    private $imageFile;
 
     /**
      * @var boolean
@@ -153,6 +190,18 @@ class NewsCategory
         return $this->name;
     }
 
+    public function setTitleLandingPage($titleLandingPage)
+    {
+        $this->titleLandingPage = $titleLandingPage;
+
+        return $this;
+    }
+
+    public function getTitleLandingPage()
+    {
+        return $this->titleLandingPage;
+    }
+
     public function setParentcat(\AppBundle\Entity\NewsCategory $parent = null) {
         $this->parentcat = $parent;
 
@@ -189,6 +238,59 @@ class NewsCategory
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setSchemaMarkup($schemaMarkup)
+    {
+        $this->schemaMarkup = $schemaMarkup;
+
+        return $this;
+    }
+
+    public function getSchemaMarkup()
+    {
+        return $this->schemaMarkup;
+    }
+
+    public function setImageFile(File $images = null)
+    {
+        $this->imageFile = $images;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($images) {
+            $this->updatedAt = new \DateTime('now');
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImages($images)
+    {
+        $this->images = $images;
+
+        return $this;
+    }
+
+    public function getImages()
+    {
+        return $this->images;
     }
 
     public function setEnable($enable)

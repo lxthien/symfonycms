@@ -19,6 +19,7 @@ parameters:
     app.notifications.email_sender: anonymous@example.com
     app.path.product_images: "/uploads/images/products"
     app.path.news_images: "/uploads/images/news"
+    app.path.newscategory_images: "/uploads/images/newscategory"
     app.path.banner_images: "/uploads/images/banner"
 
 # Basic configuration for the Symfony framework features
@@ -112,6 +113,12 @@ vich_uploader:
         news_images:
             uri_prefix:         '%app.path.news_images%'
             upload_destination: '%kernel.root_dir%/../web/uploads/images/news'
+            namer: vich_uploader.namer_origname
+            delete_on_remove: true
+            delete_on_update: true
+        newscategory_images:
+            uri_prefix:         '%app.path.newscategory_images%'
+            upload_destination: '%kernel.root_dir%/../web/uploads/images/newscategory'
             namer: vich_uploader.namer_origname
             delete_on_remove: true
             delete_on_update: true

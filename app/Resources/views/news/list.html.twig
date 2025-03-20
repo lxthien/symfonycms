@@ -4,11 +4,13 @@
 {% block description %}{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}{% endblock %}
 {% block keyword %}{{ category.getPageKeyword() }}{% endblock %}
 
+{% set imagePathFilter = (vich_uploader_asset(category, 'imageFile') ? vich_uploader_asset(category, 'imageFile') : asset('/assets/images/xaydungminhduy-2.jpg')) | imagine_filter('news_share_800_420') %}
+
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}" />
     <meta property="og:description" content="{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}" />
-    <meta property="og:image" content="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/xaydungminhduy-2.jpg'), '')) }}" />
+    <meta property="og:image" content="{{ absolute_url(imagePathFilter) }}" />
     <meta property="og:image:alt" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}" />
     <meta property="og:image:width" content="800" />
     <meta property="og:image:height" content="420" />
@@ -32,6 +34,12 @@
     {% endif %}
 {% endblock %}
 
+{% block structuredReview %}
+    {% if category.getSchemaMarkup() != null %}
+        {{ category.getSchemaMarkup()|raw }}
+    {% endif %}
+{% endblock %}
+
 {% block canonical %}
     <link rel="canonical" href="{{ baseUrl }}"/>
 {% endblock %}
@@ -39,31 +47,37 @@
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig',
-        { type: 'category', title: category.getName()|replace({'%YEAR%': "now"|date('Y')}), description: category.getDescription()|replace({'%YEAR%': "now"|date('Y')}) })
+        { type: 'category', title: (category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName()), description: category.getDescription() })
     }}
     
     <div class="container wrapper-container">
         <div class="row category-list-items">
             <div class="col-12 col-md-12 col-lg-12">
-                {# List item on this page #}
-                {% if pagination|length > 0  %}
-                    {# Sort items #}
-                    {% if get_setting('isShowSortOnCategory') %}
-                        {{ include('news/components/sort.html.twig') }}
-                    {% endif %}
+                {% if category.getContent() == null %}
+                    {# List item on this page #}
+                    {% if pagination|length > 0  %}
+                        {# Sort items #}
+                        {% if get_setting('isShowSortOnCategory') %}
+                            {{ include('news/components/sort.html.twig') }}
+                        {% endif %}
 
-                    <div class="list-news-items">
-                        <div class="row">
-                            {% for row in pagination %}
-                                {{ include('news/components/itemsGrid.html.twig') }}
-                            {% endfor %}
+                        <div class="list-news-items">
+                            <div class="row">
+                                {% for row in pagination %}
+                                    {{ include('news/components/itemsGrid.html.twig') }}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
 
-                    {# Pagination #}
-                    {{ include('news/components/pagination.html.twig') }}
+                        {# Pagination #}
+                        {{ include('news/components/pagination.html.twig') }}
+                    {% else %}
+                        {{ include('news/components/noRecord.html.twig') }}
+                    {% endif %}
                 {% else %}
-                    {{ include('news/components/noRecord.html.twig') }}
+                    <div class="category-content">
+                        {{ category.getContent()|raw }}
+                    </div>
                 {% endif %}
             </div>
         </div>
