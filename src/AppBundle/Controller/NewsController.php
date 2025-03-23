@@ -100,24 +100,6 @@ class NewsController extends Controller
                 ->setParameter('enable', 1)
                 ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
-
-            // No items on this page
-            if (count($news) === 0) {
-                $tag = $this->getDoctrine()
-                    ->getRepository(Tag::class)
-                    ->findOneBy(
-                        array('url' => $level1)
-                    );
-
-                $news = $this->getDoctrine()
-                    ->getRepository(News::class)
-                    ->createQueryBuilder('n')
-                    ->leftJoin('n.tags', 't')
-                    ->where('t.id = :tags_id')
-                    ->setParameter('tags_id', $tag->getId())
-                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
-                    ->getQuery()->getResult();
-            }
         } else {
             $news = $this->getDoctrine()
                 ->getRepository(News::class)
@@ -491,13 +473,15 @@ class NewsController extends Controller
      */
     public function tagAction($slug, Request $request)
     {
-        throw $this->createNotFoundException("The item does not exist");
-        
         $tag = $this->getDoctrine()
             ->getRepository(Tag::class)
             ->findOneBy(
                 array('url' => $slug)
             );
+
+        if (!$tag) {
+            throw $this->createNotFoundException("The item does not exist");
+        }
 
         // Get the list post related to tag
         $posts = $this->getDoctrine()
@@ -515,12 +499,12 @@ class NewsController extends Controller
         $pagination = $paginator->paginate(
             $posts,
             !empty($request->query->get('page')) ? $request->query->get('page') : 1,
-            $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
+            40
         );
 
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
-        $breadcrumbs->addItem('Tags > ' . $tag->getName());
+        $breadcrumbs->addItem($tag->getName());
 
         return $this->render('news/tags.html.twig', [
             'baseUrl' => $this->generateUrl('tags', array('slug' => $slug), UrlGeneratorInterface::ABSOLUTE_URL),

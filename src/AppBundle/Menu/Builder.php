@@ -164,9 +164,17 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['level1' => 'thiet-ke', 'level2' => 'thiet-ke-nha-pho']
         ]);
 
-        $menu->addChild('Phong thủy xây dựng', [
+        $menu->addChild('Dịch vụ khác', [
+            'uri' => '#'
+        ])
+        ->setAttribute('class', 'dropdown')
+        ->setLinkAttribute('class', 'dropdown-toggle')
+        ->setLinkAttribute('data-toggle', 'dropdown')
+        ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Dịch vụ khác']->addChild('Sơn nhà trọn gói', [
             'route' => 'news_category',
-            'routeParameters' => ['level1' => 'phong-thuy-xay-dung']
+            'routeParameters' => ['level1' => 'dich-vu-son-nha-tron-goi']
         ]);
 
         $menu->addChild('Dự án thi công', [
@@ -187,9 +195,22 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['level1' => 'du-an', 'level2' => 'quan-cafe-tra-sua']
         ]);
 
-        $menu->addChild('Tư vấn', [
+        $menu->addChild('Tin tức', [
+            'uri' => '#'
+        ])
+        ->setAttribute('class', 'dropdown')
+        ->setLinkAttribute('class', 'dropdown-toggle')
+        ->setLinkAttribute('data-toggle', 'dropdown')
+        ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Tin tức']->addChild('Tư vấn', [
             'route' => 'news_category',
             'routeParameters' => ['level1' => 'tu-van']
+        ]);
+
+        $menu['Tin tức']->addChild('Phong thủy xây dựng', [
+            'route' => 'news_category',
+            'routeParameters' => ['level1' => 'phong-thuy-xay-dung']
         ]);
 
         // Contact us
