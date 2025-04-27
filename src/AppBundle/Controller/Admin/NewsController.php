@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller\Admin;
 
+use Symfony\Component\HttpFoundation\Response;
+
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
 use AppBundle\Entity\Rating;
@@ -162,5 +164,32 @@ class NewsController extends Controller
         $this->addFlash('success', 'action.deleted_successfully');
 
         return $this->redirectToRoute('admin_news_index');
+    }
+
+    /**
+     * @Route("/disable", name="admin_news_disable")
+     */
+    public function disableAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $news = $this->getDoctrine()->getRepository(News::class)->find($request->request->get('newsId'));
+        
+        if ($news) {
+            $news->setEnable($request->request->get('enable'));
+        }
+
+        $em->persist($news);
+
+        $em->flush();
+
+        return new Response(
+            json_encode(
+                array(
+                    'status'=>'success',
+                    'message' => 'Thao tác thành công'
+                )
+            )
+        );
     }
 }

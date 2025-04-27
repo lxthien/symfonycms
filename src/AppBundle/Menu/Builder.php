@@ -177,6 +177,11 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['level1' => 'dich-vu-son-nha-tron-goi']
         ]);
 
+        $menu['Dịch vụ khác']->addChild('Phá dỡ nhà cũ', [
+            'route' => 'news_category',
+            'routeParameters' => ['level1' => 'bao-gia-dich-vu-pha-do-nha-cu']
+        ]);
+
         $menu->addChild('Dự án thi công', [
             'route' => 'news_category',
             'routeParameters' => ['level1' => 'du-an']

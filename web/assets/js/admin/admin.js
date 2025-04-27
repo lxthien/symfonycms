@@ -87,7 +87,21 @@ $(function() {
      * Update object when change the enable button toggle
      **/
     function initEnableToggleButton() {
-        
+        $('.switch-input').on('change', function() {
+            let isChecked = $(this).prop('checked');
+            isChecked = isChecked ? 1 : 0;
+            let id = $(this).data('id');
+            let url = $(this).data('action');
+            
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: 'newsId=' + id + '&enable=' + isChecked,
+                success: function(data) {
+                    var response = JSON.parse(data);
+                }
+            });
+        });
     }
 
     function initMakePrimaryCategory() {
