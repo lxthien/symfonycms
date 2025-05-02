@@ -24,8 +24,8 @@
     {% endif %}
 {% endblock %}
 
-{% block robots %}
-<meta name="robots" content="noindex, follow" />
+{% block canonical %}
+    <link rel="canonical" href="{{ baseUrl }}"/>
 {% endblock %}
 
 {% block body %}

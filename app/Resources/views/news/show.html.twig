@@ -81,6 +81,7 @@
         "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "articleSection": "{{ category.getName() }}",
+        "articleBody": "{{ articleBody }}",
         "author": {
             "@type": "Person",
             "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person"
@@ -97,7 +98,7 @@
             "width": "420"
         },
         "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-        "wordCount": "{{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw|length }}",
+        "wordCount": "{{ wordCount }}",
         "inLanguage": "vi-VN",
         "commentCount": "{{ comments|length }}",
         "isPartOf": {
