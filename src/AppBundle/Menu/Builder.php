@@ -145,6 +145,11 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['level1' => 'sua-chua-nha', 'level2' => 'sua-nha-nang-tang']
         ]);
 
+        $menu['Sửa chữa nhà']->addChild('Sửa nhà cấp 4', [
+            'route' => 'list_category',
+            'routeParameters' => ['level1' => 'sua-chua-nha', 'level2' => 'sua-nha-cap-4']
+        ]);
+
         $menu['Sửa chữa nhà']->addChild('Dự án sửa chữa nhà', [
             'route' => 'list_category',
             'routeParameters' => ['level1' => 'sua-chua-nha', 'level2' => 'sua-chua']
@@ -180,6 +185,11 @@ class Builder implements ContainerAwareInterface
         $menu['Dịch vụ khác']->addChild('Phá dỡ nhà cũ', [
             'route' => 'news_category',
             'routeParameters' => ['level1' => 'bao-gia-dich-vu-pha-do-nha-cu']
+        ]);
+
+        $menu['Dịch vụ khác']->addChild('Chống thấm', [
+            'route' => 'news_category',
+            'routeParameters' => ['level1' => 'dich-vu-chong-tham']
         ]);
 
         $menu->addChild('Dự án thi công', [

@@ -12,7 +12,13 @@
                         <a href="{{ path('news_show', {'slug': 'tuyen-dung' }) }}">Tuyển dụng</a>
                     </li>
                     <li>
+                        <a href="{{ path('news_show', {'slug': 'chinh-sach-bao-hanh' }) }}" title="Chính sách bảo hành">Chính sách bảo hành</a>
+                    </li>
+                    <li>
                         <a href="{{ path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' }) }}" title="Chính sách bảo mật thông tin">Chính sách bảo mật thông tin</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('news_show', {'slug': 'tien-do-thanh-toan' }) }}" title="Tiến độ thanh toán">Tiến độ thanh toán</a>
                     </li>
                     <li>
                         <a href="{{ path('contact') }}">Liên hệ</a>
@@ -20,7 +26,7 @@
                 </ul>
             </div>
             <div class="col-12 col-md-12 col-lg-4">
-                <div class="wigget-title-h2 text-uppercase">Từ khóa</div>
+                <div class="wigget-title-h2 text-uppercase">Dịch vụ</div>
                 {{ get_setting('topKeyword')|raw }}
             </div>
             <div class="col-12 col-md-12 col-lg-4">
