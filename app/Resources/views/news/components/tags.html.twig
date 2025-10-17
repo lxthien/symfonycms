@@ -3,7 +3,7 @@
         <ul>
             <li class="label-tags text-uppercase"><span><i class="fa fa-tags"></i></span></li>
             {% for tag in post.getTags() %}
-                <li><a href="{{ path('tags', {'slug': tag.getUrl() }) }}" title="{{ tag.getName() }}">{{ tag.getName() }}</a></li>
+                <li><a href="{{ path('tags', {'slug': tag.getUrl() }) }}" title="{{ tag.getName() }}" target="_blank" rel="noopener">{{ tag.getName() }}</a></li>
             {% endfor %}
         </ul>
     </div>

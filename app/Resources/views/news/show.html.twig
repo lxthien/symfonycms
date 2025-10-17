@@ -125,7 +125,7 @@
                     <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
                     <p class="post-modified-info">Ngày cập nhật: {{ post.getUpdatedAt()|date('d/m/Y') }} bởi <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank" class="last-modified-author">Lê Xuân Minh</a></p>
                     <div class="news-container">
-                        {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
+                        {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
                         {% if post.getAutoFulfillAddress() %}
                             {{ get_setting('addressInPost')|raw }}
                         {% endif %}

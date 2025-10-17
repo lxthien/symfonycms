@@ -156,7 +156,7 @@
                 {% endif %}
                 <h1>{{ post.title }}</h1>
                 <div class="article-content">
-                    {{ contentsAmp|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM'})|raw }}
+                    {{ contentsAmp|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
                     {% if post.getAutoFulfillAddress() %}
                         {{ get_setting('addressInPost')|raw }}
                     {% endif %}

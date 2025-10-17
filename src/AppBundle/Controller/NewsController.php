@@ -198,7 +198,7 @@ class NewsController extends Controller
                 ->setParameter('id', $post->getId())
                 ->setParameter('postType', $post->getPostType())
                 ->setParameter('enable', 1)
-                ->setMaxResults( 8 )
+                ->setMaxResults( 16 )
                 ->orderBy('r.createdAt', 'DESC')
                 ->getQuery()
                 ->getResult();
@@ -296,6 +296,7 @@ class NewsController extends Controller
         $string = str_replace("\n", ' ', $string);
         $string = str_replace("\t", ' ', $string);
         $string = str_replace("10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM", 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM', $string);
+        $string = str_replace("A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM", '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', $string);
         // ----- remove multiple spaces -----
         $string = trim(preg_replace('/ {2,}/', ' ', $string));
         
