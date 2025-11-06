@@ -37,6 +37,7 @@
                                         <th>{{ 'label.parentcat'|trans }}</th>
                                         <th>{{ 'label.url'|trans }}</th>
                                         <th>{{ 'label.published_at'|trans }}</th>
+                                        <th>{{ 'Updated' }}</th>
                                         <th>{{ 'label.actions'|trans }}</th>
                                     </tr>
                                 </thead>
@@ -47,6 +48,7 @@
                                         <td>{{ row.getParentcat() }}</td>
                                         <td>{{ row.getUrl() }}</td>
                                         <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                        <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                         <td>
                                             <div class="item-actions">
                                                 <a href="{{ path('admin_newscategory_edit', {id: row.id}) }}" class="btn-sm btn-edit">
