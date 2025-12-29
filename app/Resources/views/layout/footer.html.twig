@@ -1,112 +1,81 @@
 <!-- Begin footer -->
-<footer>
-    <div class="container">
-        <div class="row footer-top">
-            <div class="col-12 col-md-12 col-lg-4">
-                <div class="wigget-title-h2 text-uppercase">Về chúng tôi</div>
-                <ul class="about-us">
-                    <li>
-                        <a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}">Về chúng tôi</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_show', {'slug': 'tuyen-dung' }) }}">Tuyển dụng</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_show', {'slug': 'chinh-sach-bao-hanh' }) }}" title="Chính sách bảo hành">Chính sách bảo hành</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' }) }}" title="Chính sách bảo mật thông tin">Chính sách bảo mật thông tin</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_show', {'slug': 'tien-do-thanh-toan' }) }}" title="Tiến độ thanh toán">Tiến độ thanh toán</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('contact') }}">Liên hệ</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-12 col-md-12 col-lg-4">
-                <div class="wigget-title-h2 text-uppercase">Dịch vụ</div>
-                {{ get_setting('topKeyword')|raw }}
-            </div>
-            <div class="col-12 col-md-12 col-lg-4">
-                <div class="wigget-title-h2 text-uppercase">Xây Dựng Minh Duy</div>
-                <ul class="footer-company">
-                    <li>
-                        <i class="fa fa-map-marker"></i>
-                        <span>{{ get_setting('companyAddress') }}</span>
-                    </li>
-                    <li>
-                        <i class="fa fa-phone"></i>
-                        <span>{{ get_setting('hotLine1') }}</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <span>{{ get_setting('emailContact') }}</span>
-                    </li>
-                    <li>
-                        <i class="fab fa-internet-explorer"></i>
-                        <span>{{ get_setting('companyWebsite') }}</span>
-                    </li>
-                </ul>
-                <br>
-                {{ get_setting('dmcaScript')|raw }}
-            </div>
-        </div>
-        <div class="row footer-middle">
-            <div class="col-12 col-md-12 col-lg-3 hidden-xs hidden-sm">
-                <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                    <img
-                        alt="{{ get_setting('siteName') }}"
-                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-footer.png'), '')) }}"
-                        width="293"
-                        height="206"
-                        class="lazyload">
-                </a>
-            </div>
-            <div class="col-12 col-md-12 col-lg-6">
-                <div class="wigget-title-h2 text-uppercase">Về chúng tôi</div>
-                <div class="footer-text-wrap">
-                    {{ get_setting('siteNameDescription')|raw }}
+<footer class="site-footer">
+    <div class="footer-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-widget">
+                        <div class="footer-logo">
+                            <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
+                                <img alt="{{ get_setting('siteName') }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-footer.png'), '')) }}" width="200" height="140" class="lazyload">
+                            </a>
+                        </div>
+                        <p class="footer-desc">{{ get_setting('siteNameDescription')|striptags|slice(0, 200) }}...</p>
+                        <div class="footer-social">
+                            <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Facebook" rel="nofollow noreferrer" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Youtube" rel="nofollow noreferrer" class="social-icon youtube"><i class="fab fa-youtube"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Twitter" rel="nofollow noreferrer" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToGooglePlus') }}" title="Pinterest" rel="nofollow noreferrer" class="social-icon pinterest"><i class="fab fa-pinterest-p"></i></a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-12 col-md-12 col-lg-3">
-                <div class="wigget-title-h2 text-uppercase">Mạng xã hội</div>
-                <span class="td-social-icon-wrap">
-                    <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Minh Duy trên Facebook" rel="nofollow noreferrer">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                </span>
-                <span class="td-social-icon-wrap">
-                    <a target="_blank" href="{{ get_setting('linkToGooglePlus') }}" title="Xây Dựng Minh Duy trên Google plus" rel="nofollow noreferrer">
-                        <i class="fab fa-google-plus"></i>
-                    </a>
-                </span>
-                <span class="td-social-icon-wrap">
-                    <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Xây Dựng Minh Duy trên Twitter" rel="nofollow noreferrer">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                </span>
-                <span class="td-social-icon-wrap">
-                    <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Xây Dựng Minh Duy trên Youtube" rel="nofollow noreferrer">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </span>
-                <span class="td-social-icon-wrap">
-                    <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Xây Dựng Minh Duy trên Linkedin" rel="nofollow noreferrer">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="row copyright">
-            <div class="col-sm-12 text-center">
-                <p>Copyright © {{ "now"|date('Y') }} <a href="https://xaydungminhduy.com/" title="Xây Dựng Minh Duy">Xây Dựng Minh Duy</a>, all rights reserved.</p>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-widget">
+                        <h4 class="widget-title">Về Chúng Tôi</h4>
+                        <ul class="footer-links">
+                            <li><a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}"><i class="fas fa-chevron-right"></i> Giới thiệu</a></li>
+                            <li><a href="{{ path('news_show', {'slug': 'tuyen-dung' }) }}"><i class="fas fa-chevron-right"></i> Tuyển dụng</a></li>
+                            <li><a href="{{ path('news_show', {'slug': 'chinh-sach-bao-hanh' }) }}"><i class="fas fa-chevron-right"></i> Chính sách bảo hành</a></li>
+                            <li><a href="{{ path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' }) }}"><i class="fas fa-chevron-right"></i> Chính sách bảo mật</a></li>
+                            <li><a href="{{ path('news_show', {'slug': 'tien-do-thanh-toan' }) }}"><i class="fas fa-chevron-right"></i> Tiến độ thanh toán</a></li>
+                            <li><a href="{{ path('contact') }}"><i class="fas fa-chevron-right"></i> Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-widget">
+                        <h4 class="widget-title">Dịch Vụ</h4>
+                        <div class="footer-services">
+                            {{ get_setting('topKeyword')|raw }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-widget">
+                        <h4 class="widget-title">Liên Hệ</h4>
+                        <ul class="footer-contact">
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="contact-info">{{ get_setting('companyAddress') }}</div>
+                            </li>
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                                <div class="contact-info"><a href="tel:{{ get_setting('hotLine2') }}">{{ get_setting('hotLine1') }}</a></div>
+                            </li>
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                                <div class="contact-info"><a href="mailto:{{ get_setting('emailContact') }}">{{ get_setting('emailContact') }}</a></div>
+                            </li>
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-globe"></i></div>
+                                <div class="contact-info">{{ get_setting('companyWebsite') }}</div>
+                            </li>
+                        </ul>
+                        {{ get_setting('dmcaScript')|raw }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-12 text-center">
+                    <p class="copyright-text">© {{ "now"|date('Y') }} <a href="https://xaydungminhduy.com/" title="Xây Dựng Minh Duy">Xây Dựng Minh Duy</a>. Tất cả quyền được bảo lưu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
     {{ include('layout/hotline.html.twig') }}
 </footer>
 <!-- End footer -->

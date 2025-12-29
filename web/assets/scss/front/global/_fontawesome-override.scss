@@ -1,0 +1,39 @@
+// Font Awesome font-display: swap override for better LCP
+// This ensures icons don't cause layout shift
+
+// Override Font Awesome font-face with font-display: swap
+@font-face {
+    font-family: 'Font Awesome 6 Free';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Font Awesome 6 Free';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Font Awesome 6 Brands';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+// Fallback sizing for icons to prevent CLS
+.fa, .fas, .far, .fab, .fal, .fad {
+    display: inline-block;
+    min-width: 1em;
+    text-align: center;
+}
+
+// Common icon sizes - reserve space before font loads
+[class^="fa-"], [class*=" fa-"] {
+    &::before {
+        display: inline-block;
+        min-width: 1em;
+    }
+}

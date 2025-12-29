@@ -1,11 +1,84 @@
-<div class="col-lg-3 d-none hidden-xs hidden-sm" id="sidebar">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="sidebar">
-                {# {{ include('widgets/recentNews.html.twig') }}
-                {{ include('widgets/hotNews.html.twig') }} #}
-                {{ include('layout/fanpage.html.twig') }}
-            </div>
+<div class="sidebar-inner">
+    {# Author Box #}
+    <div class="sidebar-widget author-widget">
+        <div class="author-avatar">
+            <img src="{{ asset('assets/images/author-avatar.jpg') }}" alt="Lê Xuân Minh" onerror="this.src='https://ui-avatars.com/api/?name=Minh+Duy&background=1e3a5f&color=fff&size=100'">
         </div>
+        <div class="author-info">
+            <h4 class="author-name">Lê Xuân Minh</h4>
+            <p class="author-title">CEO - Xây Dựng Minh Duy</p>
+            <p class="author-bio">Hơn 15 năm kinh nghiệm trong lĩnh vực xây dựng và thiết kế nhà ở tại TP.HCM</p>
+        </div>
+    </div>
+
+    {# CTA Box #}
+    <div class="sidebar-widget cta-widget">
+        <div class="cta-icon">
+            <i class="fas fa-phone-volume"></i>
+        </div>
+        <h4 class="cta-title">Tư vấn miễn phí</h4>
+        <p class="cta-text">Gọi ngay để được tư vấn và báo giá nhanh nhất!</p>
+        <a href="tel:{{ get_setting('hotLine1') }}" class="cta-phone">
+            <i class="fas fa-phone-alt"></i>
+            {{ get_setting('hotLine1') }}
+        </a>
+    </div>
+
+    {# Price List Widget #}
+    <div class="sidebar-widget price-widget">
+        <h3 class="widget-title">
+            <i class="fas fa-tags"></i>
+            Bảng giá dịch vụ
+        </h3>
+        <ul class="price-list">
+            <li>
+                <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}">
+                    <i class="fas fa-chevron-right"></i>
+                    Báo giá xây nhà trọn gói
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}">
+                    <i class="fas fa-chevron-right"></i>
+                    Báo giá sửa nhà trọn gói
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('news_show', {'slug': 'bang-gia-xay-dung-nha-phan-tho' }) }}">
+                    <i class="fas fa-chevron-right"></i>
+                    Giá xây nhà phần thô
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('news_show', {'slug': 'dich-vu-bao-gia-sua-chua-can-ho-chung-cu' }) }}">
+                    <i class="fas fa-chevron-right"></i>
+                    Giá sửa chữa chung cư
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-nha-pho' }) }}">
+                    <i class="fas fa-chevron-right"></i>
+                    Giá thiết kế nhà phố
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    {# Recent Posts Widget #}
+    <div class="sidebar-widget recent-widget">
+        <h3 class="widget-title">
+            <i class="fas fa-newspaper"></i>
+            Bài viết mới nhất
+        </h3>
+        {{ render(controller('AppBundle:News:recentNews')) }}
+    </div>
+
+    {# Fanpage Widget #}
+    <div class="sidebar-widget fanpage-widget">
+        <h3 class="widget-title">
+            <i class="fab fa-facebook"></i>
+            Fanpage
+        </h3>
+        {{ include('layout/fanpage.html.twig') }}
     </div>
 </div>

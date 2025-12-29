@@ -20,7 +20,9 @@
     },
     "dependencies": {
         "@fancyapps/fancybox": "^3.5.6",
+        "@fortawesome/fontawesome-free": "^7.1.0",
         "bxslider": "^4.2.14",
+        "eonasdan-bootstrap-datetimepicker": "^4.17.49",
         "jquery-validation": "^1.19.0"
     }
 }

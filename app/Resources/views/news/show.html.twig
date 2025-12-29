@@ -48,110 +48,170 @@
     }
     </script>
     {% endif %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "WebPage",
-        "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage",
-        "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "isPartOf": {
-            "@id": "https://xaydungminhduy.com/#website"
-        },
-        "primaryImageOfPage": {
-            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-        },
-        "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
-        "inLanguage": "vi-VN"
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "BlogPosting",
-        "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#blogposting",
-        "mainEntityOfPage": {
-            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-        },
-        "headline": "{{ post.getTitle() }}",
-        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
-        "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "articleSection": "{{ category.getName() }}",
-        "articleBody": "{{ articleBody }}",
-        "author": {
-            "@type": "Person",
-            "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "@id": "https://xaydungminhduy.com/#organization"
-        },
-        "image": {
-            "@type": "ImageObject",
-            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-            "url": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-            "height": "800",
-            "width": "420"
-        },
-        "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-        "wordCount": "{{ wordCount }}",
-        "inLanguage": "vi-VN",
-        "commentCount": "{{ comments|length }}",
-        "isPartOf": {
-            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-        }{% if keywords is not null %},
-        "keywords": [
-            {% for keyword in keywords %}
-            "{{ keyword|trim }}"{% if loop.last == false %},{% endif %}
-            {% endfor %}
-        ]
-        {% endif %}
-    }
-    </script>
+    
+    {% if post.getQa() != null %}
+        {{ post.getQa()|raw }}
+    {% else %}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org/",
+            "@type": "WebPage",
+            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage",
+            "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
+            "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
+            "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+            "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+            "isPartOf": {
+                "@id": "https://xaydungminhduy.com/#website"
+            },
+            "primaryImageOfPage": {
+                "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+            },
+            "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
+            "inLanguage": "vi-VN"
+        }
+        </script>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org/",
+            "@type": "BlogPosting",
+            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#blogposting",
+            "mainEntityOfPage": {
+                "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
+            },
+            "headline": "{{ post.getTitle() }}",
+            "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
+            "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
+            "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+            "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+            "articleSection": "{{ category.getName() }}",
+            "articleBody": "{{ articleBody }}",
+            "author": {
+                "@type": "Person",
+                "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "@id": "https://xaydungminhduy.com/#organization"
+            },
+            "image": {
+                "@type": "ImageObject",
+                "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
+                "url": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
+                "height": "800",
+                "width": "420"
+            },
+            "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
+            "wordCount": "{{ wordCount }}",
+            "inLanguage": "vi-VN",
+            "commentCount": "{{ comments|length }}",
+            "isPartOf": {
+                "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
+            }{% if keywords is not null %},
+            "keywords": [
+                {% for keyword in keywords %}
+                "{{ keyword|trim }}"{% if loop.last == false %},{% endif %}
+                {% endfor %}
+            ]
+            {% endif %}
+        }
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <div class="container wrapper-container wrapper-post-container">
-        <div class="row post-container {{ post.getTemplate() == '1_column' ? 'page-1-column' : 'page-1-column' }}">
-            <div class="col-12 col-md-12 {{ post.getTemplate() != '1_column' ? 'col-lg-12' : 'col-lg-12' }} wrapper-post-container-left">
-                {# breadcrumbs #}
-                {{ include('news/components/breadcrumbs.html.twig') }}
+    {# Hero Breadcrumb #}
+    <div class="post-hero">
+        <div class="container">
+            {{ include('news/components/breadcrumbs.html.twig') }}
+        </div>
+    </div>
 
-                <article id="post-{{ post.getId() }}" class="news">
-                    <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
-                    <p class="post-modified-info">Ngày cập nhật: {{ post.getUpdatedAt()|date('d/m/Y') }} bởi <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank" class="last-modified-author">Lê Xuân Minh</a></p>
-                    <div class="news-container">
-                        {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
-                        {% if post.getAutoFulfillAddress() %}
-                            {{ get_setting('addressInPost')|raw }}
-                        {% endif %}
-                    </div>
+    <div class="post-page">
+        <div class="container">
+            <div class="post-layout">
+                {# Main Content #}
+                <div class="post-main">
+                    <article id="post-{{ post.getId() }}" class="post-article">
+                        {# Post Header #}
+                        <header class="post-header">
+                            <h1 class="post-title">{{ post.getTitle() }}</h1>
+                            <div class="post-meta">
+                                <span class="meta-item">
+                                    <i class="far fa-calendar-alt"></i>
+                                    {{ post.getUpdatedAt()|date('d/m/Y') }}
+                                </span>
+                                <span class="meta-item">
+                                    <i class="far fa-user"></i>
+                                    <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank">Lê Xuân Minh</a>
+                                </span>
+                                <span class="meta-item">
+                                    <i class="far fa-folder"></i>
+                                    <a href="#">{{ category.getName() }}</a>
+                                </span>
+                                <span class="meta-item">
+                                    <i class="far fa-eye"></i>
+                                    {{ post.getViewCounts() }} lượt xem
+                                </span>
+                            </div>
+                        </header>
 
-                    {# List tags #}
-                    {{ include('news/components/tags.html.twig') }}
+                        {# Post Content #}
+                        <div class="post-content news-container">
+                            {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                            {% if post.getAutoFulfillAddress() %}
+                                {{ get_setting('addressInPost')|raw }}
+                            {% endif %}
+                        </div>
 
-                    {# Rating and Share #}
-                    <div class="rating-share-container">
-                        {{ include('news/rating/rating.html.twig') }}
-                    </div>
+                        {# Post Footer #}
+                        <footer class="post-footer">
+                            {# Tags #}
+                            {{ include('news/components/tags.html.twig') }}
 
-                    {# Q&A #}
+                            {# Rating #}
+                            <div class="post-rating-wrapper">
+                                {{ include('news/rating/rating.html.twig') }}
+                            </div>
+
+                            {# Share Buttons #}
+                            <div class="post-share">
+                                <span class="share-label"><i class="fas fa-share-alt"></i> Chia sẻ:</span>
+                                <div class="share-buttons">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-facebook" title="Chia sẻ lên Facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="https://twitter.com/intent/tweet?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&text={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-twitter" title="Chia sẻ lên Twitter">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-linkedin" title="Chia sẻ lên LinkedIn">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                    <a href="https://pinterest.com/pin/create/button/?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&media={{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}&description={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-pinterest" title="Chia sẻ lên Pinterest">
+                                        <i class="fab fa-pinterest-p"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </footer>
+                    </article>
+
+                    {# FAQ Section #}
                     {{ include('news/components/qa.html.twig') }}
 
+                    {# Related Posts #}
                     {% if post.getTemplate() != '1_column' %}
                         {{ include('news/components/related.html.twig') }}
                     {% endif %}
-                    
-                    {# List comments #}
+
+                    {# Comments Section #}
                     {{ include('news/comments/list.html.twig') }}
-                    
-                    {# Render form comment #}
                     {{ include('news/comments/form.html.twig') }}
-                </article>
+                </div>
+
+                {# Sidebar #}
+                <aside class="post-sidebar">
+                    {{ include('layout/sidebar.html.twig') }}
+                </aside>
             </div>
         </div>
     </div>

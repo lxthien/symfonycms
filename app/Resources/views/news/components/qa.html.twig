@@ -17,23 +17,24 @@
             ]
         }
     </script>
-    <div class="faq-news">
-        <h2>Những câu hỏi thường gặp</h2>
-        <div class="row">
-            <div id="faq">
-                <ul>
-                    {% for qA in qAs %}
-                    <li>
-                        <input type="checkbox" checked>
-                        <i></i>
-                        <h3>{{ qA.question }}</h3>
-                        <p>{{ qA.answer }}</p>
-                    </li>
-                    {% endfor %}
-                </ul>
+    <div class="faq-section">
+        <h2 class="section-title">
+            <i class="fas fa-question-circle"></i>
+            <span>Những câu hỏi thường gặp</span>
+        </h2>
+        <div class="faq-list">
+            {% for qA in qAs %}
+            <div class="faq-item">
+                <input type="checkbox" id="faq-{{ loop.index }}" checked>
+                <label for="faq-{{ loop.index }}" class="faq-question">
+                    <span class="question-text">{{ qA.question }}</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </label>
+                <div class="faq-answer">
+                    <p>{{ qA.answer }}</p>
+                </div>
             </div>
-
+            {% endfor %}
         </div>
     </div>
-    <div class="clearfix"></div>
 {% endif %}

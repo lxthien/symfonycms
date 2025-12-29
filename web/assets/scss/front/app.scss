@@ -6,6 +6,10 @@ $web-font-path: 'data:text/css;base64,';
 @import "~bootswatch/flatly/variables";
 @import "global/bootstrap";
 
+// Font Awesome - Self-hosted CSS (SCSS không tương thích với node-sass)
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@import "global/fontawesome-override";
+
 @import '~bxslider/dist/jquery.bxslider.css';
 @import '~@fancyapps/fancybox/dist/jquery.fancybox.css';
 @import '../../libs/starrating/css/rating.css';

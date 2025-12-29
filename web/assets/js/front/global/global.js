@@ -37,19 +37,30 @@ function initGoToTop() {
 }
 
 function initProjectHotSlider() {
+    var slideWidth = 280;
+    
+    // Responsive: 1 slide on mobile
+    if ($(window).width() < 576) {
+        slideWidth = $(window).width() - 40;
+    } else if ($(window).width() < 768) {
+        slideWidth = ($(window).width() - 60) / 2;
+    }
+    
     $('.bxslider').show().bxSlider({
         auto: true,
         autoControls: false,
         stopAutoOnClick: true,
-        pager: false,
+        pager: true,
         controls: true,
         minSlides: 1,
         maxSlides: 4,
         moveSlides: 1,
+        slideWidth: slideWidth,
         slideMargin: 20,
-        touchEnabled: false,
+        touchEnabled: true,
         autoHover: true,
-        adaptiveHeight: true
+        adaptiveHeight: false,
+        shrinkItems: true
     });
 }
 
@@ -261,6 +272,52 @@ function initTypewriterEffect() {
     }
 }
 
+function initTableOfContents() {
+    var $toc = $('.table-of-contents');
+    
+    if ($toc.length === 0) return;
+    
+    $toc.each(function() {
+        var $this = $(this);
+        var $children = $this.children();
+        
+        // Skip if already initialized
+        if ($this.find('.toc-header').length > 0) return;
+        
+        // Create wrapper for existing content
+        var $tocContent = $('<div class="toc-content collapsed"></div>');
+        $children.appendTo($tocContent);
+        
+        // Create header
+        var $tocHeader = $('<div class="toc-header">' +
+            '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
+            '<span class="toc-toggle collapsed">' +
+                '<span class="toggle-text">Hiện</span>' +
+                '<i class="fas fa-chevron-down toggle-icon"></i>' +
+            '</span>' +
+        '</div>');
+        
+        // Build new structure
+        $this.empty().append($tocHeader).append($tocContent);
+        
+        // Toggle functionality
+        $tocHeader.on('click', function() {
+            var $toggle = $(this).find('.toc-toggle');
+            var $content = $(this).siblings('.toc-content');
+            
+            $toggle.toggleClass('collapsed');
+            $content.toggleClass('collapsed');
+            
+            // Update text
+            if ($content.hasClass('collapsed')) {
+                $toggle.find('.toggle-text').text('Hiện');
+            } else {
+                $toggle.find('.toggle-text').text('Ẩn');
+            }
+        });
+    });
+}
+
 exports.init = function () {
     initSearchBox();
     initProjectHotSlider();
@@ -272,4 +329,5 @@ exports.init = function () {
     initCostConstruction();
     initFancybox();
     initTypewriterEffect();
+    initTableOfContents();
 };

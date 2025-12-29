@@ -111,6 +111,159 @@
     }
 }
 
+// ============================================
+// PRICE SECTION - MODERN DESIGN
+// ============================================
+
+.price-section {
+    background: $white;
+    padding: 30px 0;
+    border-bottom: 1px solid $gray200;
+
+    @media only screen and (max-width: 768px) {
+        padding: 20px 0;
+    }
+
+    .price-cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+
+        @media only screen and (max-width: 991.98px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media only screen and (max-width: 575.98px) {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+    }
+
+    .price-card {
+        a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 15px;
+            background: $white;
+            border: 2px solid $gray200;
+            border-radius: 12px;
+            transition: all $transitionNormal;
+            text-decoration: none;
+
+            &:hover {
+                border-color: $primaryColor2;
+                box-shadow: $shadowMd;
+                transform: translateY(-3px);
+
+                .card-icon {
+                    background: $gradientPrimary;
+
+                    i {
+                        color: $white;
+                    }
+                }
+
+                .card-arrow {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba($primaryColor2, 0.1) 0%, rgba($primaryColor2, 0.2) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all $transitionNormal;
+
+            i {
+                font-size: 18px;
+                color: $primaryColor2;
+                transition: all $transitionNormal;
+            }
+        }
+
+        .card-text {
+            flex: 1;
+
+            .card-title {
+                display: block;
+                font-size: 14px;
+                font-weight: 700;
+                color: $primaryColor;
+                margin-bottom: 2px;
+                font-family: $robotoCondesed;
+                line-height: 1.3;
+            }
+
+            .card-desc {
+                display: block;
+                font-size: 13px;
+                color: $secondaryColor;
+                font-weight: 600;
+            }
+        }
+
+        .card-arrow {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all $transitionNormal;
+
+            i {
+                color: $primaryColor2;
+                font-size: 14px;
+            }
+        }
+
+        // Highlight card (CTA)
+        &.highlight {
+            a {
+                background: $gradientSecondary;
+                border-color: transparent;
+
+                .card-icon {
+                    background: rgba($white, 0.2);
+
+                    i {
+                        color: $white;
+                    }
+                }
+
+                .card-text {
+                    .card-title {
+                        color: $white;
+                    }
+
+                    .card-desc {
+                        color: rgba($white, 0.9);
+                    }
+                }
+
+                .card-arrow {
+                    opacity: 1;
+                    transform: translateX(0);
+
+                    i {
+                        color: $white;
+                    }
+                }
+
+                &:hover {
+                    box-shadow: $shadowLg;
+                    transform: translateY(-5px);
+                }
+            }
+        }
+    }
+}
+
+// Legacy styles for backward compatibility
 .bang-gia {
     padding-top: 40px;
     padding-bottom: 40px;
@@ -167,7 +320,161 @@
         }
     }
 }
+// ============================================
+// WHY CHOOSE US SECTION - MODERN DESIGN
+// ============================================
 
+.why-choose-us-section {
+    padding: 60px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+
+    @media only screen and (max-width: 768px) {
+        padding: 40px 0;
+    }
+
+    // Section Header
+    .section-header {
+        text-align: center;
+        margin-bottom: 30px;
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: $primaryColor;
+            margin-bottom: 15px;
+            font-family: $robotoCondesed;
+
+            @media only screen and (max-width: 768px) {
+                font-size: 28px;
+            }
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: $gray600;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+    }
+
+    // Commitment Header
+    .commitment-header {
+        text-align: center;
+        margin-bottom: 40px;
+
+        .commitment-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: $primaryColor2;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            @media only screen and (max-width: 768px) {
+                font-size: 22px;
+            }
+        }
+
+        .title-decoration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+
+            .line {
+                width: 60px;
+                height: 3px;
+                background: $secondaryColor;
+                border-radius: 2px;
+            }
+
+            i {
+                color: $secondaryColor;
+                font-size: 20px;
+            }
+        }
+    }
+
+    // Commitment Cards Grid
+    .commitment-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    // Commitment Card
+    .commitment-card {
+        background: $white;
+        border-radius: 12px;
+        padding: 30px 25px;
+        margin-bottom: 25px;
+        box-shadow: $shadowMd;
+        transition: all $transitionNormal;
+        height: calc(100% - 25px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: 1px solid transparent;
+
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: $shadowLg;
+            border-color: $primaryColor2;
+
+            .card-icon {
+                background: $gradientPrimary;
+                transform: scale(1.1);
+
+                i {
+                    color: $white;
+                }
+            }
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba($primaryColor2, 0.1) 0%, rgba($primaryColor2, 0.2) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: all $transitionNormal;
+
+            i {
+                font-size: 32px;
+                color: $primaryColor2;
+                transition: all $transitionNormal;
+            }
+        }
+
+        .card-content {
+            h3 {
+                font-size: 18px;
+                font-weight: 700;
+                color: $primaryColor;
+                margin-bottom: 12px;
+                font-family: $robotoCondesed;
+            }
+
+            p {
+                font-size: 14px;
+                color: $gray600;
+                line-height: 1.6;
+                margin-bottom: 0;
+
+                @media only screen and (max-width: 575.98px) {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+}
+
+// Legacy styles for backward compatibility
 .why-choose-us {
     background-image: url("../../assets/images/background-why-choose-us.jpg");
     background-position: center center;
@@ -513,5 +820,566 @@
         text-align: center;
         font-style: italic;
         margin-bottom: 20px;
+    }
+}
+
+// ============================================
+// SERVICE & PROJECT BLOCKS - MODERN DESIGN
+// ============================================
+
+.service-block {
+    padding: 50px 0;
+
+    &.bg-light {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    }
+
+    @media only screen and (max-width: 768px) {
+        padding: 35px 0;
+    }
+}
+
+.project-block {
+    padding: 50px 0;
+    background: $gradientPrimary;
+
+    .section-heading {
+        .heading-title a {
+            color: $white;
+        }
+
+        .heading-decoration {
+            .line {
+                background: $secondaryColor;
+            }
+
+            i {
+                color: $secondaryColor;
+            }
+        }
+
+        .heading-desc {
+            color: rgba($white, 0.8);
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        padding: 35px 0;
+    }
+}
+
+// Section Heading
+.section-heading {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .heading-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: $robotoCondesed;
+
+        a {
+            color: $primaryColor2;
+            transition: all $transitionFast;
+
+            &:hover {
+                color: $primaryColor;
+                text-decoration: none;
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            font-size: 22px;
+        }
+    }
+
+    .heading-decoration {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 15px;
+
+        .line {
+            width: 50px;
+            height: 3px;
+            background: $primaryColor2;
+            border-radius: 2px;
+        }
+
+        i {
+            color: $primaryColor2;
+            font-size: 18px;
+        }
+    }
+
+    .heading-desc {
+        font-size: 15px;
+        color: $gray700;
+        max-width: 600px;
+        margin: 0 auto;
+        font-style: italic;
+
+        @media only screen and (max-width: 575.98px) {
+            font-size: 14px;
+            padding: 0 10px;
+        }
+    }
+}
+
+// Service Grid
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+
+    @media only screen and (max-width: 991.98px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media only screen and (max-width: 767.98px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    @media only screen and (max-width: 575.98px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Service Card
+.service-card {
+    background: $white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $shadowMd;
+    transition: all $transitionNormal;
+
+    &.d-none-tablet {
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            display: none;
+        }
+    }
+
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadowLg;
+
+        .card-image {
+            img {
+                transform: scale(1.1);
+            }
+
+            .card-overlay {
+                opacity: 1;
+            }
+        }
+
+        .card-content .card-more {
+            color: $secondaryColor;
+
+            i {
+                transform: translateX(5px);
+            }
+        }
+    }
+
+    .card-link {
+        display: block;
+        text-decoration: none;
+    }
+
+    .card-image {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+
+        @media only screen and (max-width: 767.98px) {
+            height: 180px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba($primaryColor, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all $transitionNormal;
+
+            .overlay-icon {
+                width: 50px;
+                height: 50px;
+                border: 2px solid $white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $white;
+                font-size: 18px;
+            }
+        }
+    }
+
+    .card-content {
+        padding: 20px;
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: $gray900;
+            margin-bottom: 10px;
+            font-family: $robotoCondesed;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 44px;
+
+            @media only screen and (max-width: 767.98px) {
+                font-size: 15px;
+                min-height: auto;
+            }
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: $gray800;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-more {
+            font-size: 13px;
+            font-weight: 700;
+            color: $primaryColor2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all $transitionFast;
+
+            i {
+                font-size: 11px;
+                transition: transform $transitionFast;
+            }
+        }
+    }
+}
+
+// Section Footer
+.section-footer {
+    text-align: center;
+    margin-top: 30px;
+
+    .btn-view-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 30px;
+        background: $gradientPrimary;
+        color: $white;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all $transitionNormal;
+        text-decoration: none;
+
+        i {
+            transition: transform $transitionFast;
+        }
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: $shadowMd;
+            color: $white;
+
+            i {
+                transform: translateX(5px);
+            }
+        }
+    }
+}
+
+// Project Slider
+.project-slider {
+    position: relative;
+    margin: 0 -10px;
+
+    .bxslider {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        .slide-item {
+            padding: 10px;
+            
+            @media only screen and (max-width: 575.98px) {
+                width: 100% !important;
+                max-width: 100%;
+            }
+        }
+    }
+    
+    @media only screen and (max-width: 575.98px) {
+        margin: 0 10px;
+        
+        .bx-wrapper {
+            .bx-viewport {
+                .bxslider {
+                    .slide-item {
+                        padding: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Project Card (for slider)
+.project-card {
+    background: $white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $shadowMd;
+    transition: all $transitionNormal;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: $shadowLg;
+
+        .card-image {
+            img {
+                transform: scale(1.1);
+            }
+
+            .card-overlay {
+                opacity: 1;
+            }
+        }
+
+        .card-content .card-more {
+            color: $secondaryColor;
+
+            i {
+                transform: translateX(5px);
+            }
+        }
+    }
+
+    .card-link {
+        display: block;
+        text-decoration: none;
+    }
+
+    .card-image {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+
+        @media only screen and (max-width: 767.98px) {
+            height: 180px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba($primaryColor, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all $transitionNormal;
+
+            .overlay-icon {
+                width: 50px;
+                height: 50px;
+                border: 2px solid $white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $white;
+                font-size: 18px;
+            }
+        }
+    }
+
+    .card-content {
+        padding: 20px;
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: $gray900;
+            margin-bottom: 10px;
+            font-family: $robotoCondesed;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 44px;
+
+            @media only screen and (max-width: 767.98px) {
+                font-size: 15px;
+                min-height: auto;
+            }
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: $gray800;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-more {
+            font-size: 13px;
+            font-weight: 700;
+            color: $primaryColor2;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all $transitionFast;
+
+            i {
+                font-size: 11px;
+                transition: transform $transitionFast;
+            }
+        }
+    }
+}
+
+// BxSlider custom styles for project block
+.project-block {
+    .bx-wrapper {
+        margin: 0 auto;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+
+        .bx-viewport {
+            box-shadow: none;
+            border: none;
+            background: transparent;
+            left: 0 !important;
+        }
+
+        .bx-controls-direction {
+            a {
+                width: 50px;
+                height: 50px;
+                background: $secondaryColor;
+                border-radius: 50%;
+                box-shadow: $shadowLg;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all $transitionFast;
+                z-index: 100;
+                top: 50%;
+                margin-top: -80px;
+
+                &:hover {
+                    background: darken($secondaryColor, 10%);
+                    transform: scale(1.15);
+                    box-shadow: 0 6px 20px rgba($secondaryColor, 0.5);
+                }
+
+                &.bx-prev {
+                    left: -25px;
+                    text-indent: -9999px;
+
+                    &::after {
+                        content: '\f053';
+                        font-family: 'Font Awesome 5 Free';
+                        font-weight: 900;
+                        color: $white;
+                        font-size: 18px;
+                        text-indent: 0;
+                        position: absolute;
+                    }
+
+                    @media only screen and (max-width: 991.98px) {
+                        left: 5px;
+                    }
+                }
+
+                &.bx-next {
+                    right: -25px;
+                    text-indent: -9999px;
+
+                    &::after {
+                        content: '\f054';
+                        font-family: 'Font Awesome 5 Free';
+                        font-weight: 900;
+                        color: $white;
+                        font-size: 18px;
+                        text-indent: 0;
+                        position: absolute;
+                    }
+
+                    @media only screen and (max-width: 991.98px) {
+                        right: 5px;
+                    }
+                }
+            }
+        }
+
+        .bx-pager {
+            padding-top: 25px;
+
+            .bx-pager-item {
+                .bx-pager-link {
+                    width: 14px;
+                    height: 14px;
+                    background: rgba($white, 0.5);
+                    border: 2px solid rgba($white, 0.7);
+                    border-radius: 50%;
+                    margin: 0 6px;
+                    transition: all $transitionFast;
+
+                    &.active,
+                    &:hover {
+                        background: $secondaryColor;
+                        border-color: $secondaryColor;
+                        transform: scale(1.2);
+                    }
+                }
+            }
+        }
     }
 }

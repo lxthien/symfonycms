@@ -1,0 +1,92 @@
+/* Critical CSS - Above the fold styles for LCP optimization */
+
+/* Reset & Base */
+*, *::before, *::after { box-sizing: border-box; }
+html { line-height: 1.15; -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 1.5; color: #333; background-color: #f1f1f1; }
+
+/* Font Awesome Critical - Prevent CLS */
+.fa, .fas, .far, .fab, .fal, .fad, [class^="fa-"], [class*=" fa-"] {
+    display: inline-block;
+    min-width: 1em;
+    min-height: 1em;
+    text-align: center;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container */
+.container { width: 100%; padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto; }
+@media (min-width: 992px) { .container { width: 1260px; } }
+.container-fluid { width: 100%; padding: 0; }
+
+/* Wrapper */
+.wrapper { background: #f1f1f1; }
+
+/* Header - Top Bar */
+.header-top-bar { background: #1e3a5f; color: #fff; padding: 8px 0; font-size: 13px; }
+.header-top-bar .contact-info { display: flex; align-items: center; gap: 25px; flex-wrap: wrap; }
+.header-top-bar .contact-item { display: flex; align-items: center; gap: 6px; }
+.header-top-bar .social-icons { display: flex; gap: 10px; }
+.header-top-bar .social-icons a { color: #fff; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.1); }
+
+/* Header - Main */
+.header-main { background: #fff; padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.header-main .header-content { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+.header-main .logo img { max-height: 60px; width: auto; }
+.header-main .header-contact { display: flex; align-items: center; gap: 30px; }
+.header-main .contact-box { display: flex; align-items: center; gap: 12px; }
+.header-main .contact-icon { width: 45px; height: 45px; background: #1e3a5f; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+.header-main .contact-text .label { font-size: 12px; color: #666; }
+.header-main .contact-text .value { font-size: 16px; font-weight: 700; color: #1e3a5f; }
+.header-main .btn-quote { display: inline-flex; align-items: center; gap: 8px; padding: 12px 25px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #fff; font-weight: 700; border-radius: 50px; text-decoration: none; }
+
+/* Navigation */
+#nav { background: linear-gradient(135deg, #1e3a5f 0%, #2563a8 100%); position: relative; z-index: 100; }
+#nav .navbar { margin: 0; border: none; border-radius: 0; min-height: auto; }
+#nav .navbar-nav { display: flex; }
+#nav .navbar-nav > li > a { color: #fff; padding: 15px 18px; font-weight: 600; font-size: 14px; text-transform: uppercase; }
+#nav .navbar-nav > li > a:hover, #nav .navbar-nav > li.active > a { background: rgba(255,255,255,0.1); }
+
+/* Carousel/Slider */
+#myCarousel { position: relative; overflow: hidden; }
+#myCarousel .carousel-inner { position: relative; width: 100%; overflow: hidden; }
+#myCarousel .item { display: none; position: relative; }
+#myCarousel .item.active { display: block; }
+#myCarousel .item img { width: 100%; height: auto; display: block; }
+#myCarousel .carousel-caption { position: absolute; bottom: 20%; left: 0; right: 0; padding: 20px; }
+#myCarousel .carousel-caption h2 { font-size: 2em; font-weight: 700; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+
+/* Price Cards Section */
+.price-section { padding: 50px 0; background: #f1f1f1; }
+.price-cards { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+.price-card { background: #fff; border-radius: 16px; padding: 30px 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); flex: 1; min-width: 250px; max-width: 300px; }
+.price-card .card-icon { width: 70px; height: 70px; background: linear-gradient(135deg, #1e3a5f 0%, #2563a8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.price-card .card-icon i { color: #fff; font-size: 28px; }
+.price-card h3 { font-size: 18px; font-weight: 700; color: #1e3a5f; margin-bottom: 10px; }
+.price-card .price { font-size: 24px; font-weight: 700; color: #f97316; }
+
+/* Hide elements below fold initially */
+.why-choose-us-section, .projects-section, footer { opacity: 1; }
+
+/* Responsive */
+@media (max-width: 991px) {
+    .header-main .header-contact { display: none; }
+    .header-main .btn-quote { padding: 10px 20px; font-size: 14px; }
+    #nav .navbar-nav { flex-direction: column; }
+    #nav .navbar-nav > li > a { padding: 12px 15px; }
+}
+@media (max-width: 767px) {
+    .header-top-bar .contact-info { font-size: 12px; gap: 15px; }
+    #myCarousel .carousel-caption h2 { font-size: 1.4em; }
+    .price-card { min-width: 100%; }
+}
+
+/* Font loading optimization */
+@font-face {
+    font-family: 'Roboto Condensed';
+    font-display: swap;
+}

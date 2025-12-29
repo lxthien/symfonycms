@@ -22,8 +22,9 @@
                                 'allow_safe_labels': true,
                             })|raw }}
                             <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get">
-                                <div class="form-group">
+                                <div class="form-group search-group">
                                     <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}">
+                                    <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>

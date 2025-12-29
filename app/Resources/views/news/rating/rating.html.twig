@@ -1,13 +1,14 @@
-<div class="rating-container">
-    {{ ratingValue|rating }}
-    <a href="javascript:void(0)" id="rating">
-        <div>
-            {% if rating > 0 %}
-                <span>{{ rating }}</span> ({{ ratingPercent }}%) / <span>{{ ratingCount }}</span> votes
-            {% else %}
-                <span>đánh giá</span>
-            {% endif %}
-        </div>
+<div class="post-rating">
+    <div class="rating-stars">
+        {{ ratingValue|rating }}
+    </div>
+    <a href="javascript:void(0)" id="rating" class="rating-link">
+        {% if rating > 0 %}
+            <span class="rating-score">{{ rating }}</span>
+            <span class="rating-text">({{ ratingPercent }}%) - {{ ratingCount }} đánh giá</span>
+        {% else %}
+            <span class="rating-text">Hãy đánh giá bài viết này</span>
+        {% endif %}
     </a>
 </div>
 

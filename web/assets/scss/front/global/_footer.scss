@@ -1,3 +1,255 @@
+// ============================================
+// MODERN FOOTER STYLES
+// ============================================
+
+.site-footer {
+    background: $gradientPrimary;
+    color: $white;
+    position: relative;
+
+    // Main Footer
+    .footer-main {
+        padding: 60px 0 40px;
+
+        @media (max-width: 767.98px) {
+            padding: 40px 0 30px;
+        }
+    }
+
+    // Footer Widget
+    .footer-widget {
+        margin-bottom: 30px;
+
+        .footer-logo {
+            margin-bottom: 20px;
+
+            img {
+                max-width: 180px;
+                height: auto;
+            }
+        }
+
+        .footer-desc {
+            color: rgba($white, 0.8);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        // Widget Title
+        .widget-title {
+            color: $white;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            position: relative;
+            font-family: $robotoCondesed;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            &::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 50px;
+                height: 3px;
+                background: $secondaryColor;
+                border-radius: 2px;
+            }
+        }
+
+        // Social Icons
+        .footer-social {
+            display: flex;
+            gap: 10px;
+
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba($white, 0.1);
+                color: $white;
+                font-size: 16px;
+                transition: all $transitionFast;
+                border: 1px solid rgba($white, 0.2);
+
+                &:hover {
+                    transform: translateY(-3px);
+                    color: $white;
+                }
+
+                &.facebook:hover {
+                    background: #1877f2;
+                    border-color: #1877f2;
+                }
+
+                &.youtube:hover {
+                    background: #ff0000;
+                    border-color: #ff0000;
+                }
+
+                &.twitter:hover {
+                    background: #000000;
+                    border-color: #000000;
+                }
+
+                &.pinterest:hover {
+                    background: #e60023;
+                    border-color: #e60023;
+                }
+            }
+        }
+
+        // Footer Links
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin-bottom: 12px;
+
+                a {
+                    color: rgba($white, 0.8);
+                    font-size: 15px;
+                    transition: all $transitionFast;
+                    display: inline-block;
+
+                    i {
+                        font-size: 10px;
+                        margin-right: 8px;
+                        color: $secondaryColor;
+                        transition: all $transitionFast;
+                    }
+
+                    &:hover {
+                        color: $secondaryColor;
+                        text-decoration: none;
+                        padding-left: 5px;
+
+                        i {
+                            margin-right: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Footer Services (keywords)
+        .footer-services {
+            .keyword {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+
+                li {
+                    display: inline-block;
+                    margin: 0;
+                    padding: 0;
+                    border: none;
+
+                    a {
+                        display: inline-block;
+                        padding: 6px 14px;
+                        background: rgba($white, 0.1);
+                        color: rgba($white, 0.9);
+                        border-radius: 20px;
+                        font-size: 13px;
+                        transition: all $transitionFast;
+                        border: 1px solid rgba($white, 0.2);
+
+                        &:hover {
+                            background: $secondaryColor;
+                            border-color: $secondaryColor;
+                            color: $white;
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Footer Contact
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 15px;
+                gap: 12px;
+
+                .contact-icon {
+                    width: 36px;
+                    height: 36px;
+                    min-width: 36px;
+                    background: rgba($white, 0.1);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    i {
+                        color: $secondaryColor;
+                        font-size: 14px;
+                    }
+                }
+
+                .contact-info {
+                    color: rgba($white, 0.8);
+                    font-size: 14px;
+                    line-height: 1.6;
+                    padding-top: 6px;
+
+                    a {
+                        color: rgba($white, 0.8);
+                        transition: all $transitionFast;
+
+                        &:hover {
+                            color: $secondaryColor;
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Footer Bottom
+    .footer-bottom {
+        background: rgba($black, 0.2);
+        padding: 20px 0;
+        border-top: 1px solid rgba($white, 0.1);
+
+        .copyright-text {
+            margin: 0;
+            font-size: 14px;
+            color: rgba($white, 0.7);
+
+            a {
+                color: $secondaryColor;
+                font-weight: 600;
+
+                &:hover {
+                    color: $white;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+// Legacy footer styles for backward compatibility
 footer {
     padding-top: 30px;
     position: relative;
