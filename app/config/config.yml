@@ -73,7 +73,7 @@ twig:
         - 'form/layout.html.twig'
         - 'form/fields.html.twig'
     paths:
-        'web/build': 'web'
+        'web': 'web'
         'app/Resources/views/amp/amp-theme': 'amp_theme'
 
 # Doctrine Configuration (used to access databases and manipulate their information)

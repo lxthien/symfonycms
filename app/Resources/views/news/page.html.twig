@@ -13,6 +13,11 @@
     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
 {% endif %}
 
+{# LCP Optimization - Preload Roboto Condensed Bold for hero title #}
+{% block lcpPreload %}
+    <link rel="preload" href="https://fonts.gstatic.com/s/robotocondensed/v27/ieVo2ZhZI2eCN5jzbjEETS9weq8-_d6T_POl0fRJeyWyo-BMVqZc.woff2" as="font" type="font/woff2" crossorigin>
+{% endblock %}
+
 {% block structuredOpenGraph %}
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
@@ -27,31 +32,50 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container page wrapper-post-container">
-        <div class="row post-container page-1-column">
-            <div class="col-12 col-md-12 col-lg-12 wrapper-post-container-left">
-                {# breadcrumbs #}
-                {{ include('news/components/breadcrumbs.html.twig') }}
+    {# Page Hero Section #}
+    <section class="page-hero">
+        <div class="container">
+            {# breadcrumbs #}
+            {{ include('news/components/breadcrumbs.html.twig') }}
+            
+            <h1 class="page-hero-title">{{ post.getTitle() }}</h1>
+            {% if post.getDescription() %}
+                <p class="page-hero-desc">{{ post.getDescription() }}</p>
+            {% endif %}
+        </div>
+    </section>
 
-                <article id="post-{{ post.getId() }}" class="news">
-                    <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
-                    
-                    <div class="news-container">
-                        {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+    {# Page Content #}
+    <div class="page-content-wrapper">
+        <div class="container">
+            <article id="post-{{ post.getId() }}" class="page-article">
+                <div class="page-article-content">
+                    {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                </div>
+
+                {# CTA Section #}
+                <div class="page-cta-section">
+                    <div class="cta-content">
+                        <div class="cta-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="cta-text">
+                            <h3>Bạn cần tư vấn thêm?</h3>
+                            <p>Liên hệ ngay với chúng tôi để được hỗ trợ nhanh chóng</p>
+                        </div>
                     </div>
-
-                    {# Rating and Share #}
-                    {# <div class="rating-share-container">
-                        {{ include('news/rating/rating.html.twig') }}
-                    </div> #}
-
-                    {# List comments #}
-                    {# {{ include('news/comments/list.html.twig') }} #}
-                    
-                    {# Render form comment #}
-                    {# {{ include('news/comments/form.html.twig') }} #}
-                </article>
-            </div>
+                    <div class="cta-actions">
+                        <a href="tel:{{ get_setting('hotLine2') }}" class="btn-cta-primary">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>{{ get_setting('hotLine2') }}</span>
+                        </a>
+                        <a href="{{ path('contact') }}" class="btn-cta-secondary">
+                            <i class="fas fa-envelope"></i>
+                            <span>Gửi yêu cầu</span>
+                        </a>
+                    </div>
+                </div>
+            </article>
         </div>
     </div>
 {% endblock %}

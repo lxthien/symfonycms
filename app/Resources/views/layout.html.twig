@@ -254,12 +254,13 @@
         {{ get_setting('googleAnalytic')|raw }}
 
         <style type="text/css">
-            {{ source('@web/css/first.css', ignore_missing = true) }}
+            {# Get hashed path from asset(), then use source() with @web namespace #}
+            {{ source('@web' ~ asset('build/css/first.css'), ignore_missing = false) }}
         </style>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-        <link href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+        <link href="{{ asset('build/css/new.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
         <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
-        <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" ></noscript>
+        <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css') }}" ></noscript>
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->

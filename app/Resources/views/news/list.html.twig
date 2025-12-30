@@ -6,6 +6,14 @@
 
 {% set imagePathFilter = (vich_uploader_asset(category, 'imageFile') ? vich_uploader_asset(category, 'imageFile') : asset('/assets/images/xaydungminhduy-2.jpg')) | imagine_filter('news_share_800_420') %}
 
+{# LCP Optimization for Landing Page #}
+{% block lcpPreload %}
+{% if category.getContent() is not null %}
+    {# Preload Roboto Condensed Bold for hero title - LCP element #}
+    <link rel="preload" href="https://fonts.gstatic.com/s/robotocondensed/v27/ieVo2ZhZI2eCN5jzbjEETS9weq8-_d6T_POl0fRJeyWyo-BMVqZc.woff2" as="font" type="font/woff2" crossorigin>
+{% endif %}
+{% endblock %}
+
 {% block structuredOpenGraph %}
     {% if category.getSchemaMarkup() == null %}
         <meta property="og:type" content="object" />
@@ -47,13 +55,16 @@
 {% endblock %}
 
 {% block body %}
-    {# breadcrumbs #}
-    {{ include('news/components/breadcrumbs.html.twig',
-        { type: 'category', title: (category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName()), description: category.getDescription() })
-    }}
-    
     {% if category.getContent() == null %}
-        {# Category List View - No Landing Content #}
+        {# ================================================================ #}
+        {# CATEGORY LIST VIEW - No Landing Content (Keep Original Style)   #}
+        {# ================================================================ #}
+        
+        {# breadcrumbs #}
+        {{ include('news/components/breadcrumbs.html.twig',
+            { type: 'category', title: (category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName()), description: category.getDescription() })
+        }}
+        
         <div class="container wrapper-container">
             <div class="row category-list-items">
                 <div class="col-12 col-md-12 col-lg-12">
@@ -81,15 +92,95 @@
             </div>
         </div>
     {% else %}
-        {# Landing Page View - Has Content #}
+        {# ================================================================ #}
+        {# LANDING PAGE VIEW - Has Content (New Modern Design)             #}
+        {# ================================================================ #}
         <div class="landing-page">
+            {# Hero Section #}
+            <section class="landing-hero">
+                <div class="landing-hero-bg">
+                    <div class="hero-overlay"></div>
+                </div>
+                <div class="container">
+                    <div class="landing-hero-content">
+                        {# Breadcrumbs #}
+                        {{ wo_render_breadcrumbs() }}
+                        
+                        <h1 class="landing-hero-title">
+                            {{ category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName() }}
+                        </h1>
+                        
+                        {% if category.getDescription() %}
+                            <p class="landing-hero-desc">{{ category.getDescription()|striptags }}</p>
+                        {% endif %}
+
+                        <div class="landing-hero-cta">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-hero btn-hero-primary">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-hero btn-hero-secondary">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Nhận báo giá</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Features/Highlights Section #}
+            <section class="landing-highlights">
+                <div class="container">
+                    <div class="highlights-grid">
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">15+</span>
+                                <span class="highlight-label">Năm kinh nghiệm</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">500+</span>
+                                <span class="highlight-label">Công trình hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">100%</span>
+                                <span class="highlight-label">Khách hàng hài lòng</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">10</span>
+                                <span class="highlight-label">Năm bảo hành</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {# Main Content Section #}
             <section class="landing-content-section">
                 <div class="container">
                     <div class="landing-content-wrapper">
-                        <div class="category-content">
-                            {{ category.getContent()|raw }}
-                        </div>
+                        <article class="landing-article">
+                            <div class="landing-article-content">
+                                {{ category.getContent()|raw }}
+                            </div>
+                        </article>
                     </div>
                 </div>
             </section>
@@ -106,7 +197,7 @@
                             <p class="cta-text">Gọi ngay cho chúng tôi để được tư vấn và báo giá nhanh nhất!</p>
                         </div>
                         <div class="cta-actions">
-                            <a href="tel:{{ get_setting('hotLine1') }}" class="btn-cta btn-cta-phone">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-cta btn-cta-phone">
                                 <i class="fas fa-phone-alt"></i>
                                 <span>{{ get_setting('hotLine1') }}</span>
                             </a>
@@ -128,6 +219,7 @@
                             <i class="fas fa-newspaper"></i>
                             Bài viết liên quan
                         </h2>
+                        <p class="section-desc">Tìm hiểu thêm thông tin hữu ích về xây dựng và thi công</p>
                     </div>
                     <div class="list-news-items">
                         <div class="row">

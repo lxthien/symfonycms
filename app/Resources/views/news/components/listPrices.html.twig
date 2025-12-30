@@ -1,17 +1,30 @@
 <section class="price-section">
     <div class="{% if hasContainer is defined %}{% else %}container{% endif %}">
+        <div class="price-header">
+            <h2 class="price-title"><i class="fas fa-tags"></i> Bảng Giá Dịch Vụ</h2>
+            <p class="price-subtitle">Cam kết giá tốt nhất thị trường - Báo giá miễn phí trong 24h</p>
+        </div>
         <div class="price-cards">
             <div class="price-card">
                 <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}" title="Đơn giá xây nhà trọn gói">
+                    <div class="card-ribbon">Hot</div>
                     <div class="card-icon">
                         <i class="fas fa-building"></i>
                     </div>
-                    <div class="card-text">
-                        <span class="card-title">Đơn giá xây nhà trọn gói</span>
-                        <span class="card-desc">Từ 4.5 triệu/m²</span>
+                    <div class="card-content">
+                        <h3 class="card-title">Xây nhà trọn gói</h3>
+                        <div class="card-price">
+                            <span class="price-from">Từ</span>
+                            <span class="price-value">4.5</span>
+                            <span class="price-unit">triệu/m²</span>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Thiết kế miễn phí</li>
+                            <li><i class="fas fa-check"></i> Bảo hành 5 năm</li>
+                        </ul>
                     </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
+                    <div class="card-footer">
+                        <span class="btn-view">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
@@ -20,12 +33,20 @@
                     <div class="card-icon">
                         <i class="fas fa-tools"></i>
                     </div>
-                    <div class="card-text">
-                        <span class="card-title">Đơn giá sửa nhà trọn gói</span>
-                        <span class="card-desc">Từ 2.8 triệu/m²</span>
+                    <div class="card-content">
+                        <h3 class="card-title">Sửa nhà trọn gói</h3>
+                        <div class="card-price">
+                            <span class="price-from">Từ</span>
+                            <span class="price-value">2.8</span>
+                            <span class="price-unit">triệu/m²</span>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Tư vấn miễn phí</li>
+                            <li><i class="fas fa-check"></i> Thi công nhanh</li>
+                        </ul>
                     </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
+                    <div class="card-footer">
+                        <span class="btn-view">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
@@ -34,26 +55,43 @@
                     <div class="card-icon">
                         <i class="fas fa-hard-hat"></i>
                     </div>
-                    <div class="card-text">
-                        <span class="card-title">Đơn giá xây dựng phần thô</span>
-                        <span class="card-desc">Từ 3.2 triệu/m²</span>
+                    <div class="card-content">
+                        <h3 class="card-title">Xây dựng phần thô</h3>
+                        <div class="card-price">
+                            <span class="price-from">Từ</span>
+                            <span class="price-value">3.2</span>
+                            <span class="price-unit">triệu/m²</span>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Vật liệu chính hãng</li>
+                            <li><i class="fas fa-check"></i> Đúng tiến độ</li>
+                        </ul>
                     </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
+                    <div class="card-footer">
+                        <span class="btn-view">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
             </div>
-            <div class="price-card">
+            <div class="price-card featured">
                 <a href="{{ path('news_show', {'slug': 'don-gia-thiet-ke-nha-pho' }) }}" title="Đơn giá thiết kế kiến trúc">
+                    <div class="card-ribbon">Ưu đãi</div>
                     <div class="card-icon">
                         <i class="fas fa-drafting-compass"></i>
                     </div>
-                    <div class="card-text">
-                        <span class="card-title">Đơn giá thiết kế kiến trúc</span>
-                        <span class="card-desc">Từ 80.000đ/m²</span>
+                    <div class="card-content">
+                        <h3 class="card-title">Thiết kế kiến trúc</h3>
+                        <div class="card-price">
+                            <span class="price-from">Từ</span>
+                            <span class="price-value">80K</span>
+                            <span class="price-unit">đ/m²</span>
+                        </div>
+                        <ul class="card-features">
+                            <li><i class="fas fa-check"></i> Miễn phí nếu thi công</li>
+                            <li><i class="fas fa-check"></i> 3D phối cảnh</li>
+                        </ul>
                     </div>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
+                    <div class="card-footer">
+                        <span class="btn-view">Xem chi tiết <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </a>
             </div>

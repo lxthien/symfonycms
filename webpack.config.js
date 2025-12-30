@@ -9,7 +9,7 @@ Encore
         "jQuery.tagsinput": "bootstrap-tagsinput"
     })
     .enableSassLoader()
-    .enableVersioning(false)
+    .enableVersioning(Encore.isProduction())
     .createSharedEntry('js/common', ['jquery'])
     .addEntry('js/app', './web/assets/js/front/app.js')
     .addEntry('js/admin', './web/assets/js/admin/admin.js')

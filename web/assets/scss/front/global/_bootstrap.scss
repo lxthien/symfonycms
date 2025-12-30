@@ -2,37 +2,39 @@
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * 
+ * OPTIMIZED: Only import components actually used on frontend
  */
 
-// Core variables and mixins
+// Core variables and mixins - REQUIRED
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
 
-// Reset and dependencies
+// Reset and dependencies - REQUIRED
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/normalize";
 
-// Core CSS
+// Core CSS - REQUIRED
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/type";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/grid";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/forms";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/buttons";
 
-// Components
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/dropdowns";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/button-groups";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/navs";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/navbar";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/pagination";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/alerts";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/media";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/list-group";
+// Components - Only what we use
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/dropdowns";     // Menu dropdowns
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/button-groups"; // NOT USED on frontend
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/input-groups";  // Only in admin forms
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/navs";          // Navigation tabs
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/navbar";        // Main navigation
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs";   // Breadcrumbs
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/pagination";    // Custom pagination used
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/alerts";        // Flash messages
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap/media";         // Replaced with custom CSS
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/list-group";    // Sidebar widgets
 
 // Components w/ JavaScript
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/carousel";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/carousel";      // Homepage slider
 
-// Utility classes
+// Utility classes - REQUIRED
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/utilities";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
