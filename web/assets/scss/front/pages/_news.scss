@@ -162,10 +162,14 @@
                 margin-bottom: 6px;
 
                 &::before {
+                    content: "";
+                    position: absolute;
                     left: 15px;
+                    top: 10px;
                     width: 5px;
                     height: 5px;
-                    background: $gray400;
+                    background: $secondaryColor;
+                    border-radius: 50%;
                 }
             }
 
@@ -266,7 +270,6 @@
 
     // Blockquote
     blockquote {
-        font-size: 16px;
         border-left: 4px solid $secondaryColor;
         background: $grayf1;
         padding: 20px 25px;
@@ -274,6 +277,7 @@
         border-radius: 0 8px 8px 0;
         font-style: italic;
         color: $gray700;
+        font-size: 16px;
 
         p:last-child {
             margin-bottom: 0;
@@ -998,7 +1002,7 @@
 
                 // Blockquote - Enhanced
                 blockquote {
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 500;
                     line-height: 1.6;
                     color: #1e3a5f;
@@ -2256,7 +2260,6 @@ ul li i:after {
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('/assets/images/pattern-dots.png') repeat;
         opacity: 0.05;
         pointer-events: none;
     }
@@ -2362,24 +2365,26 @@ ul li i:after {
         &.btn-hero-primary {
             background: $white;
             color: $primaryColor;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 2px solid $white;
 
             &:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             }
         }
 
         &.btn-hero-secondary {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             color: $white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
 
             &:hover {
-                background: rgba(255, 255, 255, 0.25);
-                border-color: rgba(255, 255, 255, 0.8);
+                background: rgba(255, 255, 255, 0.2);
+                border-color: $white;
                 transform: translateY(-3px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
         }
     }
@@ -2404,8 +2409,9 @@ ul li i:after {
         grid-template-columns: repeat(4, 1fr);
         background: $white;
         border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         overflow: hidden;
+        border: 1px solid #e2e8f0;
 
         @media only screen and (max-width: 991.98px) {
             grid-template-columns: repeat(2, 1fr);
@@ -2420,9 +2426,9 @@ ul li i:after {
         display: flex;
         align-items: center;
         gap: 15px;
-        padding: 25px 20px;
-        border-right: 1px solid #eee;
-        border-bottom: 1px solid #eee;
+        padding: 30px 25px;
+        border-right: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
         transition: all $transitionNormal;
 
         &:nth-child(4n) {
@@ -2452,14 +2458,14 @@ ul li i:after {
             justify-content: center;
             text-align: center;
             flex-direction: column;
-            padding: 20px;
+            padding: 25px;
 
             &:last-child {
                 border-bottom: none;
             }
 
             &:nth-last-child(-n+4) {
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid #e2e8f0;
             }
 
             &:nth-last-child(1) {
@@ -2531,7 +2537,7 @@ ul li i:after {
     background: $white;
 
     @media only screen and (max-width: 767.98px) {
-        padding: 40px 0;
+        padding: 50px 0;
     }
 
     .landing-content-wrapper {
@@ -2581,7 +2587,7 @@ ul li i:after {
             font-family: $robotoCondesed;
             font-size: 22px;
             font-weight: 700;
-            color: #333;
+            color: $primaryColor;
             margin: 30px 0 15px;
 
             @media only screen and (max-width: 767.98px) {
@@ -2593,7 +2599,7 @@ ul li i:after {
             font-family: $robotoCondesed;
             font-size: 18px;
             font-weight: 700;
-            color: #444;
+            color: $gray900;
             margin: 25px 0 12px;
 
             @media only screen and (max-width: 767.98px) {
@@ -2622,7 +2628,6 @@ ul li i:after {
 
         ul {
             list-style: none;
-            padding-left: 0;
 
             li {
                 padding-left: 25px;
@@ -2646,7 +2651,8 @@ ul li i:after {
             height: auto;
             border-radius: 12px;
             margin: 20px 0;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
         }
 
         table {
@@ -2656,7 +2662,8 @@ ul li i:after {
             font-size: 15px;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
 
             thead {
                 background: $gradientPrimary;
@@ -2673,7 +2680,7 @@ ul li i:after {
 
             tbody {
                 tr {
-                    border-bottom: 1px solid #eee;
+                    border-bottom: 1px solid #e2e8f0;
 
                     &:nth-child(even) {
                         background: #f9f9f9;
@@ -2703,6 +2710,7 @@ ul li i:after {
             margin: 25px 0;
             font-style: italic;
             color: #555;
+            font-size: 16px;
 
             p {
                 margin: 0;
@@ -3296,7 +3304,7 @@ ul li i:after {
 .post-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
-    gap: 30px;
+    gap: 10px;
     align-items: start;
 
     @media only screen and (max-width: 991.98px) {
@@ -3595,7 +3603,6 @@ ul li i:after {
 
     // Blockquote
     blockquote {
-        font-size: 16px;
         border-left: 4px solid $secondaryColor;
         background: $grayf1;
         padding: 20px 25px;
@@ -3603,6 +3610,7 @@ ul li i:after {
         border-radius: 0 8px 8px 0;
         font-style: italic;
         color: $gray700;
+        font-size: 16px;
 
         p:last-child {
             margin-bottom: 0;
@@ -3800,7 +3808,7 @@ ul li i:after {
 .sidebar-inner {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 0;
 }
 
 .sidebar-widget {
@@ -4296,6 +4304,7 @@ ul li i:after {
             border-radius: 0 10px 10px 0;
             font-style: italic;
             color: $gray700;
+            font-size: 16px;
 
             p {
                 margin: 0;
@@ -4649,7 +4658,6 @@ ul li i:after {
 
         // Blockquote
         blockquote {
-            font-size: 18px;
             font-weight: 500;
             line-height: 1.6;
             color: #1e3a5f;
@@ -4659,6 +4667,7 @@ ul li i:after {
             margin: 30px 0;
             border-radius: 0 12px 12px 0;
             position: relative;
+            font-size: 16px;
 
             &::before {
                 content: '\f10d';

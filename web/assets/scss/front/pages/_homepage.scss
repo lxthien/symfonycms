@@ -54,25 +54,21 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.7) 0%,
-            rgba(0, 0, 0, 0.4) 40%,
-            rgba(0, 0, 0, 0.1) 70%,
-            transparent 100%
-        );
+        background: linear-gradient(90deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.4) 40%,
+                rgba(0, 0, 0, 0.1) 70%,
+                transparent 100%);
         z-index: 1;
         pointer-events: none;
 
         @media only screen and (max-width: 768px) {
-            background: linear-gradient(
-                to bottom,
-                rgba(0, 0, 0, 0.3) 0%,
-                rgba(0, 0, 0, 0.5) 100%
-            );
+            background: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0.3) 0%,
+                    rgba(0, 0, 0, 0.5) 100%);
         }
     }
-    
+
     .carousel-inner {
         .item {
             position: relative;
@@ -244,8 +240,9 @@
         opacity: 1;
         transition: all 0.3s ease;
         z-index: 15;
-        
-        &.left, &.right {
+
+        &.left,
+        &.right {
             background: none !important;
         }
 
@@ -309,6 +306,7 @@
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -320,6 +318,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -414,7 +413,7 @@
 
     .price-card {
         position: relative;
-        
+
         a {
             display: flex;
             flex-direction: column;
@@ -424,8 +423,8 @@
             padding: 30px 25px;
             text-decoration: none;
             transition: all 0.4s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid transparent;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
             position: relative;
             overflow: hidden;
 
@@ -452,7 +451,7 @@
 
                 .card-icon {
                     transform: scale(1.1);
-                    
+
                     i {
                         animation: pulse 0.6s ease;
                     }
@@ -635,7 +634,9 @@
                     }
 
                     .card-price {
-                        .price-from, .price-unit {
+
+                        .price-from,
+                        .price-unit {
                             color: rgba($white, 0.8);
                         }
 
@@ -682,8 +683,15 @@
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
 }
 
 // Legacy styles for backward compatibility
@@ -712,7 +720,9 @@
         }
     }
 
-    .two, .three, .four {
+    .two,
+    .three,
+    .four {
         div {
             background: $primaryColor2;
             padding: 10px 0;
@@ -743,6 +753,7 @@
         }
     }
 }
+
 // ============================================
 // WHY CHOOSE US SECTION - MODERN DESIGN
 // ============================================
@@ -751,7 +762,7 @@
 // WHY CHOOSE US - MODERN REDESIGN
 // ============================================
 .why-choose-us-section {
-    padding: 50px 0 40px;
+    padding: 70px 0 60px;
     background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
     position: relative;
     overflow: hidden;
@@ -843,7 +854,7 @@
             font-size: 32px;
             font-weight: 700;
             font-family: $robotoCondesed;
-            color: $primaryColor2;
+            color: $primaryColor;
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -908,7 +919,8 @@
         margin: 0 -10px;
     }
 
-    .col-lg-4, .col-md-6 {
+    .col-lg-4,
+    .col-md-6 {
         padding: 0 10px;
     }
 
@@ -918,14 +930,14 @@
         border-radius: 16px;
         padding: 25px 20px;
         margin-bottom: 20px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         transition: all 0.3s ease;
         height: calc(100% - 20px);
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
         position: relative;
         overflow: hidden;
 
@@ -944,8 +956,8 @@
 
         &:hover {
             transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            border-color: rgba($primaryColor2, 0.15);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba($primaryColor2, 0.3);
 
             &::before {
                 transform: scaleX(1);
@@ -1141,7 +1153,7 @@
                     img {
                         margin-top: -5px;
                     }
-    
+
                     i {
                         margin-right: 0;
                         color: $primaryColor2;
@@ -1149,14 +1161,14 @@
                     }
                 }
             }
-    
+
             .media-body {
                 b.media-heading {
                     font-size: 18px;
                     font-weight: 600;
                     margin-bottom: 8px;
                 }
-    
+
                 .marketing-container {
                     font-size: 16px;
                     line-height: 24px;
@@ -1269,7 +1281,7 @@
                     }
                 }
             }
-    
+
             .media-body {
                 display: inline-block;
                 width: 100%;
@@ -1290,7 +1302,7 @@
                         min-height: auto;
                         font-size: 22px;
                     }
-    
+
                     a {
                         color: $primaryColor;
                         font-family: $robotoCondesed;
@@ -1344,7 +1356,7 @@
                         font-size: 22px;
                     }
                 }
-    
+
                 p {
                     font-size: 16px;
                     margin-bottom: 0;
@@ -1370,7 +1382,7 @@
     h2.p-title-news-items {
         font-size: 35px;
         margin: 30px 0 5px;
-        color: $primaryColor2;
+        color: $primaryColor;
         line-height: 45px;
 
         img {
@@ -1444,20 +1456,23 @@
 // SERVICE & PROJECT BLOCKS - MODERN DESIGN
 // ============================================
 
+// SERVICE & PROJECT BLOCKS - MODERN DESIGN
+// ============================================
+
 .service-block {
-    padding: 50px 0;
+    padding: 70px 0;
 
     &.bg-light {
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
     }
 
     @media only screen and (max-width: 768px) {
-        padding: 35px 0;
+        padding: 50px 0;
     }
 }
 
 .project-block {
-    padding: 50px 0;
+    padding: 70px 0;
     background: $gradientPrimary;
 
     .section-heading {
@@ -1499,11 +1514,11 @@
         font-family: $robotoCondesed;
 
         a {
-            color: $primaryColor2;
+            color: $primaryColor;
             transition: all $transitionFast;
 
             &:hover {
-                color: $primaryColor;
+                color: $primaryColor2;
                 text-decoration: none;
             }
         }
@@ -1572,8 +1587,9 @@
     background: $white;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: $shadowMd;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transition: all $transitionNormal;
+    border: 1px solid #e2e8f0;
 
     &.d-none-tablet {
         @media (min-width: 768px) and (max-width: 991.98px) {
@@ -1582,8 +1598,9 @@
     }
 
     &:hover {
-        transform: translateY(-8px);
-        box-shadow: $shadowLg;
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: rgba($primaryColor, 0.2);
 
         .card-image {
             img {
@@ -1748,17 +1765,12 @@
 
         .slide-item {
             padding: 10px;
-            
-            @media only screen and (max-width: 575.98px) {
-                width: 100% !important;
-                max-width: 100%;
-            }
         }
     }
-    
+
     @media only screen and (max-width: 575.98px) {
         margin: 0 10px;
-        
+
         .bx-wrapper {
             .bx-viewport {
                 .bxslider {
@@ -1776,12 +1788,14 @@
     background: $white;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: $shadowMd;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transition: all $transitionNormal;
+    border: 1px solid #e2e8f0;
 
     &:hover {
         transform: translateY(-5px);
-        box-shadow: $shadowLg;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: rgba($secondaryColor, 0.3);
 
         .card-image {
             img {

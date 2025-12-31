@@ -17,12 +17,24 @@
     <article class="project-card">
         <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="card-link" title="{{ row.getTitle() }}">
             <div class="card-image">
-                <img
-                    src="{{ imagePathFilter }}"
-                    srcset="{{ imagePathFilterMobile }} 382w, {{ imagePathFilterTablet }} 224w, {{ imagePathFilter }} 290w"
-                    sizes="(max-width: 575px) 100vw, (max-width: 767px) 50vw, 280px"
-                    class="img-responsive"
-                    alt="{{ row.getTitle() }}" />
+                <picture>
+                    <!--[if IE 9]><video style="display: none"><![endif]-->
+                    <source
+                        data-srcset="{{ imagePathMobile != false ? asset(imagePathMobile) : asset(imagePathFilterMobile) }}"
+                        media="(max-width: 639px) 100vw" />
+                    <source
+                        data-srcset="{{ imagePathTablet != false ? asset(imagePathTablet) : asset(imagePathFilterTablet) }}"
+                        media="(min-width: 640px) and (max-width: 1023px) 50vw" />
+                    <source
+                        data-srcset="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                        media="(min-width: 1024px) 25vw" />
+                    <!--[if IE 9]></video><![endif]-->
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                        class="lazyload"
+                        alt="{{ row.getTitle() }}" />
+                </picture>
                 <div class="card-overlay">
                     <span class="overlay-icon"><i class="fas fa-search-plus"></i></span>
                 </div>

@@ -1,5 +1,5 @@
 <ul class="recent-posts-list">
-    {% for row in posts|slice(0, 5) %}
+    {% for row in posts %}
         {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
         {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_70_50') %}
                                 
@@ -21,7 +21,6 @@
                 </div>
                 <div class="recent-post-info">
                     <h4 class="recent-post-title">{{ row.getTitle()|length > 55 ? row.getTitle()|slice(0, 55) ~ '...' : row.getTitle() }}</h4>
-                    <span class="recent-post-date"><i class="far fa-clock"></i> {{ row.getUpdatedAt()|date('d/m/Y') }}</span>
                 </div>
             </a>
         </li>

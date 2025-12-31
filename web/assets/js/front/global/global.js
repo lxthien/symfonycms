@@ -30,7 +30,7 @@ function initProtectedContent() {
 function initGoToTop() {
     var $goToTop = $('.go-to-top');
 
-    $goToTop.click(function() {
+    $goToTop.click(function () {
         $("html, body").animate({ scrollTop: 0 }, "slow");
         return false;
     });
@@ -38,14 +38,14 @@ function initGoToTop() {
 
 function initProjectHotSlider() {
     var slideWidth = 280;
-    
+
     // Responsive: 1 slide on mobile
     if ($(window).width() < 576) {
         slideWidth = $(window).width() - 40;
     } else if ($(window).width() < 768) {
-        slideWidth = ($(window).width() - 60) / 2;
+        slideWidth = ($(window).width() - 60);
     }
-    
+
     $('.bxslider').show().bxSlider({
         auto: true,
         autoControls: false,
@@ -83,11 +83,11 @@ function initNewsSlider() {
 }
 
 function initFixedMenu() {
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         var $nav = $("#nav");
         var $scrollUp = $('.td-scroll-up');
         var scroll = $(window).scrollTop();
-    
+
         if (scroll >= 160) {
             $nav.addClass("navbar-fixed-top");
             $scrollUp.removeClass("hidden");
@@ -99,15 +99,15 @@ function initFixedMenu() {
 }
 
 function initFixedSidebar() {
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         var $sidebar = $("#sidebar .sidebar"),
             $pageDetailLeft = $('.wrapper-post-container-left'),
             scrollTop = $(this).scrollTop(),
-            pageDetailLeftHeight =  $pageDetailLeft.outerHeight(),
+            pageDetailLeftHeight = $pageDetailLeft.outerHeight(),
             sidebarHeight = $sidebar.height(),
             positionFixedMax = pageDetailLeftHeight - sidebarHeight,
             positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 290;
-        
+
         if (pageDetailLeftHeight > sidebarHeight) {
             if (scrollTop > 220) {
                 $sidebar.css({
@@ -131,7 +131,7 @@ function initCostConstruction() {
         $formFloor.attr('disabled', 'disabled');
     }
 
-    $formType.change(function(e) {
+    $formType.change(function (e) {
         if ($(this).val() == 3) {
             $formFloor.val(1);
             $formFloor.attr('disabled', 'disabled');
@@ -147,33 +147,33 @@ function initFancybox() {
     var $star = $('#form-rating-review .rating-well .star');
     var $formRating = $('#form-rating-review');
 
-    $rating.click(function() {
+    $rating.click(function () {
         $formRating.show();
         $ratingMessage.html('');
-        
+
         $.fancybox.open({
             src: '#form-rating-container',
-            touch : false
+            touch: false
         });
 
         return false;
     });
 
-    $('a#rating').click(function(e) {
+    $('a#rating').click(function (e) {
         e.preventDefault();
 
         $formRating.show();
         $ratingMessage.html('');
-        
+
         $.fancybox.open({
             src: '#form-rating-container',
-            touch : false
+            touch: false
         });
 
         return false;
     });
 
-    $star.on('click', function(e) {
+    $star.on('click', function (e) {
         var rating = $(this).data('value');
         var newsId = $formRating.data('newsId');
 
@@ -181,9 +181,9 @@ function initFancybox() {
             type: "POST",
             url: $formRating.attr('action'),
             data: 'rating=' + rating + '&newsId=' + newsId,
-            success: function(data) {
+            success: function (data) {
                 var response = JSON.parse(data);
-                
+
                 if (response.status === 'success') {
                     $formRating.hide();
                     $ratingMessage.html(response.message);
@@ -274,40 +274,40 @@ function initTypewriterEffect() {
 
 function initTableOfContents() {
     var $toc = $('.table-of-contents');
-    
+
     if ($toc.length === 0) return;
-    
-    $toc.each(function() {
+
+    $toc.each(function () {
         var $this = $(this);
-        var $children = $this.children();
-        
+        var $children = $this.children().not('hr#hr-toc');
+
         // Skip if already initialized
         if ($this.find('.toc-header').length > 0) return;
-        
+
         // Create wrapper for existing content
         var $tocContent = $('<div class="toc-content collapsed"></div>');
         $children.appendTo($tocContent);
-        
+
         // Create header
         var $tocHeader = $('<div class="toc-header">' +
             '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
             '<span class="toc-toggle collapsed">' +
-                '<span class="toggle-text">Hiện</span>' +
-                '<i class="fas fa-chevron-down toggle-icon"></i>' +
+            '<span class="toggle-text">Hiện</span>' +
+            '<i class="fas fa-chevron-down toggle-icon"></i>' +
             '</span>' +
-        '</div>');
-        
+            '</div>');
+
         // Build new structure
         $this.empty().append($tocHeader).append($tocContent);
-        
+
         // Toggle functionality
-        $tocHeader.on('click', function() {
+        $tocHeader.on('click', function () {
             var $toggle = $(this).find('.toc-toggle');
             var $content = $(this).siblings('.toc-content');
-            
+
             $toggle.toggleClass('collapsed');
             $content.toggleClass('collapsed');
-            
+
             // Update text
             if ($content.hasClass('collapsed')) {
                 $toggle.find('.toggle-text').text('Hiện');

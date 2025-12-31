@@ -4,7 +4,9 @@
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    &:before, &:after {
+
+    &:before,
+    &:after {
         box-sizing: inherit;
         -webkit-box-sizing: inherit;
         -moz-box-sizing: inherit;
@@ -18,7 +20,7 @@ html {
 }
 
 body {
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     color: $black;
     background: $gray94;
@@ -47,10 +49,6 @@ body {
     background: $grayf1;
 }
 
-.wrapper-container {
-    padding-bottom: 50px;
-}
-
 .wrapper-post-container {
     background-color: $grayf1;
 }
@@ -59,14 +57,25 @@ body {
     padding-bottom: 50px;
 }
 
-header, nav, section, article, figure, aside, footer {
+header,
+nav,
+section,
+article,
+figure,
+aside,
+footer {
     display: block;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     margin: 0 0 15px;
     line-height: 1.4;
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 img {
@@ -79,7 +88,7 @@ a {
     color: $black;
     @include transition(0.1s);
     outline: none;
-    
+
     &:hover,
     &:focus {
         outline: 0;
