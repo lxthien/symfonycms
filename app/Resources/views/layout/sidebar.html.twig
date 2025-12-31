@@ -24,40 +24,74 @@
         </a>
     </div>
 
-    {# Price List Widget #}
+    {# Featured Services Widget #}
+    <div class="sidebar-widget service-widget">
+        <h3 class="widget-title">
+            <i class="fas fa-star"></i>
+            Dịch vụ nổi bật
+        </h3>
+        <ul class="service-list">
+            <li>
+                <a href="{{ path('list_category', {'level1': 'xay-dung', 'level2': 'xay-nha-tron-goi' }) }}">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                    <span class="text">Xây nhà trọn gói</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('list_category', {'level1': 'xay-dung', 'level2': 'xay-nha-phan-tho' }) }}">
+                    <span class="icon"><i class="fas fa-hard-hat"></i></span>
+                    <span class="text">Thi công phần thô</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('news_category', {'level1': 'thiet-ke' }) }}">
+                    <span class="icon"><i class="fas fa-drafting-compass"></i></span>
+                    <span class="text">Thiết kế nhà đẹp</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('list_category', {'level1': 'sua-chua-nha', 'level2': 'sua-nha-tron-goi' }) }}">
+                    <span class="icon"><i class="fas fa-tools"></i></span>
+                    <span class="text">Sửa nhà trọn gói</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    {# Latest Quotes Widget #}
     <div class="sidebar-widget price-widget">
         <h3 class="widget-title">
-            <i class="fas fa-tags"></i>
-            Bảng giá dịch vụ
+            <i class="fas fa-file-invoice-dollar"></i>
+            Báo giá mới nhất
         </h3>
         <ul class="price-list">
             <li>
                 <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-circle-right"></i>
                     Báo giá xây nhà trọn gói
                 </a>
             </li>
             <li>
                 <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-circle-right"></i>
                     Báo giá sửa nhà trọn gói
                 </a>
             </li>
             <li>
                 <a href="{{ path('news_show', {'slug': 'bang-gia-xay-dung-nha-phan-tho' }) }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-circle-right"></i>
                     Giá xây nhà phần thô
                 </a>
             </li>
             <li>
                 <a href="{{ path('news_show', {'slug': 'dich-vu-bao-gia-sua-chua-can-ho-chung-cu' }) }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-circle-right"></i>
                     Giá sửa chữa chung cư
                 </a>
             </li>
             <li>
                 <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-nha-pho' }) }}">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-circle-right"></i>
                     Giá thiết kế nhà phố
                 </a>
             </li>

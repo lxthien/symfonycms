@@ -220,6 +220,7 @@
         {% endblock %}
 
         <!-- Google Tag Manager -->
+        {% if app.environment == 'prod' %}
         <script>
             document.addEventListener('DOMContentLoaded', () => { /** init gtm after 3500 seconds - this could be adjusted */
                 setTimeout(initGTM, 3500);
@@ -249,6 +250,7 @@
                 document.head.appendChild(script);
             }
         </script>
+        {% endif %}
         <!-- End Google Tag Manager -->
 
         {{ get_setting('googleAnalytic')|raw }}
@@ -264,8 +266,10 @@
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->
+        {% if app.environment == 'prod' %}
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        {% endif %}
         <!-- End Google Tag Manager (noscript) -->
         <div class="container-fluid wrapper">
             {{ include('layout/header.html.twig') }}

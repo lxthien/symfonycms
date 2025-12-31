@@ -211,7 +211,7 @@
             </section>
 
             {# Related Posts Section - if has child categories with posts #}
-            {% if pagination|length > 0 %}
+            {# {% if pagination|length > 0 %}
             <section class="landing-related-section">
                 <div class="container">
                     <div class="section-header">
@@ -228,11 +228,11 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {# Pagination #}
+
                     {{ include('news/components/pagination.html.twig') }}
                 </div>
             </section>
-            {% endif %}
+            {% endif %} #}
         </div>
     {% endif %}
 {% endblock %}
