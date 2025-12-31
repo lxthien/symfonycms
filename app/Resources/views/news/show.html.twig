@@ -125,91 +125,228 @@
 {% endblock %}
 
 {% block body %}
-    {# Hero Breadcrumb #}
-    <div class="post-hero">
-        <div class="container">
-            {{ include('news/components/breadcrumbs.html.twig') }}
-        </div>
-    </div>
-
-    <div class="post-page">
-        <div class="container">
-            <div class="post-layout">
-                {# Main Content #}
-                <div class="post-main">
-                    <article id="post-{{ post.getId() }}" class="post-article">
-                        {# Post Header #}
-                        <header class="post-header">
-                            <h1 class="post-title">{{ post.getTitle() }}</h1>
-                            <div class="post-meta">
-                                <span class="meta-item">
-                                    <i class="far fa-calendar-alt"></i>
-                                    {{ post.getUpdatedAt()|date('d/m/Y') }}
-                                </span>
-                                <span class="meta-item">
-                                    <i class="far fa-user"></i>
-                                    <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank">Lê Xuân Minh</a>
-                                </span>
-                            </div>
-                        </header>
-
-                        {# Post Content #}
-                        <div class="post-content news-container">
-                            {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
-                            {% if post.getAutoFulfillAddress() %}
-                                {{ get_setting('addressInPost')|raw }}
-                            {% endif %}
-                        </div>
-
-                        {# Post Footer #}
-                        <footer class="post-footer">
-                            {# Tags #}
-                            {{ include('news/components/tags.html.twig') }}
-
-                            {# Rating #}
-                            <div class="post-rating-wrapper">
-                                {{ include('news/rating/rating.html.twig') }}
-                            </div>
-
-                            {# Share Buttons #}
-                            <div class="post-share">
-                                <span class="share-label"><i class="fas fa-share-alt"></i> Chia sẻ:</span>
-                                <div class="share-buttons">
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-facebook" title="Chia sẻ lên Facebook">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </a>
-                                    <a href="https://twitter.com/intent/tweet?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&text={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-twitter" title="Chia sẻ lên Twitter">
-                                        <i class="fab fa-twitter"></i>
-                                    </a>
-                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-linkedin" title="Chia sẻ lên LinkedIn">
-                                        <i class="fab fa-linkedin-in"></i>
-                                    </a>
-                                    <a href="https://pinterest.com/pin/create/button/?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&media={{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}&description={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-pinterest" title="Chia sẻ lên Pinterest">
-                                        <i class="fab fa-pinterest-p"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </footer>
-                    </article>
-
-                    {# FAQ Section #}
-                    {{ include('news/components/qa.html.twig') }}
-
-                    {# Related Posts #}
-                    {% if post.getTemplate() != '1_column' %}
-                        {{ include('news/components/related.html.twig') }}
-                    {% endif %}
-
-                    {# Comments Section #}
-                    {{ include('news/comments/list.html.twig') }}
-                    {{ include('news/comments/form.html.twig') }}
+    {% if post.getTemplate() == '1_column' %}
+        {# ================================================================ #}
+        {# LANDING PAGE VIEW - Modern Design                                #}
+        {# ================================================================ #}
+        <div class="landing-page">
+            {# Hero Section #}
+            <section class="landing-hero">
+                <div class="landing-hero-bg">
+                    <div class="hero-overlay"></div>
                 </div>
+                <div class="container">
+                    <div class="landing-hero-content">
+                        {# Breadcrumbs #}
+                        {{ include('news/components/breadcrumbs.html.twig') }}
+                        
+                        <h1 class="landing-hero-title">
+                            {{ post.getTitle() }}
+                        </h1>
+                        
+                        {% if post.getDescription() %}
+                            <p class="landing-hero-desc">{{ post.getDescription()|striptags }}</p>
+                        {% endif %}
 
-                {# Sidebar #}
-                <aside class="post-sidebar">
-                    {{ include('layout/sidebar.html.twig') }}
-                </aside>
+                        <div class="landing-hero-cta">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-hero btn-hero-primary">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-hero btn-hero-secondary">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Nhận báo giá</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Features/Highlights Section #}
+            <section class="landing-highlights">
+                <div class="container">
+                    <div class="highlights-grid">
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">15+</span>
+                                <span class="highlight-label">Năm kinh nghiệm</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">500+</span>
+                                <span class="highlight-label">Công trình hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">100%</span>
+                                <span class="highlight-label">Khách hàng hài lòng</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">10</span>
+                                <span class="highlight-label">Năm bảo hành</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Main Content Section #}
+            <section class="landing-content-section">
+                <div class="container">
+                    <div class="landing-content-wrapper">
+                        <article class="landing-article">
+                            <div class="landing-article-content news-container">
+                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                                {% if post.getAutoFulfillAddress() %}
+                                    {{ get_setting('addressInPost')|raw }}
+                                {% endif %}
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            {# CTA Section #}
+            <section class="landing-cta-section">
+                <div class="container">
+                    <div class="cta-box">
+                        <div class="cta-content">
+                            <h3 class="cta-title">
+                                <i class="fas fa-phone-volume"></i>
+                                Liên hệ tư vấn miễn phí
+                            </h3>
+                            <p class="cta-text">Gọi ngay cho chúng tôi để được tư vấn và báo giá nhanh nhất!</p>
+                        </div>
+                        <div class="cta-actions">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-cta btn-cta-phone">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-cta btn-cta-contact">
+                                <i class="fas fa-envelope"></i>
+                                <span>Gửi yêu cầu báo giá</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            {# Comments Section for Landing Page #}
+             <section class="landing-comments-section">
+                <div class="container">
+                    <div class="landing-content-wrapper">
+                        {{ include('news/comments/list.html.twig') }}
+                        {{ include('news/comments/form.html.twig') }}
+                    </div>
+                </div>
+            </section>
+        </div>
+    {% else %}
+        {# ================================================================ #}
+        {# BLOG POST VIEW - Standard with Sidebar                           #}
+        {# ================================================================ #}
+        {# Hero Breadcrumb #}
+        <div class="post-hero">
+            <div class="container">
+                {{ include('news/components/breadcrumbs.html.twig') }}
             </div>
         </div>
-    </div>
+
+        <div class="post-page">
+            <div class="container">
+                <div class="post-layout">
+                    {# Main Content #}
+                    <div class="post-main">
+                        <article id="post-{{ post.getId() }}" class="post-article">
+                            {# Post Header #}
+                            <header class="post-header">
+                                <h1 class="post-title">{{ post.getTitle() }}</h1>
+                                <div class="post-meta">
+                                    <span class="meta-item">
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ post.getUpdatedAt()|date('d/m/Y') }}
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="far fa-user"></i>
+                                        <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank">Lê Xuân Minh</a>
+                                    </span>
+                                </div>
+                            </header>
+
+                            {# Post Content #}
+                            <div class="post-content news-container">
+                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                                {% if post.getAutoFulfillAddress() %}
+                                    {{ get_setting('addressInPost')|raw }}
+                                {% endif %}
+                            </div>
+
+                            {# Post Footer #}
+                            <footer class="post-footer">
+                                {# Tags #}
+                                {{ include('news/components/tags.html.twig') }}
+
+                                {# Rating #}
+                                <div class="post-rating-wrapper">
+                                    {{ include('news/rating/rating.html.twig') }}
+                                </div>
+
+                                {# Share Buttons #}
+                                <div class="post-share">
+                                    <span class="share-label"><i class="fas fa-share-alt"></i> Chia sẻ:</span>
+                                    <div class="share-buttons">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-facebook" title="Chia sẻ lên Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                        <a href="https://twitter.com/intent/tweet?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&text={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-twitter" title="Chia sẻ lên Twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-linkedin" title="Chia sẻ lên LinkedIn">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                        <a href="https://pinterest.com/pin/create/button/?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&media={{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}&description={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-pinterest" title="Chia sẻ lên Pinterest">
+                                            <i class="fab fa-pinterest-p"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </footer>
+                        </article>
+
+                        {# FAQ Section #}
+                        {{ include('news/components/qa.html.twig') }}
+
+                        {# Related Posts #}
+                        {% if post.getTemplate() != '1_column' %}
+                            {{ include('news/components/related.html.twig') }}
+                        {% endif %}
+
+                        {# Comments Section #}
+                        {{ include('news/comments/list.html.twig') }}
+                        {{ include('news/comments/form.html.twig') }}
+                    </div>
+
+                    {# Sidebar #}
+                    <aside class="post-sidebar">
+                        {{ include('layout/sidebar.html.twig') }}
+                    </aside>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
