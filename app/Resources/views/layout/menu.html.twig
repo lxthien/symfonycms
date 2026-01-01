@@ -21,9 +21,9 @@
                             {{ knp_menu_render('AppBundle:Builder:mainMenu', {
                                 'allow_safe_labels': true,
                             })|raw }}
-                            <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get">
+                            <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get" onsubmit="return this.q.value.trim().length > 0" novalidate>
                                 <div class="form-group search-group">
-                                    <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}">
+                                    <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}" required minlength="1" oninvalid="this.setCustomValidity(' ')" oninput="this.setCustomValidity('')">
                                     <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
