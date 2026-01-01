@@ -8,52 +8,35 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- dns prefetch -->
+        <!-- Resource Hints -->
         <meta http-equiv="x-dns-prefetch-control" content="on">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="preconnect" href="//facebook.com" crossorigin>
-        <link rel="dns-prefetch" href="//facebook.com">
         <link rel="preconnect" href="//www.google-analytics.com" crossorigin>
-        <link rel="dns-prefetch" href="//www.google-analytics.com">
-        <link rel="preconnect" href="//www.youtube.com" crossorigin>
-        <link rel="dns-prefetch" href="//www.youtube.com">
-        <link rel="preconnect" href="//s7.addthis.com" crossorigin>
-        <link rel="dns-prefetch" href="//s7.addthis.com">
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" >
-        <link rel="preconnect" href="//static.xx.fbcdn.net" crossorigin>
-        <link rel="dns-prefetch" href="//static.xx.fbcdn.net" >
-        <link rel="preconnect" href="//connect.facebook.net" crossorigin>
-        <link rel="dns-prefetch" href="//connect.facebook.net" >
         <link rel="preconnect" href="//www.googletagmanager.com" crossorigin>
-        <link rel="dns-prefetch" href="//www.googletagmanager.com" >
+        <link rel="preconnect" href="//static.xx.fbcdn.net" crossorigin>
+        <link rel="preconnect" href="//connect.facebook.net" crossorigin>
         <link rel="preconnect" href="//cdnjs.cloudflare.com" crossorigin>
-        <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" >
         <link rel="preconnect" href="//images.dmca.com" crossorigin>
-        <link rel="dns-prefetch" href="//images.dmca.com" >
         
-        <!-- https://realfavicongenerator.net -->
+        <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         <link rel="manifest" href="/site.webmanifest">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         
-        <meta name="geo.region" content="VI-VN" />
-        <meta name="geo.placename" content="Ho Chi Minh, Viet Nam" />
-        <meta name="geo.position" content="10.735433;106.700938" />
-        <meta name="ICBM" content="10.735433;106.700938" />
-        {% block robots %}<meta name="robots" content="index, follow" />{% endblock %}
+        <meta name="geo.region" content="VI-VN">
+        <meta name="geo.placename" content="Ho Chi Minh, Viet Nam">
+        <meta name="geo.position" content="10.735433;106.700938">
+        <meta name="ICBM" content="10.735433;106.700938">
+        {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
         <meta name="revisit-after" content="1 days">
-        <meta http-equiv="content-language" content="vi">
         
-        {# Preload Font Awesome woff2 for faster icon loading #}
+        {# Preload critical fonts #}
         <link rel="preload" href="{{ asset('build/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="{{ asset('build/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
-        
-        {# LCP Preload - Homepage Banner #}
         {% block lcpPreload %}{% endblock %}
 
         {% block canonical %}
@@ -62,29 +45,26 @@
             {% endif %}
         {% endblock %}
         
-        <!-- Open Graph data -->
-        <meta property="og:locale" content="vi_VN" />
+        <!-- Open Graph -->
+        <meta property="og:locale" content="vi_VN">
         {% block structuredOpenGraph %}
-            <meta property="og:type" content="website" />
-            <meta property="og:title" content="{{ block('title') }}" />
-            <meta property="og:description" content="{{ block('description') }}" />
+            <meta property="og:type" content="website">
+            <meta property="og:title" content="{{ block('title') }}">
+            <meta property="og:description" content="{{ block('description') }}">
         {% endblock %}
         {% if app.request.attributes.get('_route') is not null %}
-            <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+            <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
         {% endif %}
-        <meta property="og:site_name" content="{{ get_setting('siteName') }}" />
-        <meta property="fb:app_id" content="224509460707857" />
-        <!-- Open Graph data -->
+        <meta property="og:site_name" content="{{ get_setting('siteName') }}">
+        <meta property="fb:app_id" content="224509460707857">
 
-        <!-- Twitter Card data -->
+        <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@xaydungminhduy">
         <meta name="twitter:title" content="{{ block('title') }}">
         <meta name="twitter:description" content="{{ block('description') }}">
         <meta name="twitter:creator" content="@xaydungminhduy">
-        {% block twitterImage %}
-        {% endblock %}
-        <!-- Twitter Card data -->
+        {% block twitterImage %}{% endblock %}
 
         {% block structuredOrganization %}
         {% endblock %}
@@ -260,17 +240,12 @@
             {{ source('@web' ~ asset('build/css/first.css'), ignore_missing = false) }}
         </style>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-        <link href="{{ asset('build/css/new.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-        <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
-        <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css') }}" ></noscript>
+        <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}"></noscript>
     </head>
     <body>
-        <!-- Google Tag Manager (noscript) -->
         {% if app.environment == 'prod' %}
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         {% endif %}
-        <!-- End Google Tag Manager (noscript) -->
         <div class="container-fluid wrapper">
             {{ include('layout/header.html.twig') }}
             {{ include('layout/menu.html.twig') }}

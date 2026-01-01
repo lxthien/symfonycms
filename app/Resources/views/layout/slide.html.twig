@@ -19,26 +19,16 @@
                     {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
                 {% endif %}
                 <picture>
-                    <source
-                        srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                        media="(max-width: 799px)" />
-                    <source
-                        srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        media="(min-width: 800px)" />
-                    <img
-                        src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        alt="Chuyên thi công xây nhà trọn gói tại TP HCM"
-                        width="1360"
-                        height="550"
-                        fetchpriority="high"
-                        decoding="async" />
+                    <source srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}" media="(max-width: 799px)">
+                    <source srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}" media="(min-width: 800px)">
+                    <img src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}" alt="Chuyên thi công xây nhà trọn gói tại TP HCM" width="1360" height="550" fetchpriority="high" decoding="async">
                 </picture>
                 <div class="carousel-overlay"></div>
                 <div class="container">
                     <div class="carousel-caption">
                         <span class="caption-badge">Uy tín - Chất lượng - Giá tốt</span>
                         <h2 class="caption-title">Xây Dựng Nhà Trọn Gói</h2>
-                        <p class="caption-desc">Công ty chuyên thi công xây nhà trọn gói tại TP.HCM với hơn 10 năm kinh nghiệm</p>
+                        <p class="caption-desc">Công ty chuyên thi công xây nhà trọn gói với hơn 10+ năm kinh nghiệm</p>
                         <div class="caption-actions">
                             <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}" class="btn-slide-cta">
                                 <i class="fas fa-calculator"></i> Xem bảng giá
@@ -63,18 +53,9 @@
                     {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
                 {% endif %}
                 <picture>
-                    <source
-                        srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                        media="(max-width: 799px)" />
-                    <source
-                        srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        media="(min-width: 800px)" />
-                    <img
-                        src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        alt="Thi công nhà phố, biệt thự"
-                        width="1360"
-                        height="550"
-                        loading="lazy" />
+                    <source srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}" media="(max-width: 799px)">
+                    <source srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}" media="(min-width: 800px)">
+                    <img src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}" alt="Thi công nhà phố, biệt thự" width="1360" height="550" loading="lazy">
                 </picture>
                 <div class="carousel-overlay"></div>
                 <div class="container">
