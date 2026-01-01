@@ -20,8 +20,8 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
-                    <div class="footer-widget">
-                        <h4 class="widget-title">Về Chúng Tôi</h4>
+                    <nav class="footer-widget" aria-label="Về chúng tôi">
+                        <p class="widget-title">Về Chúng Tôi</p>
                         <ul class="footer-links">
                             <li><a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}"><i class="fas fa-chevron-right"></i> Giới thiệu</a></li>
                             <li><a href="{{ path('news_show', {'slug': 'tuyen-dung' }) }}"><i class="fas fa-chevron-right"></i> Tuyển dụng</a></li>
@@ -30,19 +30,19 @@
                             <li><a href="{{ path('news_show', {'slug': 'tien-do-thanh-toan' }) }}"><i class="fas fa-chevron-right"></i> Tiến độ thanh toán</a></li>
                             <li><a href="{{ path('contact') }}"><i class="fas fa-chevron-right"></i> Liên hệ</a></li>
                         </ul>
-                    </div>
+                    </nav>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
-                    <div class="footer-widget">
-                        <h4 class="widget-title">Dịch Vụ</h4>
+                    <nav class="footer-widget" aria-label="Dịch vụ">
+                        <p class="widget-title">Dịch Vụ</p>
                         <div class="footer-services">
                             {{ get_setting('topKeyword')|raw }}
                         </div>
-                    </div>
+                    </nav>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-widget">
-                        <h4 class="widget-title">Liên Hệ</h4>
+                        <p class="widget-title">Liên Hệ</p>
                         <ul class="footer-contact">
                             <li>
                                 <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>

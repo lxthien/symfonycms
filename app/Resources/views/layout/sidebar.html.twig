@@ -1,22 +1,10 @@
-<div class="sidebar-inner">
-    {# Author Box #}
-    {# <div class="sidebar-widget author-widget">
-        <div class="author-avatar">
-            <img src="{{ asset('assets/images/author-avatar.jpg') }}" alt="Lê Xuân Minh" onerror="this.src='https://ui-avatars.com/api/?name=Minh+Duy&background=1e3a5f&color=fff&size=100'">
-        </div>
-        <div class="author-info">
-            <h4 class="author-name">Lê Xuân Minh</h4>
-            <p class="author-title">CEO - Xây Dựng Minh Duy</p>
-            <p class="author-bio">Hơn 15 năm kinh nghiệm trong lĩnh vực xây dựng và thiết kế nhà ở tại TP.HCM</p>
-        </div>
-    </div> #}
-
+<aside class="sidebar-inner" aria-label="Thông tin bổ sung">
     {# CTA Box #}
     <div class="sidebar-widget cta-widget">
         <div class="cta-icon">
             <i class="fas fa-phone-volume"></i>
         </div>
-        <h4 class="cta-title">Tư vấn miễn phí</h4>
+        <p class="cta-title">Tư vấn miễn phí</p>
         <p class="cta-text">Gọi ngay để được tư vấn và báo giá nhanh nhất!</p>
         <a href="tel:{{ get_setting('hotLine1') }}" class="cta-phone">
             <i class="fas fa-phone-alt"></i>
@@ -25,11 +13,11 @@
     </div>
 
     {# Featured Services Widget #}
-    <div class="sidebar-widget service-widget">
-        <h3 class="widget-title">
+    <nav class="sidebar-widget service-widget" aria-label="Dịch vụ nổi bật">
+        <p class="widget-title">
             <i class="fas fa-star"></i>
             Dịch vụ nổi bật
-        </h3>
+        </p>
         <ul class="service-list">
             <li>
                 <a href="{{ path('list_category', {'level1': 'xay-dung', 'level2': 'xay-nha-tron-goi' }) }}">
@@ -56,19 +44,25 @@
                 </a>
             </li>
         </ul>
-    </div>
+    </nav>
 
     {# Latest Quotes Widget #}
-    <div class="sidebar-widget price-widget">
-        <h3 class="widget-title">
+    <nav class="sidebar-widget price-widget" aria-label="Báo giá mới nhất">
+        <p class="widget-title">
             <i class="fas fa-file-invoice-dollar"></i>
             Báo giá mới nhất
-        </h3>
+        </p>
         <ul class="price-list">
             <li>
                 <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}">
                     <i class="fas fa-chevron-circle-right"></i>
                     Báo giá xây nhà trọn gói
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('news_show', {'slug': 'bang-gia-xay-dung-nha-phan-tho' }) }}">
+                    <i class="fas fa-chevron-circle-right"></i>
+                    Báo giá xây nhà phần thô
                 </a>
             </li>
             <li>
@@ -78,32 +72,26 @@
                 </a>
             </li>
             <li>
-                <a href="{{ path('news_show', {'slug': 'bang-gia-xay-dung-nha-phan-tho' }) }}">
-                    <i class="fas fa-chevron-circle-right"></i>
-                    Giá xây nhà phần thô
-                </a>
-            </li>
-            <li>
                 <a href="{{ path('news_show', {'slug': 'dich-vu-bao-gia-sua-chua-can-ho-chung-cu' }) }}">
                     <i class="fas fa-chevron-circle-right"></i>
-                    Giá sửa chữa chung cư
+                    Báo giá sửa chữa chung cư
                 </a>
             </li>
             <li>
                 <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-nha-pho' }) }}">
                     <i class="fas fa-chevron-circle-right"></i>
-                    Giá thiết kế nhà phố
+                    Báo giá thiết kế nhà phố
                 </a>
             </li>
         </ul>
-    </div>
+    </nav>
 
     {# Recent Posts Widget #}
     <div class="sidebar-widget recent-widget">
-        <h3 class="widget-title">
+        <p class="widget-title">
             <i class="fas fa-newspaper"></i>
             Bài viết mới nhất
-        </h3>
+        </p>
         {{ render(controller('AppBundle:News:recentNews')) }}
     </div>
-</div>
+</aside>

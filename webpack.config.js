@@ -17,8 +17,6 @@ Encore
     .addEntry('js/login', './web/assets/js/admin/login.js')
     .addStyleEntry('css/app', ['./web/assets/scss/front/app.scss'])
     .addStyleEntry('css/first', ['./web/assets/scss/front/first.scss'])
-    .addStyleEntry('css/new', ['./web/assets/scss/front/new.scss'])
-    .addStyleEntry('css/amp', ['./web/assets/scss/front/amp.scss'])
     .addStyleEntry('css/admin', ['./web/assets/scss/admin/admin.scss'])
 ;
 
