@@ -745,18 +745,21 @@ body {
 
 @media (max-width: 575px) {
     .landing-highlights .highlights-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .landing-highlights .highlight-item {
-        border-right: none;
         justify-content: center;
         text-align: center;
         flex-direction: column;
         padding: 20px;
     }
 
-    .landing-highlights .highlight-item:last-child {
+    .landing-highlights .highlight-item:nth-child(2n) {
+        border-right: none;
+    }
+
+    .landing-highlights .highlight-item:nth-child(n+3) {
         border-bottom: none;
     }
 }

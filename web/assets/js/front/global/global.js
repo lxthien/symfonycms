@@ -275,46 +275,45 @@ function initTypewriterEffect() {
 function initTableOfContents() {
     var $toc = $('.table-of-contents');
 
-    if ($toc.length === 0) return;
+    // Only process if there is exactly 1 table of contents
+    if ($toc.length !== 1) return;
 
-    $toc.each(function () {
-        var $this = $(this);
-        var $children = $this.children().not('hr#hr-toc');
+    var $this = $toc;
+    var $children = $this.children().not('hr#hr-toc');
 
-        // Skip if already initialized
-        if ($this.find('.toc-header').length > 0) return;
+    // Skip if already initialized
+    if ($this.find('.toc-header').length > 0) return;
 
-        // Create wrapper for existing content
-        var $tocContent = $('<div class="toc-content collapsed"></div>');
-        $children.appendTo($tocContent);
+    // Create wrapper for existing content
+    var $tocContent = $('<div class="toc-content collapsed"></div>');
+    $children.appendTo($tocContent);
 
-        // Create header
-        var $tocHeader = $('<div class="toc-header">' +
-            '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
-            '<span class="toc-toggle collapsed">' +
-            '<span class="toggle-text">Hiện</span>' +
-            '<i class="fas fa-chevron-down toggle-icon"></i>' +
-            '</span>' +
-            '</div>');
+    // Create header
+    var $tocHeader = $('<div class="toc-header">' +
+        '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
+        '<span class="toc-toggle collapsed">' +
+        '<span class="toggle-text">Hiện</span>' +
+        '<i class="fas fa-chevron-down toggle-icon"></i>' +
+        '</span>' +
+        '</div>');
 
-        // Build new structure
-        $this.empty().append($tocHeader).append($tocContent);
+    // Build new structure
+    $this.empty().append($tocHeader).append($tocContent);
 
-        // Toggle functionality
-        $tocHeader.on('click', function () {
-            var $toggle = $(this).find('.toc-toggle');
-            var $content = $(this).siblings('.toc-content');
+    // Toggle functionality
+    $tocHeader.on('click', function () {
+        var $toggle = $(this).find('.toc-toggle');
+        var $content = $(this).siblings('.toc-content');
 
-            $toggle.toggleClass('collapsed');
-            $content.toggleClass('collapsed');
+        $toggle.toggleClass('collapsed');
+        $content.toggleClass('collapsed');
 
-            // Update text
-            if ($content.hasClass('collapsed')) {
-                $toggle.find('.toggle-text').text('Hiện');
-            } else {
-                $toggle.find('.toggle-text').text('Ẩn');
-            }
-        });
+        // Update text
+        if ($content.hasClass('collapsed')) {
+            $toggle.find('.toggle-text').text('Hiện');
+        } else {
+            $toggle.find('.toggle-text').text('Ẩn');
+        }
     });
 }
 

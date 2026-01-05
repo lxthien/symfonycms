@@ -251,7 +251,9 @@
             {{ include('layout/menu.html.twig') }}
             {{ include('layout/slide.html.twig') }}
 
-            {% block body %}{% endblock %}
+            <main id="main-content">
+                {% block body %}{% endblock %}
+            </main>
 
             {{ include('layout/footer.html.twig') }}
             {{ include('layout/footer_UI.html.twig') }}

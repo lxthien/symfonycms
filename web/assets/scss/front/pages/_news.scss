@@ -2075,6 +2075,11 @@ ul li i:after {
                 p {
                     margin: 0;
                 }
+
+                a {
+                    color: $secondaryColor;
+                    font-weight: 600;
+                }
             }
 
             .comment-reply-btn {
@@ -2082,7 +2087,7 @@ ul li i:after {
                 align-items: center;
                 gap: 5px;
                 font-size: 13px;
-                color: $gray600;
+                color: $gray800;
                 text-decoration: none;
                 transition: color $transitionFast;
 
@@ -2420,7 +2425,7 @@ ul li i:after {
         }
 
         @media only screen and (max-width: 575.98px) {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
@@ -2456,21 +2461,16 @@ ul li i:after {
         }
 
         @media only screen and (max-width: 575.98px) {
-            border-right: none;
             justify-content: center;
             text-align: center;
             flex-direction: column;
             padding: 25px;
 
-            &:last-child {
-                border-bottom: none;
+            &:nth-child(2n) {
+                border-right: none;
             }
 
-            &:nth-last-child(-n+4) {
-                border-bottom: 1px solid #e2e8f0;
-            }
-
-            &:nth-last-child(1) {
+            &:nth-child(n+3) {
                 border-bottom: none;
             }
         }
@@ -2618,6 +2618,10 @@ ul li i:after {
             margin-bottom: 20px;
             padding-left: 25px;
 
+            @media only screen and (max-width: 767.98px) {
+                padding-left: 15px;
+            }
+
             li {
                 margin-bottom: 10px;
                 position: relative;
@@ -2635,6 +2639,10 @@ ul li i:after {
                 padding-left: 25px;
                 position: relative;
 
+                @media only screen and (max-width: 767.98px) {
+                    padding-left: 20px;
+                }
+
                 &::before {
                     content: '';
                     position: absolute;
@@ -2644,6 +2652,11 @@ ul li i:after {
                     height: 8px;
                     background: $primaryColor;
                     border-radius: 50%;
+
+                    @media only screen and (max-width: 767.98px) {
+                        width: 6px;
+                        height: 6px;
+                    }
                 }
             }
         }
@@ -2652,9 +2665,14 @@ ul li i:after {
             max-width: 100%;
             height: auto;
             border-radius: 12px;
-            margin: 20px 0;
+            margin: 10px 0;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border: 1px solid #e2e8f0;
+
+            @media only screen and (max-width: 767.98px) {
+                height: auto !important;
+                margin: 5px 0;
+            }
         }
 
         table {
@@ -2794,6 +2812,10 @@ ul li i:after {
                 overflow-y: auto;
                 transition: all 0.3s ease;
 
+                @media only screen and (max-width: 767.98px) {
+                    padding: 15px 10px;
+                }
+
                 &.collapsed {
                     max-height: 0;
                     padding-top: 0;
@@ -2813,6 +2835,10 @@ ul li i:after {
                     position: relative;
                     padding-left: 20px;
                     margin-bottom: 8px;
+
+                    @media only screen and (max-width: 767.98px) {
+                        padding-left: 15px;
+                    }
 
                     &::before {
                         content: "";
@@ -2836,6 +2862,10 @@ ul li i:after {
                     padding-left: 35px;
                     margin-bottom: 6px;
 
+                    @media only screen and (max-width: 767.98px) {
+                        padding-left: 25px;
+                    }
+
                     &::before {
                         content: "";
                         position: absolute;
@@ -2845,6 +2875,10 @@ ul li i:after {
                         height: 5px;
                         background: $gray400;
                         border-radius: 50%;
+
+                        @media only screen and (max-width: 767.98px) {
+                            left: 10px;
+                        }
                     }
                 }
 
@@ -3157,14 +3191,14 @@ ul li i:after {
         }
 
         &.btn-cta-contact {
-            background: $secondaryColor;
+            background: darken($secondaryColor, 10%);
             color: $white;
             box-shadow: 0 4px 15px rgba($secondaryColor, 0.4);
 
             &:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 8px 25px rgba($secondaryColor, 0.5);
-                background: darken($secondaryColor, 5%);
+                background: darken($secondaryColor, 15%);
             }
         }
     }
@@ -3576,6 +3610,10 @@ ul li i:after {
         padding-left: 0;
         margin-bottom: 20px;
         margin-left: 25px;
+
+        @media only screen and (max-width: 767.98px) {
+            margin-left: 15px;
+        }
 
         li {
             margin-bottom: 8px;
