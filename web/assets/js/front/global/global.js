@@ -142,7 +142,7 @@ function initCostConstruction() {
 }
 
 function initFancybox() {
-    var $rating = $('.rating-container .rating');
+    var $rating = $('.post-rating .rating');
     var $ratingMessage = $('p.rating-message');
     var $star = $('#form-rating-review .rating-well .star');
     var $formRating = $('#form-rating-review');
@@ -327,6 +327,6 @@ exports.init = function () {
     //initFixedSidebar();
     initCostConstruction();
     initFancybox();
-    initTypewriterEffect();
+    //initTypewriterEffect();
     initTableOfContents();
 };

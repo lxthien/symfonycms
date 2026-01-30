@@ -1,4 +1,13 @@
 <script defer src="{{ asset('build/manifest.js') }}"></script>
 <script defer src="{{ asset('build/js/common.js') }}"></script>
 <script defer src="{{ asset('build/js/app.js') }}"></script>
+<script>
+    // Lazysizes configuration to reduce forced reflows
+    window.lazySizesConfig = window.lazySizesConfig || {};
+    window.lazySizesConfig.throttleDelay = 125; // Increase delay between checks
+    window.lazySizesConfig.ricTimeout = 300; // Use requestIdleCallback with longer timeout
+    window.lazySizesConfig.loadMode = 2; // Load images more conservatively
+    window.lazySizesConfig.expand = 370; // Expand viewport range (default 370-500)
+    window.lazySizesConfig.expFactor = 1.5; // Factor for expand
+</script>
 <script async src="{{ asset('assets/libs/lazyload/js/lazysizes.min.js') }}"></script>

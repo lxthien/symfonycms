@@ -9,8 +9,8 @@
 {# LCP Optimization for Landing Page #}
 {% block lcpPreload %}
 {% if category.getContent() is not null %}
-    {# Preload Roboto Condensed Bold for hero title - LCP element #}
-    <link rel="preload" href="https://fonts.gstatic.com/s/robotocondensed/v27/ieVo2ZhZI2eCN5jzbjEETS9weq8-_d6T_POl0fRJeyWyo-BMVqZc.woff2" as="font" type="font/woff2" crossorigin>
+    {# Preload Local Roboto Condensed Bold for hero title - LCP element #}
+    <link rel="preload" href="{{ asset('build/fonts/RobotoCondensed-Bold.ttf') }}" as="font" type="font/ttf" crossorigin>
 {% endif %}
 {% endblock %}
 
