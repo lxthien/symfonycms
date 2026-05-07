@@ -78,7 +78,7 @@ class News
      * @var text
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="contents", type="text")
+     * @ORM\Column(name="contents", type="text", columnDefinition="LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
      */
     private $contents;
 

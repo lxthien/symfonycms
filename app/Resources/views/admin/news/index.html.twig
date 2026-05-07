@@ -50,7 +50,12 @@
                                                 <img src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('admin_thumb') }}" alt="{{ row.getTitle() }}" />
                                             </div>
                                         </td>
-                                        <td><a class="btn-link" href="{{ path('admin_news_edit', {id: row.id}) }}">{{ row.getTitle() }}</a></td>
+                                        <td>
+                                            <a class="btn-link" href="{{ path('admin_news_edit', {id: row.id}) }}">{{ row.getTitle() }}</a>
+                                            <small class="d-block text-muted">
+                                                URL: {{ row.getUrl() }}
+                                            </small>
+                                        </td>
                                         <td>
                                             {% for category in row.getCategory() %}
                                                 {{ category.getName() }}{{ loop.last == false ? ', ' : '' }}

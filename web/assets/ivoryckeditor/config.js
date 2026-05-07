@@ -15,6 +15,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.entities = false;
     config.basicEntities = false;
     config.extraPlugins = "toc";
+    config.extraAllowedContent = 'blockquote(expert-quote); div(stat-box); span(stat-number,stat-label,stat-source); p(author-byline,author-review); div(key-takeaways,definition,table-of-contents,note,table(summary-table))';
     config.toolbar_MyEditor =
     [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },

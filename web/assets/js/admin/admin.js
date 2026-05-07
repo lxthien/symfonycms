@@ -74,6 +74,10 @@ $(function() {
         $('.txt-ckeditor').each(function (e, elements) {
             var height = $(this).data("height") ? $(this).data("height") : "500";
             CKEDITOR.replace(this.id, {
+                protectedSource: [
+                    /<script[\s\S]*?<\/script>/gi,
+                    /<style[\s\S]*?<\/style>/gi
+                ],
                 height: height + 'px',
                 filebrowserBrowseUrl: '/assets/cksourceckfinder/ckfinder/ckfinder.html',
                 filebrowserUploadUrl: '/assets/cksourceckfinder/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',

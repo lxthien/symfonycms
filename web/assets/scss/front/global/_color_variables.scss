@@ -57,3 +57,19 @@ $shadowLg: 0 8px 24px rgba($black, 0.16);
 // Transitions
 $transitionFast: 0.2s ease;
 $transitionNormal: 0.3s ease;
+
+:root {
+    --md-primary: #F37021;            /* Cam thương hiệu Minh Duy */
+    --md-primary-dark: #D85A0F;       /* Cam đậm khi hover */
+    --md-primary-light: #FFF4EC;      /* Cam nhạt nền box */
+    --md-primary-tint: #FFE4D1;       /* Cam pastel viền box */
+    --md-blue: #1E5AA8;               /* Xanh dương cho stat phụ */
+    --md-blue-light: #EAF2FB;
+    --md-green: #2E7D4F;              /* Xanh lá cho stat tích cực */
+    --md-green-light: #E8F5EE;
+    --md-text: #1F2937;               /* Text chính */
+    --md-text-soft: #4B5563;          /* Text phụ */
+    --md-border: #E5E7EB;             /* Viền nhẹ */
+    --md-radius: 8px;                 /* Bo góc */
+    --md-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
