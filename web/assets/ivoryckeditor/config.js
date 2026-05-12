@@ -14,8 +14,13 @@ CKEDITOR.editorConfig = function( config ) {
     config.htmlEncodeOutput = false;
     config.entities = false;
     config.basicEntities = false;
-    config.extraPlugins = "toc";
-    config.extraAllowedContent = 'blockquote(expert-quote); div(stat-box); span(stat-number,stat-label,stat-source); p(author-byline,author-review); div(key-takeaways,definition,table-of-contents,note,table(summary-table))';
+    config.extraPlugins = 'toc,image2,widget,lineutils,widgetselection';
+    config.removePlugins = 'image';
+    config.extraAllowedContent = 'img[data-fancybox,data-caption]; a[data-fancybox,data-caption]; blockquote(expert-quote); div(stat-box); span(stat-number,stat-label,stat-source); p(author-byline,author-review); div(key-takeaways,definition,table-of-contents,note,table(summary-table)); figure(*)[*]; figcaption(*)[*]; img[*](*); script[*]; style[*]';
+    config.allowedContent = true;
+    // Protect script tags from being stripped in Source mode
+    config.protectedSource.push(/<script[\s\S]*?<\/script>/gi);
+    config.protectedSource.push(/<style[\s\S]*?<\/style>/gi);
     config.toolbar_MyEditor =
     [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },

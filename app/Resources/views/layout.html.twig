@@ -71,128 +71,268 @@
         {% block structuredWebSite %}
             <script type="application/ld+json">
             {
-                "@context": "http://schema.org",
-                "@graph": [
-                    {
+            "@context": "http://schema.org",
+            "@graph": [
+                {
+                    "@type": "Organization",
+                    "@id": "https://xaydungminhduy.com/#organization",
+                    "url": "https://xaydungminhduy.com/",
+                    "name": "Xây Dựng Minh Duy",
+                    "alternateName": [
+                        "Xây Dựng Minh Duy",
+                        "công ty xây dựng minh duy",
+                        "Xây nhà trọn gói Xây Dựng Minh Duy",
+                        "Sửa nhà trọn gói Xây Dựng Minh Duy"
+                    ],
+                    "logo": {
+                        "@type": "ImageObject",
+                        "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                        "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                        "width": "354",
+                        "height": "72"
+                    }
+                },
+                {
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "@id": "https://xaydungminhduy.com/#website",
+                    "url": "https://xaydungminhduy.com/",
+                    "name": "Xây Dựng Minh Duy",
+                    "alternateName": [
+                        "Xây Dựng Minh Duy",
+                        "công ty xây dựng minh duy",
+                        "Xây nhà trọn gói Xây Dựng Minh Duy",
+                        "Sửa nhà trọn gói Xây Dựng Minh Duy"
+                    ],
+                    "inLanguage": "vi-VN",
+                    "publisher": {
                         "@type": "Organization",
-                        "@id": "https://xaydungminhduy.com/#organization",
-                        "url": "https://xaydungminhduy.com/",
-                        "name": "Xây Dựng Minh Duy",
-                        "alternateName": [
-                            "Xây Dựng Minh Duy",
-                            "công ty xây dựng minh duy",
-                            "Xây nhà trọn gói Xây Dựng Minh Duy",
-                            "Sửa nhà trọn gói Xây Dựng Minh Duy"
-                        ],
-                        "logo": {
-                            "@type": "ImageObject",
-                            "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                            "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                            "width": "354",
-                            "height": "72"
-                        }
+                        "@id": "https://xaydungminhduy.com/#organization"
                     },
-                    {
-                        "@context": "https://schema.org",
-                        "@type": "WebSite",
-                        "@id": "https://xaydungminhduy.com/#website",
-                        "url": "https://xaydungminhduy.com/",
-                        "name": "Xây Dựng Minh Duy",
-                        "alternateName": [
-                            "Xây Dựng Minh Duy",
-                            "công ty xây dựng minh duy",
-                            "Xây nhà trọn gói Xây Dựng Minh Duy",
-                            "Sửa nhà trọn gói Xây Dựng Minh Duy"
-                        ],
-                        "inLanguage": "vi-VN",
-                        "publisher": {
-                            "@type": "Organization",
-                            "@id": "https://xaydungminhduy.com/#organization"
-                        },
-                        "potentialAction": {
-                            "@type": "SearchAction",
-                            "target": "https://xaydungminhduy.com/search?q={search_term_string}",
-                            "query-input": "required name=search_term_string"
-                        }
+                    "potentialAction": {
+                        "@type": "SearchAction",
+                        "target": "https://xaydungminhduy.com/search?q={search_term_string}",
+                        "query-input": "required name=search_term_string"
+                    }
+                },
+                {
+                    "@type": "Person",
+                    "url": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}",
+                    "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person",
+                    "name": "Lê Xuân Minh",
+                    "alternateName": [
+                        "Minh Le",
+                        "Le Xuan Thuy"
+                    ],
+                    "familyName": "Lê",
+                    "additionalName": "Xuân",
+                    "givenName": "Minh",
+                    "mainentityofpage": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}",
+                    "birthDate": "1988-05-21",
+                    "description": "Lê Xuân Minh là CEO công ty Xây Dựng Minh Duy - là một đơn vị chuyên cung cấp dịch vụ thiết kế nhà, thi công xây dựng, sửa chữa nhà ở dân dụng, nhà công nghiệp. Ông có hơn 10 năm kinh nghiệm và là chuyên gia hàng đầu trong lĩnh vực xây dựng.",
+                    "jobTitle": [
+                        "CEO",
+                        "Founder"
+                    ],
+                    "gender": "https://schema.org/Male",
+                    "height": "1m78",
+                    "email": "ldminh1988@gmail.com",
+                    "image": "https://xaydungminhduy.com/uploads/ckfinder/userfiles/files/leduyminh.jpg",
+                    "sameAs": [
+                        "https://www.facebook.com/profile.php?id=100011397406701",
+                        "https://www.linkedin.com/in/lexuanminh/",
+                        "https://www.pinterest.com/lexuanminhxaydungminhduy/",
+                        "https://twitter.com/lexuanminh88"
+                    ],
+                    "alumniOf": {
+                        "@type": "EducationalOrganization",
+                        "name": "University of Architecture Ho Chi Minh City",
+                        "url": "http://en.uah.edu.vn/",
+                        "@id": "kg:/m/02pydq7",
+                        "description": "Ho Chi Minh City University of Architecture (Vietnamese: Đại học Kiến trúc Thành phố Hồ Chí Minh), is the flagship university in architecture, civil engineering, design education and research in Vietnam. In addition to architecture and civil/structural engineering, the university provides higher education in several relating disciplines including urban planning, infrastructural engineering, fine arts, fashion design and building interior design. Its main campus is located in District 3, Ho Chi Minh City in addition to two provincial campuses in Da Lat and Can Tho.",
+                        "mainEntityOfPage": "http://en.uah.edu.vn/"
                     },
-                    {
-                        "@type": "Person",
-                        "url": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}",
-                        "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person",
-                        "name": "Lê Xuân Minh",
-                        "alternateName": [
-                            "Minh Le",
-                            "Le Xuan Thuy"
-                        ],
-                        "familyName": "Lê",
-                        "additionalName": "Xuân",
-                        "givenName": "Minh",
-                        "mainentityofpage": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}",
-                        "birthDate": "1988-05-21",
-                        "description": "Lê Xuân Minh là CEO công ty Xây Dựng Minh Duy - là một đơn vị chuyên cung cấp dịch vụ thiết kế nhà, thi công xây dựng, sửa chữa nhà ở dân dụng, nhà công nghiệp. Ông có hơn 10 năm kinh nghiệm và là chuyên gia hàng đầu trong lĩnh vực xây dựng.",
-                        "jobTitle": [
-                            "CEO",
-                            "Founder"
-                        ],
-                        "gender": "https://schema.org/Male",
-                        "height": "1m78",
+                    "contactPoint": {
+                        "@type": "ContactPoint",
+                        "telephone": "0982969379",
                         "email": "ldminh1988@gmail.com",
-                        "image": "https://xaydungminhduy.com/uploads/ckfinder/userfiles/files/leduyminh.jpg",
-                        "sameAs": [
-                            "https://www.facebook.com/profile.php?id=100011397406701",
-                            "https://www.linkedin.com/in/lexuanminh/",
-                            "https://www.pinterest.com/lexuanminhxaydungminhduy/",
-                            "https://twitter.com/lexuanminh88"
-                        ],
-                        "alumniOf": {
-                            "@type": "EducationalOrganization",
-                            "name": "University of Architecture Ho Chi Minh City",
-                            "url": "http://en.uah.edu.vn/",
-                            "@id": "kg:/m/02pydq7",
-                            "description": "Ho Chi Minh City University of Architecture (Vietnamese: Đại học Kiến trúc Thành phố Hồ Chí Minh), is the flagship university in architecture, civil engineering, design education and research in Vietnam. In addition to architecture and civil/structural engineering, the university provides higher education in several relating disciplines including urban planning, infrastructural engineering, fine arts, fashion design and building interior design. Its main campus is located in District 3, Ho Chi Minh City in addition to two provincial campuses in Da Lat and Can Tho.",
-                            "mainEntityOfPage": "http://en.uah.edu.vn/"
-                        },
-                        "contactPoint": {
-                            "@type": "ContactPoint",
-                            "telephone": "0982969379",
-                            "email": "ldminh1988@gmail.com",
-                            "availableLanguage": [
-                                "Vietnamese",
-                                "English"
+                        "availableLanguage": [
+                            "Vietnamese",
+                            "English"
+                        ]
+                    },
+                    "worksFor": {
+                        "@type": "Organization",
+                        "@id": "https://xaydungminhduy.com/#organization"
+                    },
+                    "nationality": {
+                        "@type": "Country",
+                        "@id": "kg:/m/01crd5",
+                        "url": "https://vi.wikipedia.org/wiki/Việt_Nam",
+                        "name": "Việt Nam"
+                    },
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "271/42 Lê Văn Lương, Phường Tân Quy",
+                        "addressLocality": "Quận 7",
+                        "addressRegion": "Hồ Chí Minh",
+                        "postalCode": "700000",
+                        "addressCountry": "VN"
+                    },
+                    "birthPlace": {
+                        "@type": "Place",
+                        "url": "https://vi.wikipedia.org/wiki/Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh",
+                        "name": "Thành phố Hồ Chí Minh",
+                        "description": "Thành phố Hồ Chí Minh, còn được gọi là Sài Gòn, là thành phố lớn nhất Việt Nam và là một siêu đô thị trong tương lai gần. Đây còn là trung tâm kinh tế, giải trí, một trong hai trung tâm văn hóa và giáo dục quan trọng tại Việt Nam."
+                    },
+                    "knowsLanguage": [
+                        "English",
+                        "Vietnamese"
+                    ]
+                },
+                {
+                    "@type": "LocalBusiness",
+                    "@id": "https://xaydungminhduy.com/#business",
+                    "name": "Xây Dựng Minh Duy",
+                    "url": "https://xaydungminhduy.com",
+                    "telephone": "+84982969379",
+                    "description": "Đơn vị thi công xây dựng, sửa chữa và cải tạo nhà ở tại TP.HCM với 10+ năm kinh nghiệm.",
+                    "priceRange": "Xây dựng từ 5 triệu/m² – Sửa chữa từ 1,5 triệu/m²",
+                    "image": "https://xaydungminhduy.com/images/logo.jpg",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "95/121 Đường Lê Văn Lương, P. Tân Hưng",
+                        "addressLocality": "Thành phố Hồ Chí Minh",
+                        "addressRegion": "TP.HCM",
+                        "addressCountry": "VN",
+                        "postalCode": "70000"
+                    },
+                    "areaServed": [
+                        "TP.HCM",
+                        "Bình Dương",
+                        "Đồng Nai",
+                        "Long An",
+                        "Bà Rịa - Vũng Tàu",
+                        "Tây Ninh",
+                        "Bình Phước",
+                        "Tiền Giang"
+                    ],
+                    "hasOfferCatalog": [
+                        {
+                            "@type": "OfferCatalog",
+                            "name": "Dịch vụ thi công xây dựng",
+                            "itemListElement": [
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Xây nhà trọn gói"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Xây nhà phần thô"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Thi công hoàn thiện"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Xây nhà cấp 4"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Thi công quán Cafe"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Ép cọc bê tông"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Thi công nhà xưởng"
+                                    }
+                                }
                             ]
                         },
-                        "worksFor": {
-                            "@type": "Organization",
-                            "@id": "https://xaydungminhduy.com/#organization"
-                        },
-                        "nationality": {
-                            "@type": "Country",
-                            "@id": "kg:/m/01crd5",
-                            "url": "https://vi.wikipedia.org/wiki/Việt_Nam",
-                            "name": "Việt Nam"
-                        },
-                        "address": {
-                            "@type": "PostalAddress",
-                            "streetAddress": "271/42 Lê Văn Lương, Phường Tân Quy",
-                            "addressLocality": "Quận 7",
-                            "addressRegion": "Hồ Chí Minh",
-                            "postalCode": "700000",
-                            "addressCountry": "VN"
-                        },
-                        "birthPlace": {
-                            "@type": "Place",
-                            "url": "https://vi.wikipedia.org/wiki/Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh",
-                            "name": "Thành phố Hồ Chí Minh",
-                            "description": "Thành phố Hồ Chí Minh, còn được gọi là Sài Gòn, là thành phố lớn nhất Việt Nam và là một siêu đô thị trong tương lai gần. Đây còn là trung tâm kinh tế, giải trí, một trong hai trung tâm văn hóa và giáo dục quan trọng tại Việt Nam."
-                        },
-                        "knowsLanguage": [
-                            "English",
-                            "Vietnamese"
-                        ]
-                    }
-                ]
+                        {
+                            "@type": "OfferCatalog",
+                            "name": "Dịch vụ sửa chữa cải tạo nhà",
+                            "itemListElement": [
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Sửa nhà trọn gói"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Sửa nhà nâng tầng"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Cải tạo nhà chung cư"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Sửa nhà cấp 4"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Cải tạo mặt tiền nhà"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Chống thấm chống dột"
+                                    }
+                                },
+                                {
+                                    "@type": "Offer",
+                                    "itemOffered": {
+                                        "@type": "Service",
+                                        "name": "Sửa chữa điện nước"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
             }
-        </script>
+            </script>
         {% endblock %}
 
         {% block structuredReview %}
