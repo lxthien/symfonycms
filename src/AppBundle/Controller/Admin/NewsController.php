@@ -9,6 +9,7 @@ use AppBundle\Entity\News;
 use AppBundle\Entity\Rating;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
+use AppBundle\Seo\SeoAnalyzer;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -128,7 +129,7 @@ class NewsController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_news_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger)
+    public function editAction(Request $request, News $news, Slugger $slugger, SeoAnalyzer $seoAnalyzer)
     {
         //$this->denyAccessUnlessGranted('edit', $category, 'Posts can only be edited by their authors.');
 
@@ -158,12 +159,14 @@ class NewsController extends Controller
             return $this->render('admin/news/edit.html.twig', [
                 'news' => $news,
                 'form' => $form->createView(),
+                'seoAudit' => $seoAnalyzer->analyze($news),
             ]);
         }
 
         return $this->render('admin/news/edit.html.twig', [
             'news' => $news,
             'form' => $form->createView(),
+            'seoAudit' => $seoAnalyzer->analyze($news),
         ]);
     }
 

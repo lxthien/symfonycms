@@ -3,8 +3,11 @@ import Bloodhound from "bloodhound-js";
 import 'bootstrap-tagsinput';
 
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal.js';
+import 'bootstrap-sass/assets/javascripts/bootstrap/collapse.js';
 
 $(function() {
+    initAdminSidebarState();
+
     // Build the slug for object entiry from the name
     initBuildSluggable();
 
@@ -15,6 +18,42 @@ $(function() {
     initEnableToggleButton();
 
     initMakePrimaryCategory();
+
+    function initAdminSidebarState() {
+        var storageKey = 'minhduy_admin_sidebar_open';
+
+        function setSessionCookie(value) {
+            document.cookie = storageKey + '=' + value + '; path=/; SameSite=Lax';
+        }
+
+        function persistSidebarState() {
+            var isCollapsed = $('body').hasClass('open');
+            var value = isCollapsed ? '1' : '0';
+
+            try {
+                sessionStorage.setItem(storageKey, value);
+            } catch (error) {}
+
+            setSessionCookie(value);
+        }
+
+        try {
+            if (sessionStorage.getItem(storageKey) === '1') {
+                $('body').addClass('open');
+                setSessionCookie('1');
+            }
+        } catch (error) {}
+
+        var menuToggle = document.getElementById('menuToggle');
+
+        if (!menuToggle) {
+            return;
+        }
+
+        menuToggle.addEventListener('click', function() {
+            setTimeout(persistSidebarState, 0);
+        });
+    }
 
     /**
      * Create sluggable from name

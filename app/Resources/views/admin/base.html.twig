@@ -28,7 +28,7 @@
         {% endblock %}
     </head>
 
-    <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}">
+    <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}{% if app.request.cookies.get('minhduy_admin_sidebar_open') == '1' %} open{% endif %}">
 
         {% block sidebar %}
             {{ include('admin/layout/sidebar.html.twig') }}
