@@ -19,6 +19,10 @@ $(function() {
 
     initMakePrimaryCategory();
 
+    initRevisionAutosave();
+
+    initBulkActions();
+
     function initAdminSidebarState() {
         var storageKey = 'minhduy_admin_sidebar_open';
 
@@ -171,6 +175,120 @@ $(function() {
 
             if (categoryId > 0 ) {
                 $('#news_categoryPrimary').val(categoryId);
+            }
+        });
+    }
+
+    function initRevisionAutosave() {
+        var $panel = $('.revision-panel');
+
+        if (!$panel.length) {
+            return;
+        }
+
+        var autosaveUrl = $panel.data('autosave-url');
+        var autosaveToken = $panel.data('autosave-token');
+        var $status = $('[data-autosave-status]');
+        var lastPayload = JSON.stringify(collectRevisionPayload());
+        var isSaving = false;
+
+        function getEditorData(fieldId) {
+            if (window.CKEDITOR && CKEDITOR.instances[fieldId]) {
+                return CKEDITOR.instances[fieldId].getData();
+            }
+
+            return $('#' + fieldId).val() || '';
+        }
+
+        function collectRevisionPayload() {
+            if (window.CKEDITOR) {
+                $.each(CKEDITOR.instances, function(id, editor) {
+                    editor.updateElement();
+                });
+            }
+
+            return {
+                _token: autosaveToken,
+                title: $('#news_title').val() || '',
+                url: $('#news_url').val() || '',
+                description: $('#news_description').val() || '',
+                contents: getEditorData('news_contents'),
+                pageTitle: $('#news_pageTitle').val() || '',
+                pageDescription: $('#news_pageDescription').val() || '',
+                pageKeyword: $('#news_pageKeyword').val() || '',
+                qa: $('#news_qa').val() || '',
+                template: $('#news_template').val() || ''
+            };
+        }
+
+        function autosave() {
+            if (isSaving) {
+                return;
+            }
+
+            var payload = collectRevisionPayload();
+            var encodedPayload = JSON.stringify(payload);
+
+            if (encodedPayload === lastPayload) {
+                return;
+            }
+
+            isSaving = true;
+            $status.text('Đang autosave...');
+
+            $.ajax({
+                type: 'POST',
+                url: autosaveUrl,
+                data: payload,
+                success: function(response) {
+                    lastPayload = encodedPayload;
+
+                    if (response.savedAt) {
+                        $status.text(response.message + ': ' + response.savedAt);
+                    } else {
+                        $status.text(response.message);
+                    }
+                },
+                error: function() {
+                    $status.text('Autosave lỗi, nội dung trên form vẫn chưa mất.');
+                },
+                complete: function() {
+                    isSaving = false;
+                }
+            });
+        }
+
+        setInterval(autosave, 30000);
+    }
+
+    function initBulkActions() {
+        $('[data-bulk-check-all]').on('change', function() {
+            var checked = $(this).prop('checked');
+            $(this).closest('table').find('[data-bulk-check]').prop('checked', checked);
+        });
+
+        $('[data-bulk-check]').on('change', function() {
+            var $table = $(this).closest('table');
+            var total = $table.find('[data-bulk-check]').length;
+            var checked = $table.find('[data-bulk-check]:checked').length;
+
+            $table.find('[data-bulk-check-all]').prop('checked', total > 0 && total === checked);
+        });
+
+        $('[data-bulk-form]').on('submit', function(event) {
+            var $form = $(this);
+            var formId = $form.attr('id');
+            var action = $form.find('[name="bulk_action"]').val();
+            var checkedCount = formId ? $('[data-bulk-check][form="' + formId + '"]:checked').length : $form.find('[data-bulk-check]:checked').length;
+
+            if (!action || checkedCount === 0) {
+                event.preventDefault();
+                alert('Vui lòng chọn dữ liệu và thao tác.');
+                return;
+            }
+
+            if (action === 'delete' && !confirm('Bạn chắc chắn muốn xóa các mục đã chọn?')) {
+                event.preventDefault();
             }
         });
     }

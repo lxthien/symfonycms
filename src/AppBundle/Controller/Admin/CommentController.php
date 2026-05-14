@@ -27,16 +27,39 @@ class CommentController extends Controller
      * @Route("/", name="admin_comment_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $comments = $em->getRepository(Comment::class)->findBy(
-            array(),
-            array('createdAt' => 'DESC')
+        $q = trim((string) $request->query->get('q'));
+        $status = $request->query->get('status', '');
+
+        $qb = $em->getRepository(Comment::class)->createQueryBuilder('c');
+
+        if ($q !== '') {
+            $qb->andWhere('c.author LIKE :q OR c.email LIKE :q OR c.phone LIKE :q OR c.content LIKE :q OR c.ip LIKE :q')
+                ->setParameter('q', '%' . $q . '%');
+        }
+
+        if ($status === 'approved') {
+            $qb->andWhere('c.approved = :approved')->setParameter('approved', true);
+        } elseif ($status === 'pending') {
+            $qb->andWhere('c.approved = :approved')->setParameter('approved', false);
+        }
+
+        $qb->orderBy('c.createdAt', 'DESC');
+
+        $pagination = $this->get('knp_paginator')->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            20
         );
 
         return $this->render('admin/comment/index.html.twig', [
-            'objects' => $comments
+            'pagination' => $pagination,
+            'filters' => [
+                'q' => $q,
+                'status' => $status,
+            ],
         ]);
     }
 
@@ -132,5 +155,45 @@ class CommentController extends Controller
         $this->addFlash('success', 'action.deleted_successfully');
 
         return $this->redirectToRoute('admin_comment_index');
+    }
+
+    /**
+     * @Route("/bulk", name="admin_comment_bulk")
+     * @Method("POST")
+     */
+    public function bulkAction(Request $request)
+    {
+        if (!$this->isCsrfTokenValid('bulk_comment', $request->request->get('token'))) {
+            return $this->redirectToRoute('admin_comment_index');
+        }
+
+        $action = $request->request->get('bulk_action');
+        $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
+
+        if (!$ids || !in_array($action, ['approve', 'unapprove', 'delete'], true)) {
+            $this->addFlash('warning', 'Vui lòng chọn bình luận và thao tác hợp lệ.');
+
+            return $this->redirectToRoute('admin_comment_index', $request->query->all());
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $comments = $em->getRepository(Comment::class)->createQueryBuilder('c')
+            ->where('c.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($comments as $comment) {
+            if ($action === 'delete') {
+                $em->remove($comment);
+            } else {
+                $comment->setApproved($action === 'approve');
+            }
+        }
+
+        $em->flush();
+        $this->addFlash('success', 'Đã xử lý ' . count($comments) . ' bình luận.');
+
+        return $this->redirectToRoute('admin_comment_index', $request->query->all());
     }
 }

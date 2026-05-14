@@ -27,12 +27,42 @@ class PageController extends Controller
      * @Route("/", name="admin_page_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $pages = $em->getRepository(News::class)->findAllPages();
+        $q = trim((string) $request->query->get('q'));
+        $status = $request->query->get('status', '');
 
-        return $this->render('admin/page/index.html.twig', ['pages' => $pages]);
+        $qb = $em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.postType = :postType')
+            ->setParameter('postType', 'page');
+
+        if ($q !== '') {
+            $qb->andWhere('n.title LIKE :q OR n.url LIKE :q OR n.description LIKE :q')
+                ->setParameter('q', '%' . $q . '%');
+        }
+
+        if ($status === 'published') {
+            $qb->andWhere('n.enable = :enable')->setParameter('enable', true);
+        } elseif ($status === 'draft') {
+            $qb->andWhere('n.enable = :enable')->setParameter('enable', false);
+        }
+
+        $qb->orderBy('n.createdAt', 'DESC');
+
+        $pagination = $this->get('knp_paginator')->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            20
+        );
+
+        return $this->render('admin/page/index.html.twig', [
+            'pagination' => $pagination,
+            'filters' => [
+                'q' => $q,
+                'status' => $status,
+            ],
+        ]);
     }
 
     /**
@@ -120,5 +150,47 @@ class PageController extends Controller
         $this->addFlash('success', 'action.deleted_successfully');
 
         return $this->redirectToRoute('admin_page_index');
+    }
+
+    /**
+     * @Route("/bulk", name="admin_page_bulk")
+     * @Method("POST")
+     */
+    public function bulkAction(Request $request)
+    {
+        if (!$this->isCsrfTokenValid('bulk_page', $request->request->get('token'))) {
+            return $this->redirectToRoute('admin_page_index');
+        }
+
+        $action = $request->request->get('bulk_action');
+        $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
+
+        if (!$ids || !in_array($action, ['publish', 'unpublish', 'delete'], true)) {
+            $this->addFlash('warning', 'Vui lòng chọn trang và thao tác hợp lệ.');
+
+            return $this->redirectToRoute('admin_page_index', $request->query->all());
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $pages = $em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.id IN (:ids)')
+            ->andWhere('n.postType = :postType')
+            ->setParameter('ids', $ids)
+            ->setParameter('postType', 'page')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($pages as $page) {
+            if ($action === 'delete') {
+                $em->remove($page);
+            } else {
+                $page->setEnable($action === 'publish');
+            }
+        }
+
+        $em->flush();
+        $this->addFlash('success', 'Đã xử lý ' . count($pages) . ' trang.');
+
+        return $this->redirectToRoute('admin_page_index', $request->query->all());
     }
 }

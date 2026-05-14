@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Utils\Slugger;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,6 +43,11 @@ class BannerCategory
     private $url;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Banner", mappedBy="bannercategory")
+     */
+    private $banners;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -66,6 +72,7 @@ class BannerCategory
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->banners = new ArrayCollection();
     }
 
     /**
@@ -122,6 +129,11 @@ class BannerCategory
     public function getUrl()
     {
         return $this->url;
+    }
+
+    public function getBanners()
+    {
+        return $this->banners;
     }
 
     /**

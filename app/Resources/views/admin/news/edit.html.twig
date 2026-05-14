@@ -25,6 +25,13 @@
                                         button_label: 'action.save'|trans,
                                         include_back_to_home_link: true,
                                     }, with_context = false) }}
+
+                                    {{ include('admin/news/_revisions.html.twig', {
+                                        news: news,
+                                        revisions: revisions,
+                                        latestAutosave: latestAutosave,
+                                        revisionDiffs: revisionDiffs
+                                    }, with_context = false) }}
                                 </div>
                             </div>
                         </div>

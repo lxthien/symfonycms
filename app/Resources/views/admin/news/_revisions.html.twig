@@ -1,0 +1,67 @@
+<div class="revision-panel"
+     data-autosave-url="{{ path('admin_news_autosave', {id: news.id}) }}"
+     data-autosave-token="{{ csrf_token('autosave_news_' ~ news.id) }}">
+    <div class="revision-panel-header">
+        <div>
+            <h4>Lịch sử nội dung</h4>
+            <p>Autosave chạy mỗi 30 giây khi có thay đổi và không ghi đè bài đang xuất bản.</p>
+        </div>
+        <span class="revision-autosave-status" data-autosave-status>
+            {% if latestAutosave %}
+                Autosave gần nhất: {{ latestAutosave.createdAt|date('H:i:s d/m/Y') }}
+            {% else %}
+                Chưa có autosave
+            {% endif %}
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered revision-table">
+            <thead>
+                <tr>
+                    <th>Thời gian</th>
+                    <th>Loại</th>
+                    <th>Người sửa</th>
+                    <th>Thay đổi</th>
+                    <th class="text-right">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for revision in revisions %}
+                    <tr>
+                        <td>{{ revision.createdAt|date('H:i:s d/m/Y') }}</td>
+                        <td>
+                            {% set badgeClass = revision.revisionType == 'autosave' ? 'warning' : (revision.revisionType == 'restore' ? 'success' : 'primary') %}
+                            <span class="badge badge-{{ badgeClass }}">{{ revision.revisionType }}</span>
+                        </td>
+                        <td>{{ revision.author ? revision.author.name : 'System' }}</td>
+                        <td>{{ revision.diffSummary }}</td>
+                        <td class="text-right revision-actions">
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#revisionCompareModal{{ revision.id }}">
+                                <i class="fa fa-columns"></i> So sánh
+                            </button>
+                            <form method="post" action="{{ path('admin_news_revision_restore', {id: news.id, revisionId: revision.id}) }}" data-confirmation class="revision-restore-form">
+                                <input type="hidden" name="token" value="{{ csrf_token('restore_revision_' ~ revision.id) }}">
+                                <button type="submit" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#confirmationModalRestore{{ revision.id }}">
+                                    <i class="fa fa-history"></i> Khôi phục
+                                </button>
+                            </form>
+                            {{ include('admin/news/_restore_confirmation.html.twig', {
+                                id: 'Restore' ~ revision.id
+                            }) }}
+                            {{ include('admin/news/_revision_compare_modal.html.twig', {
+                                news: news,
+                                revision: revision,
+                                revisionDiffs: revisionDiffs
+                            }, with_context = false) }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Chưa có revision nào cho bài viết này.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
