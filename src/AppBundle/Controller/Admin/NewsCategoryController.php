@@ -13,6 +13,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Form\NewsCategoryType;
+use AppBundle\Seo\RedirectManager;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -92,12 +93,16 @@ class NewsCategoryController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_newscategory_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, NewsCategory $category, Slugger $slugger)
+    public function editAction(Request $request, NewsCategory $category, Slugger $slugger, RedirectManager $redirectManager)
     {
+        $oldPublicPath = $this->getCategoryPublicPath($category);
         $form = $this->createForm(NewsCategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $newPublicPath = $this->getCategoryPublicPath($category);
+            $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
+
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'action.updated_successfully');
 
@@ -109,6 +114,18 @@ class NewsCategoryController extends Controller
         return $this->render('admin/newscategory/edit.html.twig', [
             'category' => $category,
             'form' => $form->createView(),
+        ]);
+    }
+
+    private function getCategoryPublicPath(NewsCategory $category)
+    {
+        if ($category->getParentcat() === 'root') {
+            return $this->generateUrl('news_category', ['level1' => $category->getUrl()]);
+        }
+
+        return $this->generateUrl('list_category', [
+            'level1' => $category->getParentcat()->getUrl(),
+            'level2' => $category->getUrl(),
         ]);
     }
 

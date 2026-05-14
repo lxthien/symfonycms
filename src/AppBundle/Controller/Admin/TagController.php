@@ -13,6 +13,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Tag;
 use AppBundle\Form\TagType;
+use AppBundle\Seo\RedirectManager;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -50,14 +51,18 @@ class TagController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_tag_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Tag $tag, Slugger $slugger)
+    public function editAction(Request $request, Tag $tag, Slugger $slugger, RedirectManager $redirectManager)
     {
         //$this->denyAccessUnlessGranted('edit', $category, 'Posts can only be edited by their authors.');
 
+        $oldPublicPath = $this->generateUrl('tags', ['slug' => $tag->getUrl()]);
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $newPublicPath = $this->generateUrl('tags', ['slug' => $tag->getUrl()]);
+            $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
+
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'updated_successfully');
             return $this->redirectToRoute('admin_tag_index');

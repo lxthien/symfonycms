@@ -10,6 +10,7 @@ use AppBundle\Entity\News;
 use AppBundle\Entity\Rating;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
+use AppBundle\Seo\RedirectManager;
 use AppBundle\Revision\RevisionManager;
 use AppBundle\Seo\SeoAnalyzer;
 use AppBundle\Utils\Slugger;
@@ -176,11 +177,12 @@ class NewsController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_news_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger, SeoAnalyzer $seoAnalyzer, RevisionManager $revisionManager)
+    public function editAction(Request $request, News $news, Slugger $slugger, SeoAnalyzer $seoAnalyzer, RevisionManager $revisionManager, RedirectManager $redirectManager)
     {
         //$this->denyAccessUnlessGranted('edit', $category, 'Posts can only be edited by their authors.');
 
         $originalData = $revisionManager->extractNewsData($news);
+        $oldPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
         $form = $this->createForm(NewsType::class, $news);
         $form->handleRequest($request);
 
@@ -200,6 +202,9 @@ class NewsController extends Controller
 
                     $em->persist($revision);
                 }
+
+                $newPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
+                $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
 
                 $em->flush();
                 $this->addFlash('success', 'action.updated_successfully');

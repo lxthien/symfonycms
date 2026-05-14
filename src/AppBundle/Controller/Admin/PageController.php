@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\News;
 use AppBundle\Form\PageType;
+use AppBundle\Seo\RedirectManager;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -111,12 +112,15 @@ class PageController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_page_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger)
+    public function editAction(Request $request, News $news, Slugger $slugger, RedirectManager $redirectManager)
     {
+        $oldPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
         $form = $this->createForm(PageType::class, $news);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $newPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
+            $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
 
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'action.updated_successfully');
