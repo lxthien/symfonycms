@@ -63,7 +63,7 @@ class NewsViewTracker
 
     private function shouldTrack(News $post, Request $request)
     {
-        if (!$post->getId() || !$post->getEnable()) {
+        if (!$post->getId() || !$post->isPublished()) {
             return false;
         }
 

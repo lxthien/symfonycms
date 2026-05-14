@@ -23,9 +23,9 @@ class SitemapController extends Controller
 
         $latestContentUpdate = $em->getRepository(News::class)->createQueryBuilder('n')
             ->select('MAX(n.updatedAt)')
-            ->where('n.enable = :enable')
+            ->where('n.status = :status')
             ->andWhere('n.isIndex = :isIndex')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setParameter('isIndex', true)
             ->getQuery()
             ->getSingleScalarResult();
@@ -58,9 +58,9 @@ class SitemapController extends Controller
         }
 
         $posts = $em->getRepository(News::class)->createQueryBuilder('n')
-            ->where('n.enable = :enable')
+            ->where('n.status = :status')
             ->andWhere('n.isIndex = :isIndex')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setParameter('isIndex', true)
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
@@ -107,23 +107,19 @@ class SitemapController extends Controller
         $contactPage = $this->getPublishedPostByUrl('lien-he');
         $calculatorPage = $this->getPublishedPostByUrl('chi-phi-xay-dung');
 
-        if (!$contactPage || $contactPage->getIsIndex()) {
-            $urls[] = [
-                'loc' => $this->generateUrl('contact', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                'lastmod' => $contactPage ? $contactPage->getUpdatedAt() : $fallbackLastmod,
-                'priority' => '0.8',
-                'changefreq' => 'monthly',
-            ];
-        }
+        $urls[] = [
+            'loc' => $this->generateUrl('contact', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'lastmod' => $contactPage ? $contactPage->getUpdatedAt() : $fallbackLastmod,
+            'priority' => '0.8',
+            'changefreq' => 'monthly',
+        ];
 
-        if (!$calculatorPage || $calculatorPage->getIsIndex()) {
-            $urls[] = [
-                'loc' => $this->generateUrl('caculator_cost_construction', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                'lastmod' => $calculatorPage ? $calculatorPage->getUpdatedAt() : $fallbackLastmod,
-                'priority' => '0.8',
-                'changefreq' => 'monthly',
-            ];
-        }
+        $urls[] = [
+            'loc' => $this->generateUrl('caculator_cost_construction', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'lastmod' => $calculatorPage ? $calculatorPage->getUpdatedAt() : $fallbackLastmod,
+            'priority' => '0.8',
+            'changefreq' => 'monthly',
+        ];
 
         return $urls;
     }
@@ -135,10 +131,10 @@ class SitemapController extends Controller
             ->innerJoin('t.news', 'n')
             ->where('t.isIndex = :isIndex')
             ->andWhere('n.isIndex = :isIndex')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->andWhere('n.postType = :postType')
             ->setParameter('isIndex', true)
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setParameter('postType', 'post')
             ->groupBy('t.id')
             ->orderBy('latestUpdatedAt', 'DESC')
@@ -165,10 +161,10 @@ class SitemapController extends Controller
         $rows = $this->getDoctrine()->getRepository(User::class)->createQueryBuilder('u')
             ->select('u, MAX(n.updatedAt) AS latestUpdatedAt')
             ->innerJoin(News::class, 'n', 'WITH', 'n.author = u.id')
-            ->where('n.enable = :enable')
+            ->where('n.status = :status')
             ->andWhere('n.isIndex = :isIndex')
             ->andWhere('n.postType = :postType')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setParameter('isIndex', true)
             ->setParameter('postType', 'post')
             ->groupBy('u.id')
@@ -195,9 +191,9 @@ class SitemapController extends Controller
     {
         return $this->getDoctrine()->getRepository(News::class)->createQueryBuilder('n')
             ->where('n.url = :url')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->setParameter('url', $url)
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

@@ -100,9 +100,9 @@ class NewsController extends Controller
                 ->createQueryBuilder('n')
                 ->leftJoin('n.category', 't')
                 ->where('t.id IN (:listCategoriesIds)')
-                ->andWhere('n.enable = :enable')
+                ->andWhere('n.status = :status')
                 ->setParameter('listCategoriesIds', $listCategoriesIds)
-                ->setParameter('enable', 1)
+                ->setParameter('status', 'published')
                 ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
         } else {
@@ -111,9 +111,9 @@ class NewsController extends Controller
                 ->createQueryBuilder('n')
                 ->leftJoin('n.category', 't')
                 ->where('t.id = :newscategory_id')
-                ->andWhere('n.enable = :enable')
+                ->andWhere('n.status = :status')
                 ->setParameter('newscategory_id', $subCategory->getId())
-                ->setParameter('enable', 1)
+                ->setParameter('status', 'published')
                 ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
         }
@@ -150,8 +150,8 @@ class NewsController extends Controller
             // Secure preview: only accessible with a valid token
             $post = $repo->findOneBy(['previewToken' => $previewToken, 'url' => $slug]);
         } else {
-            // Normal access: only published content (enable stays synced with status)
-            $post = $repo->findOneBy(array('url' => $slug, 'enable' => 1));
+            // Normal access: only published content
+            $post = $repo->findOneBy(array('url' => $slug, 'status' => 'published'));
         }
 
         if (!$post) {
@@ -191,11 +191,11 @@ class NewsController extends Controller
                 ->where('t.id = :newscategory_id')
                 ->andWhere('r.id <> :id')
                 ->andWhere('r.postType = :postType')
-                ->andWhere('r.enable = :enable')
+                ->andWhere('r.status = :status')
                 ->setParameter('newscategory_id', $categoryPrimary)
                 ->setParameter('id', $post->getId())
                 ->setParameter('postType', $post->getPostType())
-                ->setParameter('enable', 1)
+                ->setParameter('status', 'published')
                 ->setMaxResults(16)
                 ->orderBy('r.createdAt', 'DESC')
                 ->getQuery()
@@ -398,7 +398,7 @@ class NewsController extends Controller
         $post = $this->getDoctrine()
             ->getRepository(News::class)
             ->findOneBy(
-                array('url' => $slug, 'enable' => 1)
+                array('url' => $slug, 'status' => 'published')
             );
 
         if (!$post) {
@@ -440,11 +440,11 @@ class NewsController extends Controller
                 ->where('t.id = :newscategory_id')
                 ->andWhere('r.id <> :id')
                 ->andWhere('r.postType = :postType')
-                ->andWhere('r.enable = :enable')
+                ->andWhere('r.status = :status')
                 ->setParameter('newscategory_id', $categoryPrimary)
                 ->setParameter('id', $post->getId())
                 ->setParameter('postType', $post->getPostType())
-                ->setParameter('enable', 1)
+                ->setParameter('status', 'published')
                 ->setMaxResults(8)
                 ->orderBy('r.createdAt', 'DESC')
                 ->getQuery()
@@ -560,9 +560,9 @@ class NewsController extends Controller
             ->createQueryBuilder('n')
             ->leftJoin('n.tags', 't')
             ->where('t.id = :tags_id')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->setParameter('tags_id', $tag->getId())
-            ->setParameter('enable', 1)
+            ->setParameter('status', 'published')
             ->orderBy('n.createdAt', 'DESC')
             ->getQuery()->getResult();
 
@@ -593,7 +593,7 @@ class NewsController extends Controller
         $posts = $this->getDoctrine()
             ->getRepository(News::class)
             ->findBy(
-                array('postType' => 'post', 'enable' => 1),
+                array('postType' => 'post', 'status' => 'published'),
                 array('createdAt' => 'DESC'),
                 15
             );
@@ -612,7 +612,7 @@ class NewsController extends Controller
         $posts = $this->getDoctrine()
             ->getRepository(News::class)
             ->findBy(
-                array('postType' => 'post', 'enable' => 1),
+                array('postType' => 'post', 'status' => 'published'),
                 array('viewCounts' => 'DESC'),
                 15
             );
@@ -650,9 +650,9 @@ class NewsController extends Controller
             ->createQueryBuilder('n')
             ->leftJoin('n.category', 't')
             ->where('t.id IN (:listCategoriesIds)')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->setParameter('listCategoriesIds', $listCategoriesIds)
-            ->setParameter('enable', 1)
+            ->setParameter('status', 'published')
             ->setMaxResults(10)
             ->orderBy('n.viewCounts', 'DESC')
             ->getQuery()
@@ -727,10 +727,10 @@ class NewsController extends Controller
             ->getRepository(News::class)
             ->createQueryBuilder('p')
             ->where('p.title LIKE :q OR p.description LIKE :q')
-            ->andWhere('p.enable = :enable')
+            ->andWhere('p.status = :status')
             ->andWhere('p.postType = :postType')
             ->setParameter('q', '%' . $request->query->get('q') . '%')
-            ->setParameter('enable', 1)
+            ->setParameter('status', 'published')
             ->setParameter('postType', 'post')
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery();

@@ -33,9 +33,9 @@ class HomepageController extends Controller
                                 ->createQueryBuilder('n')
                                 ->innerJoin('n.category', 't')
                                 ->where('t.id = :newscategory_id')
-                                ->andWhere('n.enable = :enable')
+                                ->andWhere('n.status = :status')
                                 ->setParameter('newscategory_id', $category->getId())
-                                ->setParameter('enable', 1)
+                                ->setParameter('status', 'published')
                                 ->setMaxResults( $listCategoriesOnHomepage[$i]["items"] )
                                 ->orderBy('n.createdAt', 'DESC')
                                 ->getQuery()
@@ -59,9 +59,9 @@ class HomepageController extends Controller
                                 ->createQueryBuilder('n')
                                 ->innerJoin('n.category', 't')
                                 ->where('t.id IN (:listCategoriesIds)')
-                                ->andWhere('n.enable = :enable')
+                                ->andWhere('n.status = :status')
                                 ->setParameter('listCategoriesIds', $listCategoriesIds)
-                                ->setParameter('enable', 1)
+                                ->setParameter('status', 'published')
                                 ->orderBy('n.createdAt', 'DESC')
                                 ->getQuery()->getResult();
                         }

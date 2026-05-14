@@ -120,13 +120,6 @@ class News
     private $imageFile;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="enable", type="boolean")
-     */
-    private $enable = true;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="status", type="string", length=20, options={"default": "draft"})
@@ -421,34 +414,6 @@ class News
         return $this->images;
     }
 
-    /**
-     * @deprecated Use setStatus() instead. Kept for backward compatibility.
-     */
-    public function setEnable($enable)
-    {
-        $this->enable = (bool) $enable;
-
-        // Auto-sync status
-        if ($this->enable && $this->status !== self::STATUS_PUBLISHED) {
-            $this->status = self::STATUS_PUBLISHED;
-            if (!$this->publishedAt) {
-                $this->publishedAt = new \DateTime();
-            }
-        } elseif (!$this->enable && $this->status === self::STATUS_PUBLISHED) {
-            $this->status = self::STATUS_DRAFT;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns true if status is 'published'. Backward compatible.
-     */
-    public function getEnable()
-    {
-        return $this->status === self::STATUS_PUBLISHED;
-    }
-
     // ── Publishing Workflow ──────────────────────────────────────
 
     public function setStatus($status)
@@ -458,7 +423,6 @@ class News
         }
 
         $this->status = $status;
-        $this->enable = ($status === self::STATUS_PUBLISHED);
 
         if ($status === self::STATUS_PUBLISHED && !$this->publishedAt) {
             $this->publishedAt = new \DateTime();

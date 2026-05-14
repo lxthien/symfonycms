@@ -511,10 +511,6 @@ class NewsController extends Controller
             $requestedStatus = $request->request->get('status');
             if ($requestedStatus && in_array($requestedStatus, News::VALID_STATUSES, true)) {
                 $news->setStatus($requestedStatus);
-            } else {
-                // Backward compatible toggle: published ↔ draft
-                $enable = $request->request->get('enable');
-                $news->setEnable($enable);
             }
         }
 

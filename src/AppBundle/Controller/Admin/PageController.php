@@ -244,13 +244,10 @@ class PageController extends Controller
                 $em->remove($page);
             } elseif ($action === 'trash') {
                 $page->setStatus(News::STATUS_TRASH);
-                $page->setEnable(false);
             } elseif ($action === 'publish') {
                 $page->setStatus(News::STATUS_PUBLISHED);
-                $page->setEnable(true);
             } elseif ($action === 'draft') {
                 $page->setStatus(News::STATUS_DRAFT);
-                $page->setEnable(false);
             }
         }
 
