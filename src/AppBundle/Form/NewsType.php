@@ -30,7 +30,7 @@ class NewsType extends AbstractType
                 'label' => 'label.title',
             ])
             ->add('url', TextType::class, [
-                'attr' => ['class' => 'url', 'readonly' => 'readonly'],
+                'attr' => ['class' => 'url slug-field'],
                 'label' => 'label.url',
             ])
             ->add('enable', CheckboxType::class, [

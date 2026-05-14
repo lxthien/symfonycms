@@ -66,21 +66,155 @@ $(function() {
      * 
      **/
     function initBuildSluggable() {
-        $("body.new :input.sluggable").keyup(function () {
-            $(":input.url").val(remove_vietnamese_accents($(this).val()));
-        });
+        $('[data-slug-helper]').each(function() {
+            var $helper = $(this);
+            var prefix = $helper.data('form-prefix');
+            var originalSlug = normalizeSlug(String($helper.data('original-slug') || ''));
+            var currentId = $helper.data('current-id') || '';
+            var checkUrl = $helper.data('check-url');
+            var canonicalPattern = String($helper.data('canonical-pattern') || '/__slug__.html');
+            var $form = $helper.closest('form');
+            var $source = $('#' + prefix + '_title');
+            var $slug = $('#' + prefix + '_url');
+            var isNewForm = !currentId;
+            var userTouchedSlug = !isNewForm && normalizeSlug($slug.val()) !== '';
+            var checkTimer = null;
+            var lastRequest = null;
+            var $status;
 
-        $(":input.url").click(function () {
-            if ($(this).attr('readonly')) {
-                $(":input.url").removeAttr('readonly');
+            if (!$source.length || !$slug.length) {
+                return;
             }
-        });
 
-        $(":input.url").focusout(function () {
-            if (!$(this).attr('readonly')) {
-                $(":input.url").attr('readonly', 'readonly');
+            $slug.removeAttr('readonly');
+            $slug.attr('autocomplete', 'off');
+            $slug.attr('data-original-slug', originalSlug);
+
+            $status = $('<div>')
+                .addClass('slug-check-status text-muted')
+                .attr('data-slug-status', '')
+                .insertAfter($slug);
+
+            function renderStatus(type, message) {
+                $status
+                    .removeClass('text-muted text-success text-warning text-danger')
+                    .addClass('text-' + type)
+                    .html(message);
             }
+
+            function renderCanonicalWarning(slug) {
+                var canonicalUrl = canonicalPattern.replace('__slug__', slug || 'duong-dan-bai-viet');
+
+                if (!originalSlug || slug === originalSlug) {
+                    return '';
+                }
+
+                return '<div class="slug-canonical-warning">' +
+                    '<i class="fa fa-random" aria-hidden="true"></i> URL đã đổi. Canonical mới sẽ là <strong>' + escapeHtml(canonicalUrl) + '</strong>, hệ thống sẽ tạo redirect 301 từ URL cũ khi lưu.' +
+                    '</div>';
+            }
+
+            function checkDuplicate() {
+                var slug = normalizeSlug($slug.val());
+
+                if ($slug.val() !== slug) {
+                    $slug.val(slug);
+                }
+
+                if (!slug) {
+                    renderStatus('warning', 'URL không được để trống.');
+                    return;
+                }
+
+                renderStatus('muted', 'Đang kiểm tra URL...' + renderCanonicalWarning(slug));
+
+                if (lastRequest) {
+                    lastRequest.abort();
+                }
+
+                lastRequest = $.ajax({
+                    type: 'GET',
+                    url: checkUrl,
+                    data: {
+                        slug: slug,
+                        id: currentId
+                    },
+                    success: function(response) {
+                        var canonicalWarning = renderCanonicalWarning(response.slug || slug);
+
+                        if (response.duplicate) {
+                            renderStatus(
+                                'danger',
+                                'URL này đã được dùng bởi <a href="' + response.duplicate.editUrl + '" target="_blank">' + escapeHtml(response.duplicate.title) + '</a>.' + canonicalWarning
+                            );
+                            return;
+                        }
+
+                        if (response.redirectConflict) {
+                            renderStatus(
+                                'warning',
+                                'URL này đang là nguồn redirect sang <strong>' + escapeHtml(response.redirectConflict.targetPath) + '</strong>.' + canonicalWarning
+                            );
+                            return;
+                        }
+
+                        renderStatus('success', 'URL có thể dùng. Canonical: <strong>' + escapeHtml(response.canonicalUrl) + '</strong>' + canonicalWarning);
+                    },
+                    error: function(xhr) {
+                        if (xhr.statusText === 'abort') {
+                            return;
+                        }
+
+                        renderStatus('warning', 'Chưa kiểm tra được URL, server vẫn sẽ kiểm tra khi lưu.' + renderCanonicalWarning(slug));
+                    }
+                });
+            }
+
+            function scheduleCheck() {
+                window.clearTimeout(checkTimer);
+                checkTimer = window.setTimeout(checkDuplicate, 250);
+            }
+
+            $source.on('keyup input change', function() {
+                if (userTouchedSlug && $slug.val()) {
+                    return;
+                }
+
+                $slug.val(normalizeSlug($source.val())).trigger('input');
+                scheduleCheck();
+            });
+
+            $slug.on('keyup input change', function() {
+                userTouchedSlug = true;
+                scheduleCheck();
+            });
+
+            $slug.on('blur', function() {
+                $slug.val(normalizeSlug($slug.val()));
+                checkDuplicate();
+            });
+
+            $form.on('submit', function() {
+                $slug.val(normalizeSlug($slug.val()));
+            });
+
+            if (isNewForm && !$slug.val()) {
+                $slug.val(normalizeSlug($source.val()));
+            }
+
+            checkDuplicate();
         });
+    }
+
+    function normalizeSlug(value) {
+        return remove_vietnamese_accents(value || '')
+            .replace(/[^a-z0-9-]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
     }
 
     /**

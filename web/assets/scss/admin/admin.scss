@@ -743,3 +743,22 @@
         }
     }
 }
+
+.slug-check-status {
+    margin-top: 7px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    line-height: 1.45;
+
+    a {
+        font-weight: 600;
+    }
+
+    .slug-canonical-warning {
+        margin-top: 6px;
+
+        i {
+            margin-right: 5px;
+        }
+    }
+}

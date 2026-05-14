@@ -1,0 +1,11 @@
+{% set formName = form.vars.name %}
+{% set currentId = object is defined and object.id is defined ? object.id : '' %}
+{% set currentSlug = object is defined and object.url is defined ? object.url : '' %}
+
+<div data-slug-helper
+     data-form-prefix="{{ formName }}"
+     data-current-id="{{ currentId }}"
+     data-original-slug="{{ currentSlug }}"
+     data-check-url="{{ path('admin_news_slug_check') }}"
+     data-canonical-pattern="{{ path('news_show', {slug: '__slug__'}) }}">
+</div>

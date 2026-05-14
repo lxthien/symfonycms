@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -84,6 +85,16 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $news->setUrl($this->normalizeSlug($news->getUrl(), $slugger));
+
+            if ($this->hasDuplicateNewsSlug($news)) {
+                $form->get('url')->addError(new FormError('URL này đã được dùng bởi bài viết hoặc page khác.'));
+
+                return $this->render('admin/page/new.html.twig', [
+                    'object' => $news,
+                    'form' => $form->createView(),
+                ]);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($news);
@@ -119,6 +130,17 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $news->setUrl($this->normalizeSlug($news->getUrl(), $slugger));
+
+            if ($this->hasDuplicateNewsSlug($news)) {
+                $form->get('url')->addError(new FormError('URL này đã được dùng bởi bài viết hoặc page khác.'));
+
+                return $this->render('admin/page/edit.html.twig', [
+                    'object' => $news,
+                    'form' => $form->createView(),
+                ]);
+            }
+
             $newPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
             $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
 
@@ -154,6 +176,33 @@ class PageController extends Controller
         $this->addFlash('success', 'action.deleted_successfully');
 
         return $this->redirectToRoute('admin_page_index');
+    }
+
+    private function normalizeSlug($slug, Slugger $slugger)
+    {
+        $slug = $slugger->slugifyVn((string) $slug);
+        $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
+        $slug = preg_replace('/-+/', '-', $slug);
+
+        return trim($slug, '-');
+    }
+
+    private function hasDuplicateNewsSlug(News $news)
+    {
+        if (!$news->getUrl()) {
+            return false;
+        }
+
+        $duplicate = $this->getDoctrine()->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.url = :slug')
+            ->andWhere('n.id != :id')
+            ->setParameter('slug', $news->getUrl())
+            ->setParameter('id', $news->getId() ?: 0)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $duplicate !== null;
     }
 
     /**

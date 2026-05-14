@@ -1,6 +1,11 @@
 {{ form_start(form, {attr: attr|default({})}) }}
     {{ form_widget(form) }}
 
+    {{ include('admin/common/_slug_helper.html.twig', {
+        form: form,
+        object: object|default(null),
+    }) }}
+
     {{ include('admin/news/_seo_realtime_checklist.html.twig', {
         form: form,
         has_image: object is defined and object.images is defined and object.images,

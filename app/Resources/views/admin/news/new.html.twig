@@ -41,6 +41,11 @@
                                         {{ form_row(form.template) }}
                                         {{ form_row(form.qa) }}
 
+                                        {{ include('admin/common/_slug_helper.html.twig', {
+                                            form: form,
+                                            object: news,
+                                        }) }}
+
                                         {{ include('admin/news/_seo_realtime_checklist.html.twig', {
                                             form: form,
                                             has_image: false,

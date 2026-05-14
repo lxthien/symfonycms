@@ -8,6 +8,7 @@ use AppBundle\Entity\ContentRevision;
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
 use AppBundle\Entity\Rating;
+use AppBundle\Entity\SeoRedirect;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
 use AppBundle\Seo\RedirectManager;
@@ -18,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -109,6 +111,52 @@ class NewsController extends Controller
     }
 
     /**
+     * Checks whether a News/Page slug is already used.
+     *
+     * @Route("/slug/check", name="admin_news_slug_check")
+     * @Method("GET")
+     */
+    public function checkSlugAction(Request $request, Slugger $slugger)
+    {
+        $slug = $this->normalizeSlug($request->query->get('slug'), $slugger);
+        $currentId = $request->query->getInt('id', 0);
+        $em = $this->getDoctrine()->getManager();
+        $duplicate = null;
+
+        if ($slug !== '') {
+            $duplicate = $em->getRepository(News::class)->createQueryBuilder('n')
+                ->where('n.url = :slug')
+                ->andWhere('n.id != :id')
+                ->setParameter('slug', $slug)
+                ->setParameter('id', $currentId ?: 0)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
+        $publicPath = $slug !== '' ? $this->generateUrl('news_show', ['slug' => $slug]) : '';
+        $redirect = $publicPath !== ''
+            ? $em->getRepository(SeoRedirect::class)->findEnabledBySourcePath($publicPath)
+            : null;
+
+        return new JsonResponse([
+            'slug' => $slug,
+            'available' => $slug !== '' && !$duplicate,
+            'canonicalUrl' => $publicPath,
+            'duplicate' => $duplicate ? [
+                'id' => $duplicate->getId(),
+                'title' => $duplicate->getTitle(),
+                'editUrl' => $duplicate->isPage()
+                    ? $this->generateUrl('admin_page_edit', ['id' => $duplicate->getId()])
+                    : $this->generateUrl('admin_news_edit', ['id' => $duplicate->getId()]),
+            ] : null,
+            'redirectConflict' => $redirect ? [
+                'targetPath' => $redirect->getTargetPath(),
+            ] : null,
+        ]);
+    }
+
+    /**
      * Creates a new News entity.
      *
      * @Route("/new", name="admin_news_new")
@@ -125,6 +173,17 @@ class NewsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $news->setUrl($this->normalizeSlug($news->getUrl(), $slugger));
+
+            if ($this->hasDuplicateNewsSlug($news)) {
+                $form->get('url')->addError(new FormError('URL này đã được dùng bởi bài viết hoặc page khác.'));
+
+                return $this->render('admin/news/new.html.twig', [
+                    'news' => $news,
+                    'form' => $form->createView(),
+                ]);
+            }
+
             try {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($news);
@@ -186,6 +245,20 @@ class NewsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $news->setUrl($this->normalizeSlug($news->getUrl(), $slugger));
+
+            if ($this->hasDuplicateNewsSlug($news)) {
+                $form->get('url')->addError(new FormError('URL này đã được dùng bởi bài viết hoặc page khác.'));
+
+                return $this->render('admin/news/edit.html.twig', [
+                    'news' => $news,
+                    'form' => $form->createView(),
+                    'revisions' => $this->getDoctrine()->getRepository(ContentRevision::class)->findRecentByNews($news),
+                    'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
+                    'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
+                ]);
+            }
+
             try {
                 $em = $this->getDoctrine()->getManager();
                 $currentData = $revisionManager->extractNewsData($news);
@@ -375,6 +448,33 @@ class NewsController extends Controller
         }
 
         return $diffs;
+    }
+
+    private function normalizeSlug($slug, Slugger $slugger)
+    {
+        $slug = $slugger->slugifyVn((string) $slug);
+        $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
+        $slug = preg_replace('/-+/', '-', $slug);
+
+        return trim($slug, '-');
+    }
+
+    private function hasDuplicateNewsSlug(News $news)
+    {
+        if (!$news->getUrl()) {
+            return false;
+        }
+
+        $duplicate = $this->getDoctrine()->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.url = :slug')
+            ->andWhere('n.id != :id')
+            ->setParameter('slug', $news->getUrl())
+            ->setParameter('id', $news->getId() ?: 0)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $duplicate !== null;
     }
 
     /**

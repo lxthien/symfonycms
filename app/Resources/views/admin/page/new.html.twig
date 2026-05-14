@@ -34,6 +34,11 @@
                                         {{ form_row(form.isIndex) }}
                                         {{ form_row(form.isFollow) }}
 
+                                        {{ include('admin/common/_slug_helper.html.twig', {
+                                            form: form,
+                                            object: object,
+                                        }) }}
+
                                         {{ include('admin/news/_seo_realtime_checklist.html.twig', {
                                             form: form,
                                             has_image: false,
