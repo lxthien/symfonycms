@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block robots %}
-    <meta name="robots" content="follow, noindex" />
+    <meta name="robots" content="{{ tag.getIsIndex() ? 'index' : 'noindex' }}, {{ tag.getIsFollow() ? 'follow' : 'nofollow' }}">
 {% endblock %}
 
 {% block body %}

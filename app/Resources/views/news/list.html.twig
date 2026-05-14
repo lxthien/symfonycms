@@ -3,6 +3,9 @@
 {% block title %}{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}{% endblock %}
 {% block description %}{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}{% endblock %}
 {% block keyword %}{{ category.getPageKeyword() }}{% endblock %}
+{% block robots %}
+    <meta name="robots" content="{{ category.getIsIndex() ? 'index' : 'noindex' }}, {{ category.getIsFollow() ? 'follow' : 'nofollow' }}">
+{% endblock %}
 
 {% set imagePathFilter = (vich_uploader_asset(category, 'imageFile') ? vich_uploader_asset(category, 'imageFile') : asset('/assets/images/xaydungminhduy-2.jpg')) | imagine_filter('news_share_800_420') %}
 

@@ -32,6 +32,9 @@ DirectoryIndex app.php
     RewriteCond %{ENV:REDIRECT_STATUS} ^$
     RewriteRule ^app\.php(/(.*)|$) %{ENV:BASE}/$2 [R=301,L]
 
+    # Let Symfony generate the dynamic sitemap instead of serving web/sitemap.xml.
+    RewriteRule ^sitemap\.xml$ %{ENV:BASE}/app.php [L]
+
     # If the requested filename exists, simply serve it.
     # We only want to let Apache serve files and not directories.
     RewriteCond %{REQUEST_FILENAME} -f

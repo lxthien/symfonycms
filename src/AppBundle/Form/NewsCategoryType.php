@@ -73,6 +73,14 @@ class NewsCategoryType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
+            ->add('isIndex', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Index',
+            ])
+            ->add('isFollow', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Follow',
+            ])
             ->add('schemaMarkup', TextareaType::class, [
                 'attr' => ['rows' => '12'],
                 'required' => false,

@@ -81,6 +81,14 @@ class NewsType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
+            ->add('isIndex', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Index',
+            ])
+            ->add('isFollow', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Follow',
+            ])
             ->add('autoFulfillAddress', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Auto Fulfill Address'

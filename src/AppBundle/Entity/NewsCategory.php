@@ -124,6 +124,20 @@ class NewsCategory
     private $pageKeyword = null;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isIndex", type="boolean", options={"default": true})
+     */
+    private $isIndex = true;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isFollow", type="boolean", options={"default": true})
+     */
+    private $isFollow = true;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="sortBy", type="string", length=255, nullable=true)
@@ -351,6 +365,30 @@ class NewsCategory
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setIsIndex($isIndex)
+    {
+        $this->isIndex = (bool) $isIndex;
+
+        return $this;
+    }
+
+    public function getIsIndex()
+    {
+        return $this->isIndex;
+    }
+
+    public function setIsFollow($isFollow)
+    {
+        $this->isFollow = (bool) $isFollow;
+
+        return $this;
+    }
+
+    public function getIsFollow()
+    {
+        return $this->isFollow;
     }
 
     public function setCreatedAt($createdAt)

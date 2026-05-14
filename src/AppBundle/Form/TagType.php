@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class TagType extends AbstractType
 {
@@ -40,6 +41,14 @@ class TagType extends AbstractType
             ->add('pageKeyword', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageKeyword',
+            ])
+            ->add('isIndex', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Index',
+            ])
+            ->add('isFollow', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Follow',
             ])
         ;
     }

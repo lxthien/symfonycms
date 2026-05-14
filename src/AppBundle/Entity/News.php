@@ -138,6 +138,20 @@ class News
     private $pageKeyword = null;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isIndex", type="boolean", options={"default": true})
+     */
+    private $isIndex = true;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isFollow", type="boolean", options={"default": true})
+     */
+    private $isFollow = true;
+
+    /**
      * @var text
      *
      * @ORM\Column(name="qa", type="text", nullable=true)
@@ -415,6 +429,30 @@ class News
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setIsIndex($isIndex)
+    {
+        $this->isIndex = (bool) $isIndex;
+
+        return $this;
+    }
+
+    public function getIsIndex()
+    {
+        return $this->isIndex;
+    }
+
+    public function setIsFollow($isFollow)
+    {
+        $this->isFollow = (bool) $isFollow;
+
+        return $this;
+    }
+
+    public function getIsFollow()
+    {
+        return $this->isFollow;
     }
 
     public function setQa($qa)

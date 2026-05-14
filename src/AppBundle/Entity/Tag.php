@@ -82,6 +82,20 @@ class Tag implements \JsonSerializable
      */
     private $pageKeyword;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isIndex", type="boolean", options={"default": false})
+     */
+    private $isIndex = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isFollow", type="boolean", options={"default": true})
+     */
+    private $isFollow = true;
+
     public function __toString()
     {
         return $this->name;
@@ -244,5 +258,29 @@ class Tag implements \JsonSerializable
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setIsIndex($isIndex)
+    {
+        $this->isIndex = (bool) $isIndex;
+
+        return $this;
+    }
+
+    public function getIsIndex()
+    {
+        return $this->isIndex;
+    }
+
+    public function setIsFollow($isFollow)
+    {
+        $this->isFollow = (bool) $isFollow;
+
+        return $this;
+    }
+
+    public function getIsFollow()
+    {
+        return $this->isFollow;
     }
 }
