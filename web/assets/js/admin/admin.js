@@ -23,6 +23,8 @@ $(function() {
 
     initBulkActions();
 
+    initSeoRealtimeChecklist();
+
     function initAdminSidebarState() {
         var storageKey = 'minhduy_admin_sidebar_open';
 
@@ -290,6 +292,286 @@ $(function() {
             if (action === 'delete' && !confirm('Bạn chắc chắn muốn xóa các mục đã chọn?')) {
                 event.preventDefault();
             }
+        });
+    }
+
+    function initSeoRealtimeChecklist() {
+        $('[data-seo-checklist]').each(function() {
+            var $checker = $(this);
+            var prefix = $checker.data('form-prefix');
+            var previewUrlPattern = String($checker.data('preview-url-pattern') || '/__slug__');
+            var hasExistingImage = String($checker.data('has-image')) === '1';
+            var checkCategory = String($checker.data('check-category')) === '1';
+            var fieldIds = {
+                title: prefix + '_title',
+                url: prefix + '_url',
+                description: prefix + '_description',
+                contents: prefix + '_contents',
+                imageFile: prefix + '_imageFile_file',
+                pageTitle: prefix + '_pageTitle',
+                pageDescription: prefix + '_pageDescription',
+                pageKeyword: prefix + '_pageKeyword',
+                category: prefix + '_category'
+            };
+            var debounceTimer = null;
+
+            function getFieldValue(fieldId) {
+                if (window.CKEDITOR && CKEDITOR.instances[fieldId]) {
+                    return CKEDITOR.instances[fieldId].getData();
+                }
+
+                return $('#' + fieldId).val() || '';
+            }
+
+            function cleanText(value) {
+                var text = $('<div>').html(value || '').text();
+
+                return $.trim(text.replace(/\s+/g, ' '));
+            }
+
+            function countWords(text) {
+                text = cleanText(text);
+
+                if (!text) {
+                    return 0;
+                }
+
+                return text.split(/\s+/).length;
+            }
+
+            function getPrimaryKeyword(value) {
+                var parts = String(value || '').split(/[,;]+/);
+
+                return $.trim(parts[0] || '');
+            }
+
+            function containsText(haystack, needle) {
+                haystack = String(haystack || '').toLowerCase();
+                needle = String(needle || '').toLowerCase();
+
+                return needle !== '' && haystack.indexOf(needle) !== -1;
+            }
+
+            function getStatus(score) {
+                if (score >= 90) {
+                    return 'Tốt';
+                }
+
+                if (score >= 80) {
+                    return 'Khá';
+                }
+
+                if (score >= 60) {
+                    return 'Cần cải thiện';
+                }
+
+                return 'Yếu';
+            }
+
+            function getScoreClass(score) {
+                if (score >= 90) {
+                    return 'success';
+                }
+
+                if (score >= 80) {
+                    return 'primary';
+                }
+
+                if (score >= 60) {
+                    return 'warning';
+                }
+
+                return 'danger';
+            }
+
+            function appendChecklistItem($list, type, text) {
+                var icon = type === 'danger' ? 'fa-times-circle' : 'fa-exclamation-circle';
+
+                $('<li>')
+                    .addClass('seo-score-item seo-score-item-' + type)
+                    .append($('<i>').addClass('fa ' + icon).attr('aria-hidden', 'true'))
+                    .append(document.createTextNode(text))
+                    .appendTo($list);
+            }
+
+            function renderList($list, items, emptyText, type) {
+                $list.empty();
+
+                if (!items.length) {
+                    $('<li>').addClass('text-muted').text(emptyText).appendTo($list);
+                    return;
+                }
+
+                $.each(items, function(index, item) {
+                    appendChecklistItem($list, type, item);
+                });
+            }
+
+            function hasImage() {
+                var input = document.getElementById(fieldIds.imageFile);
+
+                if (input && input.files && input.files.length > 0) {
+                    return true;
+                }
+
+                return hasExistingImage;
+            }
+
+            function hasCategory() {
+                if (!checkCategory) {
+                    return true;
+                }
+
+                return $('#' + fieldIds.category + ' input[type="checkbox"]:checked').length > 0;
+            }
+
+            function analyze() {
+                var score = 100;
+                var errors = [];
+                var warnings = [];
+                var title = $.trim(getFieldValue(fieldIds.title));
+                var seoTitle = $.trim(getFieldValue(fieldIds.pageTitle));
+                var effectiveTitle = seoTitle || title;
+                var summaryDescription = cleanText(getFieldValue(fieldIds.description));
+                var metaDescription = cleanText(getFieldValue(fieldIds.pageDescription));
+                var effectiveDescription = metaDescription || summaryDescription;
+                var rawContent = getFieldValue(fieldIds.contents);
+                var wordCount = countWords(rawContent);
+                var primaryKeyword = getPrimaryKeyword(getFieldValue(fieldIds.pageKeyword));
+                var titleLength = effectiveTitle.length;
+                var descriptionLength = effectiveDescription.length;
+
+                if (!effectiveTitle) {
+                    score -= 25;
+                    errors.push('Thiếu tiêu đề SEO');
+                } else if (titleLength < 30) {
+                    score -= 8;
+                    errors.push('Tiêu đề SEO ngắn');
+                } else if (titleLength > 70) {
+                    score -= 8;
+                    errors.push('Tiêu đề SEO dài');
+                }
+
+                if (!effectiveDescription) {
+                    score -= 25;
+                    errors.push('Thiếu meta description');
+                } else if (descriptionLength < 120) {
+                    score -= 8;
+                    errors.push('Meta description ngắn');
+                } else if (descriptionLength > 170) {
+                    score -= 8;
+                    errors.push('Meta description dài');
+                }
+
+                if (!hasImage()) {
+                    score -= 10;
+                    errors.push('Thiếu ảnh đại diện');
+                }
+
+                if (wordCount < 300) {
+                    score -= 15;
+                    errors.push('Nội dung mỏng');
+                } else if (wordCount < 600) {
+                    score -= 6;
+                    warnings.push('Có thể mở rộng nội dung');
+                }
+
+                if (String(rawContent || '').toLowerCase().indexOf('<h2') === -1) {
+                    score -= 5;
+                    warnings.push('Thiếu heading H2');
+                }
+
+                if (String(rawContent || '').toLowerCase().indexOf('<a ') === -1) {
+                    score -= 5;
+                    warnings.push('Thiếu liên kết nội bộ/ngoài');
+                }
+
+                if (!hasCategory()) {
+                    score -= 8;
+                    errors.push('Chưa gán danh mục');
+                }
+
+                if (!summaryDescription) {
+                    score -= 4;
+                    warnings.push('Thiếu mô tả tóm tắt cho danh sách');
+                }
+
+                if (primaryKeyword) {
+                    if (!containsText(effectiveTitle, primaryKeyword)) {
+                        score -= 5;
+                        warnings.push('Từ khóa chính chưa có trong tiêu đề');
+                    }
+
+                    if (!containsText(effectiveDescription, primaryKeyword)) {
+                        score -= 5;
+                        warnings.push('Từ khóa chính chưa có trong mô tả');
+                    }
+                }
+
+                score = Math.max(0, Math.min(100, score));
+
+                return {
+                    score: score,
+                    status: getStatus(score),
+                    scoreClass: getScoreClass(score),
+                    errors: errors,
+                    warnings: warnings,
+                    effectiveTitle: effectiveTitle,
+                    effectiveDescription: effectiveDescription,
+                    primaryKeyword: primaryKeyword,
+                    wordCount: wordCount,
+                    titleLength: titleLength,
+                    descriptionLength: descriptionLength,
+                    url: $.trim(getFieldValue(fieldIds.url))
+                };
+            }
+
+            function render() {
+                var audit = analyze();
+                var $scoreBox = $checker.find('[data-seo-score-box]');
+                var previewUrl = previewUrlPattern.replace('__slug__', audit.url || 'duong-dan-bai-viet');
+
+                $scoreBox
+                    .removeClass('seo-score-meter-success seo-score-meter-primary seo-score-meter-warning seo-score-meter-danger')
+                    .addClass('seo-score-meter-' + audit.scoreClass);
+
+                $checker.find('[data-seo-score]').text(audit.score);
+                $checker.find('[data-seo-status]').text(audit.status);
+                $checker.find('[data-seo-preview-title]').text(audit.effectiveTitle || 'Chưa có tiêu đề');
+                $checker.find('[data-seo-preview-url]').text(previewUrl);
+                $checker.find('[data-seo-preview-description]').text(audit.effectiveDescription || 'Chưa có meta description hoặc mô tả tóm tắt.');
+                $checker.find('[data-seo-primary-keyword]').text(audit.primaryKeyword || 'Chưa đặt');
+                $checker.find('[data-seo-word-count]').text(audit.wordCount);
+                $checker.find('[data-seo-title-length]').text(audit.titleLength);
+                $checker.find('[data-seo-description-length]').text(audit.descriptionLength);
+
+                renderList($checker.find('[data-seo-errors]'), audit.errors, 'Không có lỗi SEO nghiêm trọng.', 'danger');
+                renderList($checker.find('[data-seo-warnings]'), audit.warnings, 'Không có gợi ý bổ sung.', 'warning');
+            }
+
+            function scheduleRender() {
+                window.clearTimeout(debounceTimer);
+                debounceTimer = window.setTimeout(render, 150);
+            }
+
+            $checker.closest('form').on('keyup change input', 'input, textarea, select', scheduleRender);
+
+            if (window.CKEDITOR) {
+                CKEDITOR.on('instanceReady', function(event) {
+                    if (event.editor.name === fieldIds.contents || event.editor.name === fieldIds.description) {
+                        event.editor.on('change', scheduleRender);
+                        scheduleRender();
+                    }
+                });
+
+                $.each(CKEDITOR.instances, function(id, editor) {
+                    if (id === fieldIds.contents || id === fieldIds.description) {
+                        editor.on('change', scheduleRender);
+                    }
+                });
+            }
+
+            render();
         });
     }
 

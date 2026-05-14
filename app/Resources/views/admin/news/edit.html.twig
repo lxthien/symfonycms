@@ -16,11 +16,8 @@
                             <!-- Credit Card -->
                             <div id="pay-invoice">
                                 <div class="card-body">
-                                    {{ include('admin/news/_seo_score.html.twig', {
-                                        seoAudit: seoAudit,
-                                    }, with_context = false) }}
-
                                     {{ include('admin/news/_form.html.twig', {
+                                        object: news,
                                         form: form,
                                         button_label: 'action.save'|trans,
                                         include_back_to_home_link: true,

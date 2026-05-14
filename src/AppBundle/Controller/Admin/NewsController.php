@@ -12,7 +12,6 @@ use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
 use AppBundle\Seo\RedirectManager;
 use AppBundle\Revision\RevisionManager;
-use AppBundle\Seo\SeoAnalyzer;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -177,7 +176,7 @@ class NewsController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_news_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger, SeoAnalyzer $seoAnalyzer, RevisionManager $revisionManager, RedirectManager $redirectManager)
+    public function editAction(Request $request, News $news, Slugger $slugger, RevisionManager $revisionManager, RedirectManager $redirectManager)
     {
         //$this->denyAccessUnlessGranted('edit', $category, 'Posts can only be edited by their authors.');
 
@@ -227,7 +226,6 @@ class NewsController extends Controller
             return $this->render('admin/news/edit.html.twig', [
                 'news' => $news,
                 'form' => $form->createView(),
-                'seoAudit' => $seoAnalyzer->analyze($news),
                 'revisions' => $this->getDoctrine()->getRepository(ContentRevision::class)->findRecentByNews($news),
                 'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
                 'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
@@ -237,7 +235,6 @@ class NewsController extends Controller
         return $this->render('admin/news/edit.html.twig', [
             'news' => $news,
             'form' => $form->createView(),
-            'seoAudit' => $seoAnalyzer->analyze($news),
             'revisions' => $this->getDoctrine()->getRepository(ContentRevision::class)->findRecentByNews($news),
             'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
             'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),

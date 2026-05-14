@@ -1,6 +1,12 @@
 {{ form_start(form, {attr: attr|default({})}) }}
     {{ form_widget(form) }}
 
+    {{ include('admin/news/_seo_realtime_checklist.html.twig', {
+        form: form,
+        has_image: object is defined and object.images is defined and object.images,
+        check_category: form.category is defined,
+    }) }}
+
     <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
         <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
     </button>
