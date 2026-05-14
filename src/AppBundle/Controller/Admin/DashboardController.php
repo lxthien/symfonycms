@@ -99,6 +99,7 @@ class DashboardController extends Controller
             ->getSingleScalarResult();
 
         $indexReadiness = $averageSeoScore;
+        $dashboardCharts = $this->getDashboardCharts($topPosts);
 
         return $this->render('admin/dashboard/index.html.twig', [
             'stats' => [
@@ -117,6 +118,7 @@ class DashboardController extends Controller
             'topPosts' => $topPosts,
             'recentLeads' => $recentLeads,
             'seoIssues' => array_slice($seoIssues, 0, 8),
+            'dashboardCharts' => $dashboardCharts,
         ]);
     }
 
@@ -159,5 +161,171 @@ class DashboardController extends Controller
         });
 
         return $audits;
+    }
+
+    private function getDashboardCharts(array $topPosts)
+    {
+        $now = new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh'));
+        $start = (clone $now)->modify('-29 days')->setTime(0, 0, 0);
+        $end = (clone $now)->setTime(23, 59, 59);
+        $series = $this->createDateSeries($start, $end);
+
+        return [
+            'views' => $this->getDailyViewsChart($series, $start, $end),
+            'posts' => $this->getPostGrowthChart($series, $start, $end),
+            'topPosts' => $this->getTopViewedPostsChart($topPosts),
+            'comments' => $this->getCommentTrendChart($series, $start, $end),
+        ];
+    }
+
+    private function createDateSeries(\DateTime $start, \DateTime $end)
+    {
+        $series = [];
+        $cursor = clone $start;
+
+        while ($cursor <= $end) {
+            $key = $cursor->format('Y-m-d');
+            $series[$key] = [
+                'label' => $cursor->format('d/m'),
+                'value' => 0,
+            ];
+            $cursor->modify('+1 day');
+        }
+
+        return $series;
+    }
+
+    private function getDailyViewsChart(array $series, \DateTime $start, \DateTime $end)
+    {
+        $rows = $this->getDoctrine()->getConnection()->fetchAll(
+            'SELECT viewDate AS day, SUM(views) AS total
+             FROM news_view_stat
+             WHERE viewDate BETWEEN :startDate AND :endDate
+             GROUP BY viewDate
+             ORDER BY viewDate ASC',
+            [
+                'startDate' => $start->format('Y-m-d'),
+                'endDate' => $end->format('Y-m-d'),
+            ]
+        );
+
+        foreach ($rows as $row) {
+            $day = $row['day'] instanceof \DateTimeInterface ? $row['day']->format('Y-m-d') : substr((string) $row['day'], 0, 10);
+
+            if (isset($series[$day])) {
+                $series[$day]['value'] = (int) $row['total'];
+            }
+        }
+
+        return [
+            'labels' => array_column($series, 'label'),
+            'views' => array_column($series, 'value'),
+        ];
+    }
+
+    private function getPostGrowthChart(array $series, \DateTime $start, \DateTime $end)
+    {
+        $connection = $this->getDoctrine()->getConnection();
+        $dailyRows = $connection->fetchAll(
+            'SELECT DATE(createdAt) AS day, COUNT(id) AS total
+             FROM news
+             WHERE postType = :postType
+               AND enable = :enable
+               AND createdAt BETWEEN :startDate AND :endDate
+             GROUP BY DATE(createdAt)
+             ORDER BY day ASC',
+            [
+                'postType' => 'post',
+                'enable' => true,
+                'startDate' => $start->format('Y-m-d H:i:s'),
+                'endDate' => $end->format('Y-m-d H:i:s'),
+            ]
+        );
+
+        foreach ($dailyRows as $row) {
+            $day = substr((string) $row['day'], 0, 10);
+
+            if (isset($series[$day])) {
+                $series[$day]['value'] = (int) $row['total'];
+            }
+        }
+
+        $totalBeforeStart = (int) $connection->fetchColumn(
+            'SELECT COUNT(id)
+             FROM news
+             WHERE postType = :postType
+               AND enable = :enable
+               AND createdAt < :startDate',
+            [
+                'postType' => 'post',
+                'enable' => true,
+                'startDate' => $start->format('Y-m-d H:i:s'),
+            ]
+        );
+
+        $cumulative = [];
+        $runningTotal = $totalBeforeStart;
+
+        foreach ($series as $day) {
+            $runningTotal += $day['value'];
+            $cumulative[] = $runningTotal;
+        }
+
+        return [
+            'labels' => array_column($series, 'label'),
+            'daily' => array_column($series, 'value'),
+            'cumulative' => $cumulative,
+        ];
+    }
+
+    private function getTopViewedPostsChart(array $topPosts)
+    {
+        $labels = [];
+        $views = [];
+
+        foreach (array_slice($topPosts, 0, 8) as $post) {
+            $title = trim((string) $post->getTitle());
+            $labels[] = mb_strlen($title) > 42 ? mb_substr($title, 0, 39) . '...' : $title;
+            $views[] = (int) $post->getViewCounts();
+        }
+
+        return [
+            'labels' => $labels,
+            'views' => $views,
+        ];
+    }
+
+    private function getCommentTrendChart(array $series, \DateTime $start, \DateTime $end)
+    {
+        $rows = $this->getDoctrine()->getConnection()->fetchAll(
+            'SELECT DATE(createdAt) AS day,
+                    COUNT(id) AS total,
+                    SUM(CASE WHEN approved = 1 THEN 1 ELSE 0 END) AS approvedTotal
+             FROM comment
+             WHERE createdAt BETWEEN :startDate AND :endDate
+             GROUP BY DATE(createdAt)
+             ORDER BY day ASC',
+            [
+                'startDate' => $start->format('Y-m-d H:i:s'),
+                'endDate' => $end->format('Y-m-d H:i:s'),
+            ]
+        );
+
+        $approvedSeries = $series;
+
+        foreach ($rows as $row) {
+            $day = substr((string) $row['day'], 0, 10);
+
+            if (isset($series[$day])) {
+                $series[$day]['value'] = (int) $row['total'];
+                $approvedSeries[$day]['value'] = (int) $row['approvedTotal'];
+            }
+        }
+
+        return [
+            'labels' => array_column($series, 'label'),
+            'total' => array_column($series, 'value'),
+            'approved' => array_column($approvedSeries, 'value'),
+        ];
     }
 }

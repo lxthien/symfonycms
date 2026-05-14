@@ -149,6 +149,64 @@
                 </div>
             </div>
 
+            <script type="application/json" id="dashboard-chart-data">{{ dashboardCharts|json_encode|raw }}</script>
+
+            <div class="row dashboard-chart-row">
+                <div class="col-xl-6">
+                    <div class="card dashboard-chart-card">
+                        <div class="card-header">
+                            <strong class="card-title">Lượt xem 30 ngày</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="dashboard-chart-wrap">
+                                <canvas id="dashboardViewsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="card dashboard-chart-card">
+                        <div class="card-header">
+                            <strong class="card-title">Top bài viết theo lượt xem</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="dashboard-chart-wrap">
+                                <canvas id="dashboardTopPostsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row dashboard-chart-row">
+                <div class="col-xl-8">
+                    <div class="card dashboard-chart-card">
+                        <div class="card-header">
+                            <strong class="card-title">Tăng trưởng bài viết online</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="dashboard-chart-wrap">
+                                <canvas id="dashboardPostGrowthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="card dashboard-chart-card">
+                        <div class="card-header">
+                            <strong class="card-title">Xu hướng bình luận</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="dashboard-chart-wrap">
+                                <canvas id="dashboardCommentTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">

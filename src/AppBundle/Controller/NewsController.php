@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Analytics\NewsViewTracker;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -140,7 +141,7 @@ class NewsController extends Controller
      *          "slug": "[^/\.]++"
      *      })
      */
-    public function showAction($slug, Request $request)
+    public function showAction($slug, Request $request, NewsViewTracker $viewTracker)
     {
         if ($request->query->get('preview') === false || $request->query->get('preview_id') === null) {
             $post = $this->getDoctrine()
@@ -158,9 +159,7 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
-        // Update viewCount for post
-        //$post->setViewCounts( $post->getViewCounts() + 1 );
-        //$this->getDoctrine()->getManager()->flush();
+        $viewCookie = $viewTracker->track($post, $request);
 
         $categoryPrimary = $request->query->get('cat');
 
@@ -250,7 +249,7 @@ class NewsController extends Controller
             $imagePath = substr($imagePath, 1);
             $imageSize = @getimagesize($imagePath);
 
-            return $this->render('news/page.html.twig', [
+            $response = $this->render('news/page.html.twig', [
                 'post' => $post,
                 'qAs' => !empty($qAs) ? json_decode($qAs) : NULL,
                 'contentsLazy' => $contentsLazy,
@@ -263,12 +262,18 @@ class NewsController extends Controller
                 'comments' => $comments,
                 'imageSize' => $imageSize
             ]);
+
+            if ($viewCookie) {
+                $response->headers->setCookie($viewCookie);
+            }
+
+            return $response;
         } else {
             $imagePath = $this->helper->asset($post, 'imageFile');
             $imagePath = substr($imagePath, 1);
             $imageSize = @getimagesize($imagePath);
 
-            return $this->render('news/show.html.twig', [
+            $response = $this->render('news/show.html.twig', [
                 'post' => $post,
                 'qAs' => !empty($qAs) ? json_decode($qAs) : NULL,
                 'contentsLazy' => $contentsLazy,
@@ -285,6 +290,12 @@ class NewsController extends Controller
                 'imageSize' => $imageSize,
                 'category' => !empty($category) ? $category : NULL
             ]);
+
+            if ($viewCookie) {
+                $response->headers->setCookie($viewCookie);
+            }
+
+            return $response;
         }
     }
 

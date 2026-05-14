@@ -398,7 +398,7 @@
         }
     }
 
-    .dashboard-table {
+.dashboard-table {
         table-layout: fixed;
         margin-bottom: 0;
 
@@ -441,6 +441,44 @@
 
     .dashboard-table-issues {
         width: 24%;
+    }
+}
+
+.dashboard-chart-row {
+    .dashboard-chart-card {
+        margin-bottom: 30px;
+    }
+
+    .dashboard-chart-wrap {
+        position: relative;
+        width: 100%;
+        height: 320px;
+    }
+
+    .col-xl-6 {
+        .dashboard-chart-wrap {
+            height: 350px;
+        }
+    }
+
+    .col-xl-8 {
+        .dashboard-chart-wrap {
+            height: 320px;
+        }
+    }
+
+    .col-xl-4 {
+        .dashboard-chart-wrap {
+            height: 250px;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .dashboard-chart-row {
+        .dashboard-chart-wrap {
+            height: 280px;
+        }
     }
 }
 
@@ -761,4 +799,26 @@
             margin-right: 5px;
         }
     }
+}
+
+.content-decay-summary {
+    .dashboard-mini-card {
+        min-height: 112px;
+    }
+}
+
+.content-decay-table {
+    .content-decay-title-col {
+        width: 30%;
+    }
+
+    .badge {
+        margin: 0 4px 5px 0;
+        white-space: normal;
+        line-height: 1.35;
+    }
+}
+
+.admin-filter-actions {
+    margin-top: 15px;
 }

@@ -1,6 +1,7 @@
 import 'typeahead.js';
 import Bloodhound from "bloodhound-js";
 import 'bootstrap-tagsinput';
+import Chart from 'chart.js';
 
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal.js';
 import 'bootstrap-sass/assets/javascripts/bootstrap/collapse.js';
@@ -24,6 +25,8 @@ $(function() {
     initBulkActions();
 
     initSeoRealtimeChecklist();
+
+    initDashboardCharts();
 
     function initAdminSidebarState() {
         var storageKey = 'minhduy_admin_sidebar_open';
@@ -707,6 +710,224 @@ $(function() {
 
             render();
         });
+    }
+
+    function initDashboardCharts() {
+        var dataNode = document.getElementById('dashboard-chart-data');
+
+        if (!dataNode || !window.Chart && !Chart) {
+            return;
+        }
+
+        var chartData;
+
+        try {
+            chartData = JSON.parse(dataNode.textContent || '{}');
+        } catch (error) {
+            return;
+        }
+
+        Chart.defaults.global.defaultFontFamily = "'Open Sans', Arial, sans-serif";
+        Chart.defaults.global.defaultFontColor = '#5f6b7a';
+        Chart.defaults.global.elements.line.tension = 0.25;
+
+        var gridColor = 'rgba(148, 163, 184, 0.22)';
+
+        function hasCanvas(id) {
+            return document.getElementById(id);
+        }
+
+        function axisOptions() {
+            return {
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 8
+                    }
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: gridColor,
+                        zeroLineColor: gridColor
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }]
+            };
+        }
+
+        function baseOptions(extra) {
+            return $.extend(true, {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    labels: {
+                        boxWidth: 12,
+                        padding: 16
+                    }
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: axisOptions()
+            }, extra || {});
+        }
+
+        if (hasCanvas('dashboardViewsChart') && chartData.views) {
+            new Chart(document.getElementById('dashboardViewsChart'), {
+                type: 'line',
+                data: {
+                    labels: chartData.views.labels || [],
+                    datasets: [{
+                        label: 'Lượt xem',
+                        data: chartData.views.views || [],
+                        backgroundColor: 'rgba(0, 123, 255, 0.12)',
+                        borderColor: '#007bff',
+                        pointBackgroundColor: '#007bff',
+                        pointRadius: 2,
+                        borderWidth: 2
+                    }]
+                },
+                options: baseOptions({
+                    legend: {
+                        display: false
+                    }
+                })
+            });
+        }
+
+        if (hasCanvas('dashboardTopPostsChart') && chartData.topPosts) {
+            new Chart(document.getElementById('dashboardTopPostsChart'), {
+                type: 'horizontalBar',
+                data: {
+                    labels: chartData.topPosts.labels || [],
+                    datasets: [{
+                        label: 'Lượt xem',
+                        data: chartData.topPosts.views || [],
+                        backgroundColor: '#17a2b8',
+                        borderColor: '#138496',
+                        borderWidth: 1
+                    }]
+                },
+                options: baseOptions({
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                color: gridColor,
+                                zeroLineColor: gridColor
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                fontSize: 11
+                            }
+                        }]
+                    }
+                })
+            });
+        }
+
+        if (hasCanvas('dashboardPostGrowthChart') && chartData.posts) {
+            new Chart(document.getElementById('dashboardPostGrowthChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartData.posts.labels || [],
+                    datasets: [{
+                        label: 'Bài mới',
+                        data: chartData.posts.daily || [],
+                        backgroundColor: 'rgba(40, 167, 69, 0.35)',
+                        borderColor: '#28a745',
+                        borderWidth: 1
+                    }, {
+                        label: 'Tổng bài viết',
+                        type: 'line',
+                        data: chartData.posts.cumulative || [],
+                        backgroundColor: 'rgba(255, 193, 7, 0.12)',
+                        borderColor: '#ffc107',
+                        pointBackgroundColor: '#ffc107',
+                        pointRadius: 2,
+                        borderWidth: 2,
+                        yAxisID: 'total'
+                    }]
+                },
+                options: baseOptions({
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 8
+                            }
+                        }],
+                        yAxes: [{
+                            id: 'daily',
+                            position: 'left',
+                            gridLines: {
+                                color: gridColor,
+                                zeroLineColor: gridColor
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
+                        }, {
+                            id: 'total',
+                            position: 'right',
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
+                        }]
+                    }
+                })
+            });
+        }
+
+        if (hasCanvas('dashboardCommentTrendChart') && chartData.comments) {
+            new Chart(document.getElementById('dashboardCommentTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: chartData.comments.labels || [],
+                    datasets: [{
+                        label: 'Tổng bình luận',
+                        data: chartData.comments.total || [],
+                        backgroundColor: 'rgba(220, 53, 69, 0.10)',
+                        borderColor: '#dc3545',
+                        pointBackgroundColor: '#dc3545',
+                        pointRadius: 2,
+                        borderWidth: 2
+                    }, {
+                        label: 'Đã duyệt',
+                        data: chartData.comments.approved || [],
+                        backgroundColor: 'rgba(40, 167, 69, 0.10)',
+                        borderColor: '#28a745',
+                        pointBackgroundColor: '#28a745',
+                        pointRadius: 2,
+                        borderWidth: 2
+                    }]
+                },
+                options: baseOptions()
+            });
+        }
     }
 
     // Bootstrap-tagsinput initialization
