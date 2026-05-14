@@ -10,7 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class PageType extends AbstractType
@@ -28,6 +29,28 @@ class PageType extends AbstractType
             ->add('url', TextType::class, [
                 'attr' => ['class' => 'url slug-field'],
                 'label' => 'label.url',
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Bản nháp' => News::STATUS_DRAFT,
+                    'Chờ duyệt' => News::STATUS_PENDING_REVIEW,
+                    'Đặt lịch' => News::STATUS_SCHEDULED,
+                    'Đã xuất bản' => News::STATUS_PUBLISHED,
+                    'Lưu trữ' => News::STATUS_ARCHIVED,
+                ],
+                'label' => 'Trạng thái',
+            ])
+            ->add('scheduledAt', DateTimeType::class, [
+                'required' => false,
+                'widget' => 'single_text',
+                'html5' => true,
+                'label' => 'Ngày đặt lịch',
+                'attr' => ['class' => 'js-scheduled-at'],
+            ])
+            ->add('editorialNotes', TextareaType::class, [
+                'required' => false,
+                'label' => 'Ghi chú biên tập',
+                'attr' => ['rows' => 3],
             ])
             ->add('imageFile', VichFileType::class, [
                 'required' => false,

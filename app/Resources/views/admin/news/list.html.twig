@@ -62,11 +62,17 @@
                                             {% endfor %}
                                         </td>
                                         <td>
-                                            <label class="switch switch-text switch-primary switch-pill">
-                                                <input type="checkbox" class="switch-input" {{ row.getEnable() ? 'checked="true"' : '' }} data-id="{{row.getId()}}" data-action="{{ path('admin_news_disable') }}">
-                                                <span data-on="On" data-off="Off" class="switch-label"></span>
-                                                <span class="switch-handle"></span>
-                                            </label>
+                                            {% set statusColors = {
+                                                'published': 'success',
+                                                'draft': 'secondary',
+                                                'pending_review': 'warning',
+                                                'scheduled': 'info',
+                                                'archived': 'dark',
+                                                'trash': 'danger'
+                                            } %}
+                                            <span class="badge badge-{{ statusColors[row.getStatus()] | default('secondary') }}">
+                                                {{ row.getStatusLabel() }}
+                                            </span>
                                         </td>
                                         <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                         <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>

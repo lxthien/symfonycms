@@ -37,9 +37,9 @@ class ContentDecayController extends Controller
             ->leftJoin('n.category', 'c')
             ->addSelect('c')
             ->where('n.postType = :postType')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->setParameter('postType', 'post')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->orderBy('n.updatedAt', 'ASC');
 
         if ($filters['q'] !== '') {

@@ -46,8 +46,12 @@
                                     <div class="col-md-2">
                                         <select name="status" class="form-control">
                                             <option value="">Tất cả trạng thái</option>
-                                            <option value="published" {{ filters.status == 'published' ? 'selected' : '' }}>Đang bật</option>
-                                            <option value="draft" {{ filters.status == 'draft' ? 'selected' : '' }}>Đang tắt</option>
+                                            <option value="published" {{ filters.status == 'published' ? 'selected' : '' }}>Đã xuất bản</option>
+                                            <option value="draft" {{ filters.status == 'draft' ? 'selected' : '' }}>Bản nháp</option>
+                                            <option value="pending_review" {{ filters.status == 'pending_review' ? 'selected' : '' }}>Chờ duyệt</option>
+                                            <option value="scheduled" {{ filters.status == 'scheduled' ? 'selected' : '' }}>Đặt lịch</option>
+                                            <option value="archived" {{ filters.status == 'archived' ? 'selected' : '' }}>Lưu trữ</option>
+                                            <option value="trash" {{ filters.status == 'trash' ? 'selected' : '' }}>Thùng rác</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
@@ -62,9 +66,11 @@
                                 <div class="admin-bulk-toolbar">
                                     <select name="bulk_action" class="form-control">
                                         <option value="">Chọn thao tác</option>
-                                        <option value="publish">Bật đã chọn</option>
-                                        <option value="unpublish">Tắt đã chọn</option>
-                                        <option value="delete">Xóa đã chọn</option>
+                                        <option value="publish">Xuất bản đã chọn</option>
+                                        <option value="unpublish">Chuyển nháp đã chọn</option>
+                                        <option value="archive">Lưu trữ đã chọn</option>
+                                        <option value="trash">Bỏ thùng rác đã chọn</option>
+                                        <option value="delete">Xóa vĩnh viễn đã chọn</option>
                                     </select>
                                     <button type="submit" class="btn btn-default">Áp dụng</button>
                                     <span class="text-muted">{{ pagination.getTotalItemCount }} bài viết</span>
@@ -105,11 +111,22 @@
                                                 {% endfor %}
                                             </td>
                                             <td>
-                                                <label class="switch switch-text switch-primary switch-pill">
-                                                    <input type="checkbox" class="switch-input" {{ row.getEnable() ? 'checked="true"' : '' }} data-id="{{row.getId()}}" data-action="{{ path('admin_news_disable') }}" >
-                                                    <span data-on="On" data-off="Off" class="switch-label"></span>
-                                                    <span class="switch-handle"></span>
-                                                </label>
+                                                {% set statusColors = {
+                                                    'published': 'success',
+                                                    'draft': 'secondary',
+                                                    'pending_review': 'warning',
+                                                    'scheduled': 'info',
+                                                    'archived': 'dark',
+                                                    'trash': 'danger'
+                                                } %}
+                                                <span class="badge badge-{{ statusColors[row.getStatus()] | default('secondary') }}">
+                                                    {{ row.getStatusLabel() }}
+                                                </span>
+                                                {% if row.isScheduled() and row.getScheduledAt() %}
+                                                    <small class="d-block text-muted mt-1">
+                                                        <i class="fa fa-clock-o"></i> {{ row.getScheduledAt() | localizeddate('short', 'short', null, 'Asia/Ho_Chi_Minh') }}
+                                                    </small>
+                                                {% endif %}
                                             </td>
                                             <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                             <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>

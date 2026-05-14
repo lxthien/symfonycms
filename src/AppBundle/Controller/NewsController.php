@@ -143,16 +143,15 @@ class NewsController extends Controller
      */
     public function showAction($slug, Request $request, NewsViewTracker $viewTracker)
     {
-        if ($request->query->get('preview') === false || $request->query->get('preview_id') === null) {
-            $post = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->findOneBy(
-                    array('url' => $slug, 'enable' => 1)
-                );
+        $previewToken = $request->query->get('preview_token');
+        $repo = $this->getDoctrine()->getRepository(News::class);
+
+        if ($previewToken) {
+            // Secure preview: only accessible with a valid token
+            $post = $repo->findOneBy(['previewToken' => $previewToken, 'url' => $slug]);
         } else {
-            $post = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->find($request->query->get('preview_id'));
+            // Normal access: only published content (enable stays synced with status)
+            $post = $repo->findOneBy(array('url' => $slug, 'enable' => 1));
         }
 
         if (!$post) {

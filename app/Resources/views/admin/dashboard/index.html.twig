@@ -208,6 +208,78 @@
             </div>
 
             <div class="row">
+                <div class="col-xl-6">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning">
+                            <strong class="card-title text-light"><i class="fa fa-clock-o"></i> Bài viết chờ duyệt</strong>
+                            <a class="pull-right text-light" href="{{ path('admin_news_index', {'status': 'pending_review'}) }}">Xem tất cả</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Bài viết</th>
+                                            <th class="text-center">Cập nhật</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for post in pendingPosts %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ path('admin_news_edit', {id: post.id}) }}">{{ post.title }}</a>
+                                                </td>
+                                                <td class="text-center">{{ post.updatedAt|localizeddate('short', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="2" class="text-center text-muted py-3">Không có bài viết nào chờ duyệt.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="card border-info">
+                        <div class="card-header bg-info">
+                            <strong class="card-title text-light"><i class="fa fa-calendar"></i> Bài viết đang đặt lịch</strong>
+                            <a class="pull-right text-light" href="{{ path('admin_news_index', {'status': 'scheduled'}) }}">Xem tất cả</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Bài viết</th>
+                                            <th class="text-center">Ngày đăng (dự kiến)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for post in scheduledPosts %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ path('admin_news_edit', {id: post.id}) }}">{{ post.title }}</a>
+                                                </td>
+                                                <td class="text-center">{{ post.scheduledAt|localizeddate('short', 'short', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY HH:mm') }}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="2" class="text-center text-muted py-3">Không có bài viết nào đang đặt lịch.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header">

@@ -44,10 +44,11 @@ class PageController extends Controller
                 ->setParameter('q', '%' . $q . '%');
         }
 
-        if ($status === 'published') {
-            $qb->andWhere('n.enable = :enable')->setParameter('enable', true);
-        } elseif ($status === 'draft') {
-            $qb->andWhere('n.enable = :enable')->setParameter('enable', false);
+        if ($status !== '') {
+            $qb->andWhere('n.status = :status')->setParameter('status', $status);
+        } else {
+            // Default to NOT showing trashed items if no status is explicitly requested
+            $qb->andWhere('n.status != :trashStatus')->setParameter('trashStatus', News::STATUS_TRASH);
         }
 
         $qb->orderBy('n.createdAt', 'DESC');
@@ -78,6 +79,7 @@ class PageController extends Controller
         $news = new News();
         $news->setAuthor($this->getUser());
         $news->setPostType('page');
+        $news->setPreviewToken(substr(md5(random_bytes(10)), 0, 32));
 
         $form = $this->createForm(PageType::class, $news)
             ->add('saveAndCreateNew', SubmitType::class);
@@ -125,6 +127,10 @@ class PageController extends Controller
      */
     public function editAction(Request $request, News $news, Slugger $slugger, RedirectManager $redirectManager)
     {
+        if (!$news->getPreviewToken()) {
+            $news->setPreviewToken(substr(md5(random_bytes(10)), 0, 32));
+        }
+
         $oldPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
         $form = $this->createForm(PageType::class, $news);
         $form->handleRequest($request);
@@ -218,7 +224,7 @@ class PageController extends Controller
         $action = $request->request->get('bulk_action');
         $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
 
-        if (!$ids || !in_array($action, ['publish', 'unpublish', 'delete'], true)) {
+        if (!$ids || !in_array($action, ['publish', 'draft', 'trash', 'delete'], true)) {
             $this->addFlash('warning', 'Vui lòng chọn trang và thao tác hợp lệ.');
 
             return $this->redirectToRoute('admin_page_index', $request->query->all());
@@ -236,8 +242,15 @@ class PageController extends Controller
         foreach ($pages as $page) {
             if ($action === 'delete') {
                 $em->remove($page);
-            } else {
-                $page->setEnable($action === 'publish');
+            } elseif ($action === 'trash') {
+                $page->setStatus(News::STATUS_TRASH);
+                $page->setEnable(false);
+            } elseif ($action === 'publish') {
+                $page->setStatus(News::STATUS_PUBLISHED);
+                $page->setEnable(true);
+            } elseif ($action === 'draft') {
+                $page->setStatus(News::STATUS_DRAFT);
+                $page->setEnable(false);
             }
         }
 

@@ -56,10 +56,8 @@ class NewsController extends Controller
                 ->setParameter('q', '%' . $q . '%');
         }
 
-        if ($status === 'published') {
-            $qb->andWhere('n.enable = :enable')->setParameter('enable', true);
-        } elseif ($status === 'draft') {
-            $qb->andWhere('n.enable = :enable')->setParameter('enable', false);
+        if ($status !== '') {
+            $qb->andWhere('n.status = :status')->setParameter('status', $status);
         }
 
         if ($categoryId !== '') {
@@ -166,6 +164,7 @@ class NewsController extends Controller
     {
         $news = new News();
         $news->setAuthor($this->getUser());
+        $news->generatePreviewToken();
 
         $form = $this->createForm(NewsType::class, $news)
             ->add('saveAndCreateNew', SubmitType::class);
@@ -505,15 +504,21 @@ class NewsController extends Controller
     public function disableAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        
+
         $news = $this->getDoctrine()->getRepository(News::class)->find($request->request->get('newsId'));
-        
+
         if ($news) {
-            $news->setEnable($request->request->get('enable'));
+            $requestedStatus = $request->request->get('status');
+            if ($requestedStatus && in_array($requestedStatus, News::VALID_STATUSES, true)) {
+                $news->setStatus($requestedStatus);
+            } else {
+                // Backward compatible toggle: published ↔ draft
+                $enable = $request->request->get('enable');
+                $news->setEnable($enable);
+            }
         }
 
         $em->persist($news);
-
         $em->flush();
 
         return new Response(
@@ -539,7 +544,7 @@ class NewsController extends Controller
         $action = $request->request->get('bulk_action');
         $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
 
-        if (!$ids || !in_array($action, ['publish', 'unpublish', 'delete'], true)) {
+        if (!$ids || !in_array($action, ['publish', 'unpublish', 'archive', 'trash', 'delete'], true)) {
             $this->addFlash('warning', 'Vui lòng chọn bài viết và thao tác hợp lệ.');
 
             return $this->redirectToRoute('admin_news_index', $request->query->all());
@@ -554,12 +559,19 @@ class NewsController extends Controller
             ->getQuery()
             ->getResult();
 
+        $statusMap = [
+            'publish' => News::STATUS_PUBLISHED,
+            'unpublish' => News::STATUS_DRAFT,
+            'archive' => News::STATUS_ARCHIVED,
+            'trash' => News::STATUS_TRASH,
+        ];
+
         foreach ($posts as $post) {
             if ($action === 'delete') {
                 $post->getTags()->clear();
                 $em->remove($post);
-            } else {
-                $post->setEnable($action === 'publish');
+            } elseif (isset($statusMap[$action])) {
+                $post->setStatus($statusMap[$action]);
             }
         }
 

@@ -10,7 +10,7 @@
                     <div class="card">
                         <div class="card-header">
                             <strong class="card-title">{{ 'title.edit_news'|trans({'%id%': news.id}) }}</strong>
-                            <a class="pull-right" target="_blank" href="{{ path('news_show', {'slug': news.url, 'preview' : 'true', 'preview_id' : news.id }) }}">Preview</a>
+                            <a class="pull-right" target="_blank" href="{{ path('news_show', {'slug': news.url, 'preview_token': news.previewToken}) }}">Preview</a>
                         </div>
                         <div class="card-body">
                             <!-- Credit Card -->

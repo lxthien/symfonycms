@@ -44,8 +44,8 @@ class DashboardController extends Controller
         $thirtyDaysAgo = (clone $now)->modify('-30 days');
 
         $postCount = $this->countNewsBy(['postType' => 'post']);
-        $publishedPostCount = $this->countNewsBy(['postType' => 'post', 'enable' => true]);
-        $draftPostCount = $this->countNewsBy(['postType' => 'post', 'enable' => false]);
+        $publishedPostCount = $this->countNewsBy(['postType' => 'post', 'status' => 'published']);
+        $draftPostCount = $this->countNewsBy(['postType' => 'post', 'status' => 'draft']);
         $pageCount = $this->countNewsBy(['postType' => 'page']);
         $categoryCount = $em->getRepository(NewsCategory::class)->createQueryBuilder('c')
             ->select('COUNT(c.id)')
@@ -68,9 +68,9 @@ class DashboardController extends Controller
 
         $topPosts = $em->getRepository(News::class)->createQueryBuilder('n')
             ->where('n.postType = :postType')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->setParameter('postType', 'post')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->orderBy('n.viewCounts', 'DESC')
             ->addOrderBy('n.updatedAt', 'DESC')
             ->setMaxResults(8)
@@ -91,12 +91,32 @@ class DashboardController extends Controller
         $averageSeoScore = $seoAnalyzer->calculateAverageScore($seoAudits);
         $recentPublishedCount = $em->getRepository(News::class)->createQueryBuilder('n')
             ->select('COUNT(n.id)')
-            ->where('n.enable = :enable')
+            ->where('n.status = :status')
             ->andWhere('n.createdAt >= :fromDate')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setParameter('fromDate', $thirtyDaysAgo)
             ->getQuery()
             ->getSingleScalarResult();
+
+        $pendingPosts = $em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.postType = :postType')
+            ->andWhere('n.status = :status')
+            ->setParameter('postType', 'post')
+            ->setParameter('status', 'pending_review')
+            ->orderBy('n.updatedAt', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        $scheduledPosts = $em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.postType = :postType')
+            ->andWhere('n.status = :status')
+            ->setParameter('postType', 'post')
+            ->setParameter('status', 'scheduled')
+            ->orderBy('n.scheduledAt', 'ASC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
 
         $indexReadiness = $averageSeoScore;
         $dashboardCharts = $this->getDashboardCharts($topPosts);
@@ -119,6 +139,8 @@ class DashboardController extends Controller
             'recentLeads' => $recentLeads,
             'seoIssues' => array_slice($seoIssues, 0, 8),
             'dashboardCharts' => $dashboardCharts,
+            'pendingPosts' => $pendingPosts,
+            'scheduledPosts' => $scheduledPosts,
         ]);
     }
 
@@ -138,9 +160,9 @@ class DashboardController extends Controller
     private function getSeoAudits(SeoAnalyzer $seoAnalyzer)
     {
         $posts = $this->getDoctrine()->getRepository(News::class)->createQueryBuilder('n')
-            ->where('n.enable = :enable')
+            ->where('n.status = :status')
             ->andWhere('n.postType = :postType')
-            ->setParameter('enable', true)
+            ->setParameter('status', 'published')
             ->setParameter('postType', 'post')
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
@@ -230,13 +252,13 @@ class DashboardController extends Controller
             'SELECT DATE(createdAt) AS day, COUNT(id) AS total
              FROM news
              WHERE postType = :postType
-               AND enable = :enable
+               AND status = :status
                AND createdAt BETWEEN :startDate AND :endDate
              GROUP BY DATE(createdAt)
              ORDER BY day ASC',
             [
                 'postType' => 'post',
-                'enable' => true,
+                'status' => 'published',
                 'startDate' => $start->format('Y-m-d H:i:s'),
                 'endDate' => $end->format('Y-m-d H:i:s'),
             ]
@@ -254,11 +276,11 @@ class DashboardController extends Controller
             'SELECT COUNT(id)
              FROM news
              WHERE postType = :postType
-               AND enable = :enable
+               AND status = :status
                AND createdAt < :startDate',
             [
                 'postType' => 'post',
-                'enable' => true,
+                'status' => 'published',
                 'startDate' => $start->format('Y-m-d H:i:s'),
             ]
         );
