@@ -803,7 +803,72 @@
 
 .content-decay-summary {
     .dashboard-mini-card {
-        min-height: 112px;
+        min-height: 96px;
+        margin-bottom: 22px;
+
+        .card-body {
+            min-height: 96px !important;
+            padding: 18px 22px;
+        }
+
+        .stat-widget-one {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .stat-icon {
+            width: 42px !important;
+            height: 42px !important;
+            min-width: 42px !important;
+            margin-right: 14px !important;
+            line-height: 42px !important;
+            text-align: center;
+
+            i {
+                width: 42px !important;
+                height: 42px !important;
+                min-width: 42px !important;
+                padding: 0 !important;
+                border-width: 2px !important;
+                font-size: 18px !important;
+                line-height: 38px !important;
+                text-align: center;
+            }
+        }
+
+        .stat-content {
+            margin-left: 0 !important;
+            min-width: 0;
+        }
+
+        .stat-text {
+            margin-bottom: 4px;
+            font-size: 14px;
+            line-height: 1.25;
+            white-space: normal;
+        }
+
+        .stat-digit {
+            font-size: 22px;
+            line-height: 1.15;
+        }
+    }
+}
+
+.content-decay-filters {
+    .content-decay-filter-grid {
+        display: grid;
+        grid-template-columns: minmax(260px, 1.5fr) repeat(4, minmax(170px, 1fr)) minmax(110px, .65fr);
+        gap: 14px 18px;
+        align-items: start;
+    }
+
+    .form-control {
+        min-width: 0;
+        width: 100%;
+        margin-bottom: 0;
+        text-overflow: ellipsis;
     }
 }
 
@@ -821,4 +886,20 @@
 
 .admin-filter-actions {
     margin-top: 15px;
+}
+
+@media (max-width: 1399px) {
+    .content-decay-filters {
+        .content-decay-filter-grid {
+            grid-template-columns: repeat(3, minmax(210px, 1fr));
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .content-decay-filters {
+        .content-decay-filter-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 }

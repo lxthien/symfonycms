@@ -70,12 +70,12 @@
                             <strong class="card-title">Content decay report</strong>
                         </div>
                         <div class="card-body">
-                            <form class="admin-list-filters" method="get" action="{{ path('admin_content_decay_index') }}">
-                                <div class="row">
-                                    <div class="col-md-3">
+                            <form class="admin-list-filters content-decay-filters" method="get" action="{{ path('admin_content_decay_index') }}">
+                                <div class="content-decay-filter-grid">
+                                    <div class="content-decay-filter-search">
                                         <input type="text" name="q" value="{{ filters.q }}" class="form-control" placeholder="Tìm theo tiêu đề, URL, mô tả">
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="content-decay-filter-select">
                                         <select name="category" class="form-control">
                                             <option value="">Tất cả danh mục</option>
                                             {% for category in categories %}
@@ -83,7 +83,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="content-decay-filter-select">
                                         <select name="age" class="form-control">
                                             <option value="0" {{ filters.age == 0 ? 'selected' : '' }}>Mọi thời gian</option>
                                             <option value="90" {{ filters.age == 90 ? 'selected' : '' }}>Cũ hơn 90 ngày</option>
@@ -91,7 +91,7 @@
                                             <option value="365" {{ filters.age == 365 ? 'selected' : '' }}>Cũ hơn 365 ngày</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="content-decay-filter-select">
                                         <select name="seo" class="form-control">
                                             <option value="0" {{ filters.seo == 0 ? 'selected' : '' }}>Mọi SEO score</option>
                                             <option value="60" {{ filters.seo == 60 ? 'selected' : '' }}>SEO <= 60</option>
@@ -99,7 +99,7 @@
                                             <option value="90" {{ filters.seo == 90 ? 'selected' : '' }}>SEO <= 90</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="content-decay-filter-select">
                                         <select name="sort" class="form-control">
                                             <option value="decay_desc" {{ filters.sort == 'decay_desc' ? 'selected' : '' }}>Decay cao nhất</option>
                                             <option value="updated_asc" {{ filters.sort == 'updated_asc' ? 'selected' : '' }}>Cập nhật cũ nhất</option>
@@ -108,7 +108,7 @@
                                             <option value="seo_asc" {{ filters.sort == 'seo_asc' ? 'selected' : '' }}>SEO thấp nhất</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="content-decay-filter-index">
                                         <select name="indexable" class="form-control">
                                             <option value="1" {{ filters.indexable == '1' ? 'selected' : '' }}>Index</option>
                                             <option value="0" {{ filters.indexable == '0' ? 'selected' : '' }}>Tất cả</option>
