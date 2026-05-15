@@ -28,6 +28,12 @@ $(function() {
 
     initDashboardCharts();
 
+    initMediaUploadDropzone();
+
+    initMediaEditModal();
+
+    initMediaPicker();
+
     function initAdminSidebarState() {
         var storageKey = 'minhduy_admin_sidebar_open';
 
@@ -397,7 +403,7 @@ $(function() {
             });
         }
 
-        setInterval(autosave, 30000);
+        setInterval(autosave, 300000);
     }
 
     function initBulkActions() {
@@ -928,6 +934,536 @@ $(function() {
                 options: baseOptions()
             });
         }
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+    }
+
+    function initMediaUploadDropzone() {
+        var $dropzone = $('[data-media-dropzone]');
+
+        if (!$dropzone.length) {
+            return;
+        }
+
+        var inputSelector = $dropzone.data('file-input');
+        var input = document.querySelector(inputSelector);
+        var $preview = $('[data-media-upload-preview]');
+        var $form = $dropzone.closest('[data-media-upload-form]');
+        var $status = $('[data-media-upload-status]');
+        var $submit = $('[data-media-upload-submit]');
+
+        if (!input) {
+            return;
+        }
+
+        function updateStatus(message, type) {
+            if (!$status.length) {
+                return;
+            }
+
+            $status
+                .removeClass('is-idle is-uploading is-success is-error')
+                .addClass(type ? 'is-' + type : 'is-idle')
+                .html(message || '');
+        }
+
+        function setPreviewStatus(text, type) {
+            $preview.find('[data-media-upload-item-status]')
+                .removeClass('is-uploading is-success is-error')
+                .addClass(type ? 'is-' + type : '')
+                .text(text);
+        }
+
+        function setFiles(files) {
+            if (window.DataTransfer) {
+                var dataTransfer = new DataTransfer();
+
+                $.each(files, function(index, file) {
+                    dataTransfer.items.add(file);
+                });
+
+                input.files = dataTransfer.files;
+            }
+
+            renderPreview(input.files || files);
+        }
+
+        function renderPreview(files) {
+            $preview.empty();
+
+            if (!files || !files.length) {
+                return;
+            }
+
+            $.each(files, function(index, file) {
+                var $item = $('<div>').addClass('media-upload-preview-item');
+                var $thumb = $('<div>').addClass('media-upload-preview-thumb').appendTo($item);
+
+                if (file.type && file.type.indexOf('image/') === 0 && window.FileReader) {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('<img>').attr('src', event.target.result).appendTo($thumb);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('<i>').addClass('fa fa-file-o').appendTo($thumb);
+                }
+
+                $('<span>').text(file.name).appendTo($item);
+                $('<small>').text(Math.round(file.size / 1024) + ' KB').appendTo($item);
+                $('<small>')
+                    .attr('data-media-upload-item-status', '')
+                    .addClass('media-upload-item-status')
+                    .text('Chờ upload')
+                    .appendTo($item);
+                $preview.append($item);
+            });
+
+            updateStatus(files.length + ' file đã sẵn sàng upload.', 'idle');
+        }
+
+        $dropzone.on('click', function() {
+            input.click();
+        });
+
+        $dropzone.on('dragenter dragover', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $dropzone.addClass('is-dragover');
+        });
+
+        $dropzone.on('dragleave dragend drop', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $dropzone.removeClass('is-dragover');
+        });
+
+        $dropzone.on('drop', function(event) {
+            var files = event.originalEvent.dataTransfer.files;
+
+            if (files && files.length) {
+                setFiles(files);
+            }
+        });
+
+        $(input).on('change', function() {
+            renderPreview(input.files);
+        });
+
+        if ($form.length) {
+            $form.on('submit', function(event) {
+                event.preventDefault();
+
+                if (!input.files || !input.files.length) {
+                    updateStatus('Vui lòng chọn hoặc kéo thả ít nhất 1 file.', 'error');
+                    return;
+                }
+
+                var formData = new FormData($form[0]);
+
+                $submit.prop('disabled', true);
+                setPreviewStatus('Đang upload 0%', 'uploading');
+                updateStatus(
+                    '<div class="media-upload-progress"><span style="width: 0%"></span></div><strong>Đang upload 0%</strong>',
+                    'uploading'
+                );
+
+                $.ajax({
+                    type: $form.attr('method') || 'POST',
+                    url: $form.attr('action'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    xhr: function() {
+                        var xhr = $.ajaxSettings.xhr();
+
+                        if (xhr.upload) {
+                            xhr.upload.addEventListener('progress', function(event) {
+                                if (!event.lengthComputable) {
+                                    return;
+                                }
+
+                                var percent = Math.round((event.loaded / event.total) * 100);
+                                setPreviewStatus('Đang upload ' + percent + '%', 'uploading');
+                                updateStatus(
+                                    '<div class="media-upload-progress"><span style="width: ' + percent + '%"></span></div><strong>Đang upload ' + percent + '%</strong>',
+                                    'uploading'
+                                );
+                            });
+                        }
+
+                        return xhr;
+                    },
+                    success: function(response) {
+                        setPreviewStatus('Hoàn tất', 'success');
+                        updateStatus(response.message || 'Upload hoàn tất.', 'success');
+
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 800);
+                    },
+                    error: function(xhr) {
+                        var response = xhr.responseJSON || {};
+                        var errors = response.errors && response.errors.length
+                            ? '<ul><li>' + $.map(response.errors, escapeHtml).join('</li><li>') + '</li></ul>'
+                            : '';
+
+                        setPreviewStatus('Lỗi', 'error');
+                        updateStatus(escapeHtml(response.message || 'Upload thất bại.') + errors, 'error');
+                    },
+                    complete: function() {
+                        $submit.prop('disabled', false);
+                    }
+                });
+            });
+        }
+    }
+
+    function initMediaEditModal() {
+        var $modal = $('#mediaEditModal');
+        var $content = $('[data-media-edit-modal-content]');
+
+        if (!$modal.length || !$content.length) {
+            return;
+        }
+
+        $modal.appendTo('body');
+        $content = $modal.find('[data-media-edit-modal-content]');
+
+        $modal.on('shown.bs.modal', function() {
+            $modal.addClass('show');
+            $('.modal-backdrop').addClass('show');
+        });
+
+        $modal.on('hidden.bs.modal', function() {
+            $modal.removeClass('show');
+            $content.html('<div class="modal-body text-center text-muted">Đang tải...</div>');
+        });
+
+        $(document).on('click', '[data-media-edit]', function(event) {
+            event.preventDefault();
+
+            var url = $(this).attr('href');
+            $content.html('<div class="modal-body text-center text-muted">Đang tải...</div>');
+            $modal.modal('show');
+            $modal.addClass('show');
+            $('.modal-backdrop').addClass('show');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $content.html(response);
+                },
+                error: function() {
+                    $content.html('<div class="modal-body text-center text-danger">Không tải được form media.</div>');
+                }
+            });
+        });
+
+        $(document).on('submit', '[data-media-edit-form]', function(event) {
+            event.preventDefault();
+
+            var $form = $(this);
+            var $button = $form.find('[type="submit"]');
+
+            $button.prop('disabled', true);
+            $form.find('[data-media-edit-status]').remove();
+            $form.prepend('<div class="alert alert-info" data-media-edit-status>Đang lưu media...</div>');
+
+            $.ajax({
+                type: $form.attr('method') || 'POST',
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $form.find('[data-media-edit-status]')
+                        .removeClass('alert-info')
+                        .addClass('alert-success')
+                        .text(response.message || 'Media đã được cập nhật.');
+
+                    setTimeout(function() {
+                        $modal.modal('hide');
+                        window.location.reload();
+                    }, 500);
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422 && xhr.responseText) {
+                        $content.html(xhr.responseText);
+                        return;
+                    }
+
+                    $form.find('[data-media-edit-status]')
+                        .removeClass('alert-info')
+                        .addClass('alert-danger')
+                        .text('Không lưu được media. Vui lòng thử lại.');
+                },
+                complete: function() {
+                    $button.prop('disabled', false);
+                }
+            });
+        });
+    }
+
+    function initMediaPicker() {
+        var $modal = $('#mediaPickerModal');
+        var $content = $('[data-media-picker-content]');
+        var pickerState = {
+            input: null,
+            preview: null
+        };
+
+        if (!$modal.length || !$content.length) {
+            return;
+        }
+
+        $modal.appendTo('body');
+        $content = $modal.find('[data-media-picker-content]');
+
+        function loadPicker(url) {
+            $content.html('<div class="text-center text-muted">Đang tải...</div>');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $content.html(response);
+                },
+                error: function() {
+                    $content.html('<div class="text-center text-danger">Không tải được Media Library.</div>');
+                }
+            });
+        }
+
+        function showModal() {
+            $modal.modal('show');
+            $modal.addClass('show');
+            $('.modal-backdrop').addClass('show');
+        }
+
+        function renderPickerUploadPreview($form, files) {
+            var $preview = $form.find('[data-media-picker-upload-preview]');
+            $preview.empty();
+
+            if (!files || !files.length) {
+                return;
+            }
+
+            $.each(files, function(index, file) {
+                var $item = $('<div>').addClass('media-upload-preview-item');
+                var $thumb = $('<div>').addClass('media-upload-preview-thumb').appendTo($item);
+
+                if (file.type && file.type.indexOf('image/') === 0 && window.FileReader) {
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('<img>').attr('src', event.target.result).appendTo($thumb);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('<i>').addClass('fa fa-file-o').appendTo($thumb);
+                }
+
+                $('<span>').text(file.name).appendTo($item);
+                $('<small>').text(Math.round(file.size / 1024) + ' KB').appendTo($item);
+                $preview.append($item);
+            });
+        }
+
+        function setPickerUploadStatus($form, message, type) {
+            $form.find('[data-media-picker-upload-status]')
+                .removeClass('is-idle is-uploading is-success is-error')
+                .addClass(type ? 'is-' + type : 'is-idle')
+                .html(message || '');
+        }
+
+        function setPickerUploadFiles($form, files) {
+            var input = $form.find('input[type="file"]')[0];
+
+            if (!input) {
+                return;
+            }
+
+            if (window.DataTransfer) {
+                var dataTransfer = new DataTransfer();
+
+                $.each(files, function(index, file) {
+                    dataTransfer.items.add(file);
+                });
+
+                input.files = dataTransfer.files;
+            }
+
+            renderPickerUploadPreview($form, input.files || files);
+            setPickerUploadStatus($form, files.length + ' ảnh đã sẵn sàng upload.', 'idle');
+        }
+
+        $modal.on('shown.bs.modal', function() {
+            $modal.addClass('show');
+            $('.modal-backdrop').addClass('show');
+        });
+
+        $modal.on('hidden.bs.modal', function() {
+            $modal.removeClass('show');
+        });
+
+        $(document).on('click', '[data-media-picker-open]', function(event) {
+            event.preventDefault();
+
+            var $button = $(this);
+            pickerState.input = $($button.data('target-input'));
+            pickerState.preview = $($button.data('target-preview'));
+
+            showModal();
+            loadPicker($button.data('picker-url'));
+        });
+
+        $(document).on('submit', '[data-media-picker-filter]', function(event) {
+            event.preventDefault();
+            loadPicker($(this).attr('action') + '?' + $(this).serialize());
+        });
+
+        $(document).on('click', '.media-picker-pagination a', function(event) {
+            event.preventDefault();
+            loadPicker($(this).attr('href'));
+        });
+
+        $(document).on('click', '[data-media-picker-select]', function(event) {
+            event.preventDefault();
+
+            var $item = $(this);
+
+            if (pickerState.input && pickerState.input.length) {
+                pickerState.input.val($item.data('media-id'));
+            }
+
+            if (pickerState.preview && pickerState.preview.length) {
+                pickerState.preview.html(
+                    $('<img>')
+                        .attr('src', $item.data('media-thumb'))
+                        .attr('alt', $item.data('media-alt') || $item.data('media-name'))
+                );
+            }
+
+            $modal.modal('hide');
+        });
+
+        $(document).on('click', '[data-media-picker-clear]', function(event) {
+            event.preventDefault();
+
+            var $button = $(this);
+            $($button.data('target-input')).val('');
+            $($button.data('target-preview')).html('<span>Chưa chọn ảnh từ Media Library</span>');
+        });
+
+        $(document).on('click', '[data-media-picker-upload-dropzone]', function() {
+            $(this).closest('[data-media-picker-upload-form]').find('input[type="file"]').trigger('click');
+        });
+
+        $(document).on('dragenter dragover', '[data-media-picker-upload-dropzone]', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $(this).addClass('is-dragover');
+        });
+
+        $(document).on('dragleave dragend drop', '[data-media-picker-upload-dropzone]', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $(this).removeClass('is-dragover');
+        });
+
+        $(document).on('drop', '[data-media-picker-upload-dropzone]', function(event) {
+            var files = event.originalEvent.dataTransfer.files;
+
+            if (files && files.length) {
+                setPickerUploadFiles($(this).closest('[data-media-picker-upload-form]'), files);
+            }
+        });
+
+        $(document).on('change', '[data-media-picker-upload-form] input[type="file"]', function() {
+            renderPickerUploadPreview($(this).closest('[data-media-picker-upload-form]'), this.files);
+        });
+
+        $(document).on('submit', '[data-media-picker-upload-form]', function(event) {
+            event.preventDefault();
+
+            var $form = $(this);
+            var input = $form.find('input[type="file"]')[0];
+            var $button = $form.find('[data-media-picker-upload-submit]');
+
+            if (!input || !input.files || !input.files.length) {
+                setPickerUploadStatus($form, 'Vui lòng chọn hoặc kéo thả ít nhất 1 ảnh.', 'error');
+                return;
+            }
+
+            $button.prop('disabled', true);
+            setPickerUploadStatus(
+                $form,
+                '<div class="media-upload-progress"><span style="width: 0%"></span></div><strong>Đang upload 0%</strong>',
+                'uploading'
+            );
+
+            $.ajax({
+                type: $form.attr('method') || 'POST',
+                url: $form.attr('action'),
+                data: new FormData($form[0]),
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                xhr: function() {
+                    var xhr = $.ajaxSettings.xhr();
+
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', function(event) {
+                            if (!event.lengthComputable) {
+                                return;
+                            }
+
+                            var percent = Math.round((event.loaded / event.total) * 100);
+                            setPickerUploadStatus(
+                                $form,
+                                '<div class="media-upload-progress"><span style="width: ' + percent + '%"></span></div><strong>Đang upload ' + percent + '%</strong>',
+                                'uploading'
+                            );
+                        });
+                    }
+
+                    return xhr;
+                },
+                success: function(response) {
+                    setPickerUploadStatus($form, escapeHtml(response.message || 'Upload hoàn tất.'), 'success');
+
+                    setTimeout(function() {
+                        loadPicker($form.data('picker-refresh-url'));
+                    }, 500);
+                },
+                error: function(xhr) {
+                    var response = xhr.responseJSON || {};
+                    var errors = response.errors && response.errors.length
+                        ? '<ul><li>' + $.map(response.errors, escapeHtml).join('</li><li>') + '</li></ul>'
+                        : '';
+
+                    setPickerUploadStatus($form, escapeHtml(response.message || 'Upload thất bại.') + errors, 'error');
+                },
+                complete: function() {
+                    $button.prop('disabled', false);
+                }
+            });
+        });
     }
 
     // Bootstrap-tagsinput initialization

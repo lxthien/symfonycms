@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,6 +43,10 @@ class NewsCategoryType extends AbstractType
             ->add('imageFile', VichFileType::class, [
                 'required' => false,
                 'allow_delete' => true,
+            ])
+            ->add('mediaImageId', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('description', TextareaType::class, [
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '300'],

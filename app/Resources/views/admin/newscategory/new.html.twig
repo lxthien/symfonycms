@@ -16,36 +16,11 @@
                         <div class="card-body">
                             <div id="pay-invoice">
                                 <div class="card-body">
-                                    {{ form_start(form) }}
-                                        {{ form_row(form.parentcat) }}
-                                        {{ form_row(form.name) }}
-                                        {{ form_row(form.titleLandingPage) }}
-                                        {{ form_row(form.url) }}
-                                        {{ form_row(form.imageFile) }}
-                                        {{ form_row(form.description) }}
-                                        {{ form_row(form.content) }}
-                                        {{ form_row(form.enable) }}
-                                        {{ form_row(form.sortBy) }}
-
-                                        <div class="card-title">
-                                            <h3>{{ 'label.seo'|trans }}</h3>
-                                        </div>
-                                        <hr>
-                                        {{ form_row(form.pageTitle) }}
-                                        {{ form_row(form.pageDescription) }}
-                                        {{ form_row(form.pageKeyword) }}
-                                        {{ form_row(form.schemaMarkup) }}
-
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-save" aria-hidden="true"></i> {{ 'label.create_newscategory'|trans }}
-                                        </button>
-
-                                        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
-                                        
-                                        <a href="{{ path('admin_newscategory_index') }}" class="btn btn-link">
-                                            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
-                                        </a>
-                                    {{ form_end(form) }}
+                                    {{ include('admin/newscategory/_form.html.twig', {
+                                        form: form,
+                                        button_label: 'label.create_newscategory'|trans,
+                                        include_back_to_home_link: true,
+                                    }, with_context = false) }}
                                 </div>
                             </div>
                         </div>

@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Sửa media</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="media-edit-preview">
+                {% if media.isImage() %}
+                    <img src="{{ asset(media.path) }}" alt="{{ media.alt ?: media.originalName }}">
+                {% else %}
+                    <span class="media-file-icon"><i class="fa fa-file-pdf-o"></i></span>
+                {% endif %}
+            </div>
+            <dl class="media-meta-list">
+                <dt>File</dt>
+                <dd>{{ media.originalName }}</dd>
+                <dt>URL</dt>
+                <dd><code>{{ asset(media.path) }}</code></dd>
+                <dt>Size</dt>
+                <dd>{{ (media.size / 1024)|number_format(1) }} KB</dd>
+                <dt>Kích thước</dt>
+                <dd>{{ media.width and media.height ? media.width ~ 'x' ~ media.height : '-' }}</dd>
+                <dt>WebP</dt>
+                <dd>{{ media.webpPath ? 'Có' : 'Không' }}</dd>
+            </dl>
+        </div>
+        <div class="col-md-7">
+            {{ include('admin/media/_form.html.twig', {
+                form: form,
+                button_label: 'Lưu media',
+                form_attr: {
+                    attr: {
+                        'data-media-edit-form': ''
+                    }
+                }
+            }, with_context = false) }}
+        </div>
+    </div>
+</div>

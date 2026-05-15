@@ -13,12 +13,14 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Form\NewsCategoryType;
+use AppBundle\Media\MediaSelectionManager;
 use AppBundle\Seo\RedirectManager;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,7 +55,7 @@ class NewsCategoryController extends Controller
      * @Route("/new", name="admin_newscategory_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request, Slugger $slugger)
+    public function newAction(Request $request, Slugger $slugger, MediaSelectionManager $mediaSelection)
     {
         $category = new NewsCategory();
         $category->setAuthor($this->getUser());
@@ -65,6 +67,23 @@ class NewsCategoryController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->applySelectedMedia($form, $category, $mediaSelection);
+            } catch (\InvalidArgumentException $exception) {
+                $form->addError(new FormError($exception->getMessage()));
+
+                return $this->render('admin/newscategory/new.html.twig', [
+                    'category' => $category,
+                    'form' => $form->createView(),
+                ]);
+            } catch (\RuntimeException $exception) {
+                $form->addError(new FormError('Không gán được ảnh từ Media Library.'));
+
+                return $this->render('admin/newscategory/new.html.twig', [
+                    'category' => $category,
+                    'form' => $form->createView(),
+                ]);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($category);
@@ -93,13 +112,31 @@ class NewsCategoryController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_newscategory_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, NewsCategory $category, Slugger $slugger, RedirectManager $redirectManager)
+    public function editAction(Request $request, NewsCategory $category, Slugger $slugger, RedirectManager $redirectManager, MediaSelectionManager $mediaSelection)
     {
         $oldPublicPath = $this->getCategoryPublicPath($category);
         $form = $this->createForm(NewsCategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->applySelectedMedia($form, $category, $mediaSelection);
+            } catch (\InvalidArgumentException $exception) {
+                $form->addError(new FormError($exception->getMessage()));
+
+                return $this->render('admin/newscategory/edit.html.twig', [
+                    'category' => $category,
+                    'form' => $form->createView(),
+                ]);
+            } catch (\RuntimeException $exception) {
+                $form->addError(new FormError('Không gán được ảnh từ Media Library.'));
+
+                return $this->render('admin/newscategory/edit.html.twig', [
+                    'category' => $category,
+                    'form' => $form->createView(),
+                ]);
+            }
+
             $newPublicPath = $this->getCategoryPublicPath($category);
             $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
 
@@ -127,6 +164,17 @@ class NewsCategoryController extends Controller
             'level1' => $category->getParentcat()->getUrl(),
             'level2' => $category->getUrl(),
         ]);
+    }
+
+    private function applySelectedMedia($form, NewsCategory $category, MediaSelectionManager $mediaSelection)
+    {
+        $mediaImageId = $form->has('mediaImageId') ? $form->get('mediaImageId')->getData() : null;
+
+        if (!$mediaImageId) {
+            return;
+        }
+
+        $mediaSelection->applyToNewsCategoryById($category, $mediaImageId);
     }
 
     /**
