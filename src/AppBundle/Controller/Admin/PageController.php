@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Controller used to manage page contents in the backend.
  *
  * @Route("/admin/page")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_CONTENT_VIEW')")
  */
 
 class PageController extends Controller
@@ -73,6 +73,7 @@ class PageController extends Controller
     /**
      * Creates a new News entity.
      *
+     * @Security("is_granted('CMS_CONTENT_CREATE')")
      * @Route("/new", name="admin_page_new")
      * @Method({"GET", "POST"})
      */
@@ -129,6 +130,7 @@ class PageController extends Controller
     /**
      * Displays a form to edit an existing News entity.
      *
+     * @Security("is_granted('CMS_CONTENT_EDIT')")
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_page_edit")
      * @Method({"GET", "POST"})
      */
@@ -188,6 +190,7 @@ class PageController extends Controller
     /**
      * Deletes a News entity.
      *
+     * @Security("is_granted('CMS_CONTENT_DELETE')")
      * @Route("/{id}/delete", methods={"POST"}, name="admin_page_delete")
      */
     public function deleteAction(Request $request, $id, News $page)
@@ -233,6 +236,7 @@ class PageController extends Controller
     }
 
     /**
+     * @Security("is_granted('CMS_CONTENT_PUBLISH') or is_granted('CMS_CONTENT_DELETE')")
      * @Route("/bulk", name="admin_page_bulk")
      * @Method("POST")
      */

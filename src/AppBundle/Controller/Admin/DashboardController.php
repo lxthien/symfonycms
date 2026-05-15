@@ -25,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * 
  * @Route("/admin")
  * @Route("/admin/dashboard")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_DASHBOARD_VIEW')")
  */
 
 class DashboardController extends Controller

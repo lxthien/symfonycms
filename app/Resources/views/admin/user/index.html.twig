@@ -3,6 +3,26 @@
 {% block body_id 'admin-user-index' %}
 
 {% block main %}
+    {% set role_labels = {
+        'ROLE_SUPER_ADMIN': 'Super Admin',
+        'ROLE_ADMIN': 'Admin',
+        'ROLE_EDITOR': 'Editor',
+        'ROLE_AUTHOR': 'Author',
+        'ROLE_CONTRIBUTOR': 'Contributor',
+        'ROLE_SEO': 'SEO',
+        'ROLE_SALES': 'Sales',
+        'ROLE_USER': 'User'
+    } %}
+    {% set role_classes = {
+        'ROLE_SUPER_ADMIN': 'badge-danger',
+        'ROLE_ADMIN': 'badge-danger',
+        'ROLE_EDITOR': 'badge-primary',
+        'ROLE_AUTHOR': 'badge-info',
+        'ROLE_CONTRIBUTOR': 'badge-secondary',
+        'ROLE_SEO': 'badge-warning',
+        'ROLE_SALES': 'badge-success',
+        'ROLE_USER': 'badge-light'
+    } %}
     <div class="content mt-3">
         <div class="animated fadeIn">
             <div class="row">
@@ -10,7 +30,7 @@
                     <div class="card add">
                         <div class="card-body">
                             <div class="stat-widget-one">
-                                <a href="{{ path('admin_user_index') }}">
+                                <a href="{{ path('admin_user_new') }}">
                                     <div class="stat-icon dib">
                                         <i class="ti-plus text-success border-success"></i>
                                     </div>
@@ -37,6 +57,8 @@
                                         <th>{{ 'label.name'|trans }}</th>
                                         <th>{{ 'label.email'|trans }}</th>
                                         <th>{{ 'label.role'|trans }}</th>
+                                        <th>Trạng thái</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,8 +69,41 @@
                                         <td>{{ row.getEmail() }}</td>
                                         <td>
                                             {% for role in row.getRoles() %}
-                                            {{ role }}, 
+                                                {% if role != 'ROLE_USER' or row.getRoles()|length == 1 %}
+                                                    <span class="badge {{ role_classes[role]|default('badge-light') }}">
+                                                        {{ role_labels[role]|default(role) }}
+                                                    </span>
+                                                {% endif %}
                                             {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if row.isEnabled() %}
+                                                <span class="badge badge-success">Hoạt động</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">Đã khóa</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_user_edit', {id: row.id}) }}" title="Sửa">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            {% if is_super_admin %}
+                                                <a class="btn btn-outline-warning btn-sm" href="{{ path('admin_user_password', {id: row.id}) }}" title="Đổi mật khẩu">
+                                                    <i class="fa fa-key"></i>
+                                                </a>
+                                                <form method="post" action="{{ path('admin_user_toggle', {id: row.id}) }}" style="display:inline" onsubmit="return confirm('{{ row.isEnabled() ? 'Khóa user này?' : 'Mở khóa user này?' }}');">
+                                                    <input type="hidden" name="token" value="{{ csrf_token('toggle_user_' ~ row.id) }}">
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" title="{{ row.isEnabled() ? 'Khóa' : 'Mở khóa' }}" {% if app.user and app.user.id == row.id %}disabled{% endif %}>
+                                                        <i class="fa {{ row.isEnabled() ? 'fa-lock' : 'fa-unlock' }}"></i>
+                                                    </button>
+                                                </form>
+                                                <form method="post" action="{{ path('admin_user_delete', {id: row.id}) }}" style="display:inline" onsubmit="return confirm('Xóa user này? Hành động này không thể hoàn tác.');">
+                                                    <input type="hidden" name="token" value="{{ csrf_token('delete_user_' ~ row.id) }}">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Xóa" {% if app.user and app.user.id == row.id %}disabled{% endif %}>
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}

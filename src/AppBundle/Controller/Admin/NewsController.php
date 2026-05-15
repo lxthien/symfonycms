@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Controller used to manage post contents in the backend.
  *
  * @Route("/admin/news")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_CONTENT_VIEW')")
  */
 
 class NewsController extends Controller
@@ -159,6 +159,7 @@ class NewsController extends Controller
     /**
      * Creates a new News entity.
      *
+     * @Security("is_granted('CMS_CONTENT_CREATE')")
      * @Route("/new", name="admin_news_new")
      * @Method({"GET", "POST"})
      */
@@ -239,6 +240,7 @@ class NewsController extends Controller
     /**
      * Displays a form to edit an existing News entity.
      *
+     * @Security("is_granted('CMS_CONTENT_EDIT')")
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_news_edit")
      * @Method({"GET", "POST"})
      */
@@ -339,6 +341,7 @@ class NewsController extends Controller
     /**
      * Stores an autosave revision without publishing the post.
      *
+     * @Security("is_granted('CMS_CONTENT_EDIT')")
      * @Route("/{id}/autosave", requirements={"id": "\d+"}, name="admin_news_autosave")
      * @Method("POST")
      */
@@ -403,6 +406,7 @@ class NewsController extends Controller
     /**
      * Restores content fields from a revision.
      *
+     * @Security("is_granted('CMS_CONTENT_EDIT')")
      * @Route("/{id}/revision/{revisionId}/restore", requirements={"id": "\d+", "revisionId": "\d+"}, name="admin_news_revision_restore")
      * @Method("POST")
      */
@@ -502,6 +506,7 @@ class NewsController extends Controller
     /**
      * Deletes a News entity.
      *
+     * @Security("is_granted('CMS_CONTENT_DELETE')")
      * @Route("/{id}/delete", methods={"POST"}, name="admin_news_delete")
      */
     public function deleteAction(Request $request, $id, News $news)
@@ -522,6 +527,7 @@ class NewsController extends Controller
     }
 
     /**
+     * @Security("is_granted('CMS_CONTENT_PUBLISH') or is_granted('CMS_CONTENT_DELETE')")
      * @Route("/disable", name="admin_news_disable")
      */
     public function disableAction(Request $request)
@@ -551,6 +557,7 @@ class NewsController extends Controller
     }
 
     /**
+     * @Security("is_granted('CMS_CONTENT_PUBLISH') or is_granted('CMS_CONTENT_DELETE')")
      * @Route("/bulk", name="admin_news_bulk")
      * @Method("POST")
      */

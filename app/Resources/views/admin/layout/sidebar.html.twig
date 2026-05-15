@@ -11,12 +11,15 @@
 
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="{{ path('admin_dashboard_index') }}">
-                        <i class="menu-icon fa fa-dashboard"></i>{{ 'menu.dashboard'|trans }}
-                    </a>
-                </li>
+                {% if is_granted('CMS_DASHBOARD_VIEW') %}
+                    <li>
+                        <a href="{{ path('admin_dashboard_index') }}">
+                            <i class="menu-icon fa fa-dashboard"></i>{{ 'menu.dashboard'|trans }}
+                        </a>
+                    </li>
+                {% endif %}
                 <!-- /.menu-title -->
+                {% if is_granted('CMS_CONTENT_VIEW') %}
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="menu-icon fa fa-table"></i>{{ 'menu.news'|trans }}</a>
@@ -56,42 +59,54 @@
                         </li>
                     </ul>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_COMMENT_MANAGE') %}
                 <li>
                     <a href="{{ path('admin_comment_index') }}">
                         <i class="menu-icon fa fa-comments"></i>
                         {{ 'menu.comments'|trans }}
                     </a>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_CONTACT_MANAGE') %}
                 <li>
                     <a href="{{ path('admin_contact_index') }}">
                         <i class="menu-icon fa fa-envelope-o"></i>
                         {{ 'menu.contact'|trans }}
                     </a>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_REDIRECT_MANAGE') %}
                 <li>
                     <a href="{{ path('admin_redirect_index') }}">
                         <i class="menu-icon fa fa-random"></i>
                         Redirect 301
                     </a>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_CONTENT_DECAY_VIEW') %}
                 <li>
                     <a href="{{ path('admin_content_decay_index') }}">
                         <i class="menu-icon fa fa-line-chart"></i>
                         Content decay
                     </a>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_MEDIA_MANAGE') %}
                 <li>
                     <a href="{{ path('admin_media_index') }}">
                         <i class="menu-icon fa fa-photo"></i>
                         Media Library
                     </a>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_BANNER_MANAGE') %}
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="menu-icon fa fa-picture-o"></i>
@@ -108,7 +123,9 @@
                         </li>
                     </ul>
                 </li>
+                {% endif %}
 
+                {% if is_granted('CMS_USER_MANAGE') %}
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="menu-icon fa fa-users"></i>
@@ -121,21 +138,24 @@
                         </li>
                         <li>
                             <i class="fa fa-edit"></i>
-                            <a href="{{ path('admin_user_index') }}">{{ 'menu.add_new'|trans }}</a>
+                            <a href="{{ path('admin_user_new') }}">{{ 'menu.add_new'|trans }}</a>
                         </li>
                         <li>
                             <i class="fa fa-user"></i>
-                            <a href="{{ path('fos_user_profile_edit') }}">{{ 'menu.users_profile'|trans }}</a>
+                            <a href="{{ path('admin_user_edit', {id: app.user.id}) }}">{{ 'menu.users_profile'|trans }}</a>
                         </li>
                     </ul>
                 </li>
+                {% endif %}
                 
+                {% if is_granted('CMS_SETTINGS_MANAGE') %}
                 <li>
                     <a href="{{ path('dmishh_settings_manage_global') }}">
                         <i class="menu-icon fa fa-cogs"></i>
                         {{ 'menu.setting'|trans }}
                     </a>
                 </li>
+                {% endif %}
             </ul>
         </div>
         <!-- /.navbar-collapse -->

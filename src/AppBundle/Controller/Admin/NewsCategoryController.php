@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Controller used to manage post category contents in the backend.
  *
  * @Route("/admin/newscategory")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_CONTENT_EDIT')")
  */
 
 class NewsCategoryController extends Controller

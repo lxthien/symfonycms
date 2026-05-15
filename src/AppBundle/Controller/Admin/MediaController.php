@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/admin/media")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_MEDIA_MANAGE')")
  */
 class MediaController extends Controller
 {

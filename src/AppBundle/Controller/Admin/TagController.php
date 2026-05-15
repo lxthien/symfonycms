@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Controller used to manage tag contents in the backend.
  *
  * @Route("/admin/tag")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_CONTENT_EDIT')")
  */
 
 class TagController extends Controller

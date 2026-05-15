@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin/redirect")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_REDIRECT_MANAGE')")
  */
 class SeoRedirectController extends Controller
 {

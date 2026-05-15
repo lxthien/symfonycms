@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin/content-decay")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_CONTENT_DECAY_VIEW')")
  */
 class ContentDecayController extends Controller
 {

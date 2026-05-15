@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Controller used to manage comment in the backend.
  *
  * @Route("/admin/comment")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_COMMENT_MANAGE')")
  */
 
 class CommentController extends Controller
