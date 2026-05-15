@@ -1,0 +1,46 @@
+{% set albumItems = post.getMediaItems() %}
+
+{% if albumItems|length > 0 %}
+    <section class="post-album" data-post-album>
+        <div class="post-album-header">
+            <h2>Album ảnh</h2>
+        </div>
+        <div class="post-album-carousel">
+            <button type="button" class="post-album-scroll is-prev" data-album-prev aria-label="Ảnh trước">&lsaquo;</button>
+            <div class="post-album-track" data-album-track>
+                {% for item in albumItems %}
+                    {% set media = item.getMedia() %}
+                    {% if media %}
+                        {% set imageUrl = asset(media.path) %}
+                        {% set thumbUrl = asset(media.thumbnailPath ?: media.path) %}
+                        <button type="button"
+                                class="post-album-item"
+                                data-gallery-item
+                                data-gallery-index="{{ loop.index0 }}"
+                                data-gallery-src="{{ imageUrl }}"
+                                data-gallery-alt="{{ item.getEffectiveAlt() }}"
+                                data-gallery-caption="{{ item.getEffectiveCaption() ?: '' }}">
+                            <img src="{{ thumbUrl }}" alt="{{ item.getEffectiveAlt() }}" loading="lazy">
+                            {% if item.getEffectiveCaption() %}
+                                <span>{{ item.getEffectiveCaption() }}</span>
+                            {% endif %}
+                        </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <button type="button" class="post-album-scroll is-next" data-album-next aria-label="Ảnh sau">&rsaquo;</button>
+        </div>
+        <div class="post-gallery-modal" data-gallery-modal aria-hidden="true">
+            <div class="post-gallery-backdrop" data-gallery-close></div>
+            <div class="post-gallery-dialog" role="dialog" aria-modal="true">
+                <button type="button" class="post-gallery-close" data-gallery-close aria-label="Đóng">&times;</button>
+                <button type="button" class="post-gallery-nav is-prev" data-gallery-prev aria-label="Ảnh trước">&lsaquo;</button>
+                <figure>
+                    <img src="" alt="" data-gallery-image>
+                    <figcaption data-gallery-caption-text></figcaption>
+                </figure>
+                <button type="button" class="post-gallery-nav is-next" data-gallery-next aria-label="Ảnh sau">&rsaquo;</button>
+            </div>
+        </div>
+    </section>
+{% endif %}

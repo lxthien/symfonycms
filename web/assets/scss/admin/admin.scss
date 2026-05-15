@@ -1319,6 +1319,7 @@
 }
 
 .media-picker-item {
+    position: relative;
     padding: 0;
     border: 1px solid #dce4ec;
     display: block;
@@ -1331,6 +1332,11 @@
     &:focus {
         border-color: #007bff;
         outline: none;
+    }
+
+    &.is-selected {
+        border-color: #28a745;
+        box-shadow: 0 0 0 2px rgba(40, 167, 69, .25);
     }
 
     strong,
@@ -1352,6 +1358,26 @@
         margin: 3px 0 9px;
         color: #7b8a8b;
     }
+}
+
+.media-picker-selected-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 4px 7px;
+    display: none;
+    border-radius: 3px;
+    color: #fff;
+    background: #28a745;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.media-picker-item.is-selected .media-picker-selected-badge {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
 }
 
 .media-picker-thumb {
@@ -1402,6 +1428,81 @@
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
+}
+
+.media-album-field {
+    margin: 0 0 22px;
+    padding: 16px;
+    border: 1px solid #dce4ec;
+    background: #fff;
+}
+
+.media-album-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+
+    h4 {
+        margin: 0;
+    }
+}
+
+.media-album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 14px;
+}
+
+.media-album-item {
+    position: relative;
+    padding: 10px;
+    border: 1px solid #dce4ec;
+    background: #f8fafc;
+    cursor: move;
+
+    &.is-dragging {
+        opacity: .55;
+    }
+
+    strong {
+        margin: 8px 0;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .form-control {
+        margin-bottom: 8px;
+        font-size: 13px;
+    }
+}
+
+.media-album-thumb {
+    height: 120px;
+    overflow: hidden;
+    background: #eef2f6;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.media-album-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    background: #dc3545;
+    font-size: 20px;
+    line-height: 24px;
 }
 
 .media-picker-modal {

@@ -21,6 +21,7 @@
                                         form: form,
                                         button_label: 'action.save'|trans,
                                         include_back_to_home_link: true,
+                                        album_json: album_json|default('[]'),
                                     }, with_context = false) }}
 
                                     {{ include('admin/news/_revisions.html.twig', {

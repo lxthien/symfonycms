@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\News;
 use AppBundle\Form\PageType;
+use AppBundle\Media\MediaSelectionManager;
+use AppBundle\Media\NewsMediaManager;
 use AppBundle\Seo\RedirectManager;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -74,7 +76,7 @@ class PageController extends Controller
      * @Route("/new", name="admin_page_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request, Slugger $slugger)
+    public function newAction(Request $request, Slugger $slugger, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager)
     {
         $news = new News();
         $news->setAuthor($this->getUser());
@@ -83,6 +85,7 @@ class PageController extends Controller
 
         $form = $this->createForm(PageType::class, $news)
             ->add('saveAndCreateNew', SubmitType::class);
+        $form->get('albumItems')->setData($newsMediaManager->serializeAlbumForForm($news));
 
         $form->handleRequest($request);
 
@@ -95,11 +98,14 @@ class PageController extends Controller
                 return $this->render('admin/page/new.html.twig', [
                     'object' => $news,
                     'form' => $form->createView(),
+                    'album_json' => $form->get('albumItems')->getData() ?: '[]',
                 ]);
             }
 
             $em = $this->getDoctrine()->getManager();
+            $this->applySelectedMedia($form, $news, $mediaSelection);
             $em->persist($news);
+            $newsMediaManager->syncAlbumFromJson($news, $form->get('albumItems')->getData());
             $em->flush();
 
             $this->addFlash('success', 'action.created_successfully');
@@ -116,6 +122,7 @@ class PageController extends Controller
         return $this->render('admin/page/new.html.twig', [
             'object' => $news,
             'form' => $form->createView(),
+            'album_json' => $form->get('albumItems')->getData() ?: '[]',
         ]);
     }
 
@@ -125,7 +132,7 @@ class PageController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_page_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger, RedirectManager $redirectManager)
+    public function editAction(Request $request, News $news, Slugger $slugger, RedirectManager $redirectManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager)
     {
         if (!$news->getPreviewToken()) {
             $news->setPreviewToken(substr(md5(random_bytes(10)), 0, 32));
@@ -133,6 +140,7 @@ class PageController extends Controller
 
         $oldPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
         $form = $this->createForm(PageType::class, $news);
+        $form->get('albumItems')->setData($newsMediaManager->serializeAlbumForForm($news));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -144,12 +152,15 @@ class PageController extends Controller
                 return $this->render('admin/page/edit.html.twig', [
                     'object' => $news,
                     'form' => $form->createView(),
+                    'album_json' => $form->get('albumItems')->getData() ?: '[]',
                 ]);
             }
 
             $newPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
             $redirectManager->createOrUpdate($oldPublicPath, $newPublicPath, 301);
 
+            $this->applySelectedMedia($form, $news, $mediaSelection);
+            $newsMediaManager->syncAlbumFromJson($news, $form->get('albumItems')->getData());
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'action.updated_successfully');
 
@@ -161,7 +172,17 @@ class PageController extends Controller
         return $this->render('admin/page/edit.html.twig', [
             'object' => $news,
             'form' => $form->createView(),
+            'album_json' => $form->get('albumItems')->getData() ?: '[]',
         ]);
+    }
+
+    private function applySelectedMedia($form, News $news, MediaSelectionManager $mediaSelection)
+    {
+        $mediaImageId = $form->has('mediaImageId') ? $form->get('mediaImageId')->getData() : null;
+
+        if ($mediaImageId) {
+            $mediaSelection->applyToNewsById($news, $mediaImageId);
+        }
     }
 
     /**

@@ -34,6 +34,8 @@ $(function() {
 
     initMediaPicker();
 
+    initMediaAlbumFields();
+
     function initAdminSidebarState() {
         var storageKey = 'minhduy_admin_sidebar_open';
 
@@ -1220,7 +1222,10 @@ $(function() {
         var $content = $('[data-media-picker-content]');
         var pickerState = {
             input: null,
-            preview: null
+            preview: null,
+            mode: 'single',
+            albumInput: null,
+            albumGrid: null
         };
 
         if (!$modal.length || !$content.length) {
@@ -1241,6 +1246,7 @@ $(function() {
                 },
                 success: function(response) {
                     $content.html(response);
+                    markSelectedPickerItems();
                 },
                 error: function() {
                     $content.html('<div class="text-center text-danger">Không tải được Media Library.</div>');
@@ -1310,6 +1316,35 @@ $(function() {
             setPickerUploadStatus($form, files.length + ' ảnh đã sẵn sàng upload.', 'idle');
         }
 
+        function getSelectedAlbumMediaIds() {
+            var selected = {};
+
+            if (!pickerState.albumGrid || !pickerState.albumGrid.length) {
+                return selected;
+            }
+
+            pickerState.albumGrid.find('[data-media-album-item]').each(function() {
+                selected[String($(this).data('media-id'))] = true;
+            });
+
+            return selected;
+        }
+
+        function markSelectedPickerItems() {
+            if (pickerState.mode !== 'multiple') {
+                return;
+            }
+
+            var selected = getSelectedAlbumMediaIds();
+
+            $content.find('[data-media-picker-select]').each(function() {
+                var $item = $(this);
+                var isSelected = !!selected[String($item.data('media-id'))];
+                $item.toggleClass('is-selected', isSelected);
+                $item.attr('aria-pressed', isSelected ? 'true' : 'false');
+            });
+        }
+
         $modal.on('shown.bs.modal', function() {
             $modal.addClass('show');
             $('.modal-backdrop').addClass('show');
@@ -1325,6 +1360,9 @@ $(function() {
             var $button = $(this);
             pickerState.input = $($button.data('target-input'));
             pickerState.preview = $($button.data('target-preview'));
+            pickerState.mode = $button.data('picker-mode') || 'single';
+            pickerState.albumInput = $($button.data('album-input'));
+            pickerState.albumGrid = $($button.data('album-grid'));
 
             showModal();
             loadPicker($button.data('picker-url'));
@@ -1344,6 +1382,22 @@ $(function() {
             event.preventDefault();
 
             var $item = $(this);
+
+            if (pickerState.mode === 'multiple') {
+                var added = addMediaToAlbum(pickerState.albumGrid, pickerState.albumInput, {
+                    id: $item.data('media-id'),
+                    name: $item.data('media-name'),
+                    thumb: $item.data('media-thumb'),
+                    url: $item.data('media-url'),
+                    alt: $item.data('media-alt') || $item.data('media-name'),
+                    caption: ''
+                });
+
+                if (added) {
+                    $item.addClass('is-selected').attr('aria-pressed', 'true');
+                }
+                return;
+            }
 
             if (pickerState.input && pickerState.input.length) {
                 pickerState.input.val($item.data('media-id'));
@@ -1464,6 +1518,162 @@ $(function() {
                 }
             });
         });
+    }
+
+    function initMediaAlbumFields() {
+        $('[data-media-album-grid]').each(function() {
+            var $grid = $(this);
+            var $input = $($grid.closest('[data-media-album-field]').data('album-input'));
+            var raw = $grid.attr('data-initial-album') || '[]';
+            var items = [];
+
+            try {
+                items = JSON.parse(raw);
+            } catch (error) {
+                items = [];
+            }
+
+            $.each(items, function(index, item) {
+                renderAlbumItem($grid, item);
+            });
+
+            syncAlbumInput($grid, $input);
+        });
+
+        $(document).on('click', '[data-media-album-remove]', function(event) {
+            event.preventDefault();
+
+            var $grid = $(this).closest('[data-media-album-grid]');
+            var $input = $($grid.closest('[data-media-album-field]').data('album-input'));
+            var $albumItem = $(this).closest('[data-media-album-item]');
+            var mediaId = $albumItem.data('media-id');
+            $albumItem.remove();
+            syncAlbumInput($grid, $input);
+            $('[data-media-picker-content] [data-media-picker-select][data-media-id="' + mediaId + '"]')
+                .removeClass('is-selected')
+                .attr('aria-pressed', 'false');
+        });
+
+        $(document).on('input', '[data-media-album-alt], [data-media-album-caption]', function() {
+            var $grid = $(this).closest('[data-media-album-grid]');
+            var $input = $($grid.closest('[data-media-album-field]').data('album-input'));
+            syncAlbumInput($grid, $input);
+        });
+
+        $(document).on('dragstart', '[data-media-album-item]', function(event) {
+            event.originalEvent.dataTransfer.setData('text/plain', $(this).index());
+            $(this).addClass('is-dragging');
+        });
+
+        $(document).on('dragend', '[data-media-album-item]', function() {
+            $(this).removeClass('is-dragging');
+        });
+
+        $(document).on('dragover', '[data-media-album-item]', function(event) {
+            event.preventDefault();
+        });
+
+        $(document).on('drop', '[data-media-album-item]', function(event) {
+            event.preventDefault();
+
+            var fromIndex = parseInt(event.originalEvent.dataTransfer.getData('text/plain'), 10);
+            var $target = $(this);
+            var $grid = $target.closest('[data-media-album-grid]');
+            var $items = $grid.find('[data-media-album-item]');
+            var $dragged = $items.eq(fromIndex);
+
+            if (!$dragged.length || $dragged[0] === $target[0]) {
+                return;
+            }
+
+            if (fromIndex < $target.index()) {
+                $target.after($dragged);
+            } else {
+                $target.before($dragged);
+            }
+
+            syncAlbumInput($grid, $($grid.closest('[data-media-album-field]').data('album-input')));
+        });
+    }
+
+    function addMediaToAlbum($grid, $input, item) {
+        if (!$grid || !$grid.length || !$input || !$input.length || !item.id) {
+            return false;
+        }
+
+        var exists = false;
+        $grid.find('[data-media-album-item]').each(function() {
+            if (String($(this).data('media-id')) === String(item.id)) {
+                exists = true;
+            }
+        });
+
+        if (exists) {
+            return false;
+        }
+
+        renderAlbumItem($grid, item);
+        syncAlbumInput($grid, $input);
+
+        return true;
+    }
+
+    function renderAlbumItem($grid, item) {
+        var $item = $('<div>')
+            .addClass('media-album-item')
+            .attr('data-media-album-item', '')
+            .attr('data-media-id', item.id)
+            .attr('draggable', 'true');
+
+        $('<div>')
+            .addClass('media-album-thumb')
+            .append($('<img>').attr('src', item.thumb).attr('alt', item.alt || item.name || ''))
+            .appendTo($item);
+
+        $('<button>')
+            .attr('type', 'button')
+            .attr('data-media-album-remove', '')
+            .addClass('media-album-remove')
+            .html('&times;')
+            .appendTo($item);
+
+        $('<strong>').text(item.name || '').appendTo($item);
+        $('<input>')
+            .attr('type', 'text')
+            .attr('data-media-album-alt', '')
+            .addClass('form-control')
+            .attr('placeholder', 'Alt override')
+            .val(item.alt || '')
+            .appendTo($item);
+        $('<textarea>')
+            .attr('data-media-album-caption', '')
+            .addClass('form-control')
+            .attr('rows', 2)
+            .attr('placeholder', 'Caption override')
+            .val(item.caption || '')
+            .appendTo($item);
+
+        $grid.append($item);
+    }
+
+    function syncAlbumInput($grid, $input) {
+        if (!$input || !$input.length) {
+            return;
+        }
+
+        var items = [];
+
+        $grid.find('[data-media-album-item]').each(function() {
+            var $item = $(this);
+
+            items.push({
+                id: $item.data('media-id'),
+                alt: $item.find('[data-media-album-alt]').val() || '',
+                caption: $item.find('[data-media-album-caption]').val() || ''
+            });
+        });
+
+        $input.val(JSON.stringify(items));
     }
 
     // Bootstrap-tagsinput initialization

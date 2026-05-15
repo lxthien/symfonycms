@@ -1,0 +1,57 @@
+{% set currentImage = object is defined and object and object.images ? vich_uploader_asset(object, 'imageFile') : null %}
+{% set albumJson = album_json|default('[]') %}
+
+<div class="media-field-picker" data-media-field-picker>
+    <div class="media-field-preview" data-media-field-preview>
+        {% if currentImage %}
+            <img src="{{ currentImage }}" alt="{{ object.title|default('Ảnh đại diện') }}">
+        {% else %}
+            <span>Chưa chọn ảnh từ Media Library</span>
+        {% endif %}
+    </div>
+    <div class="media-field-actions">
+        <button type="button"
+                class="btn btn-outline-primary"
+                data-media-picker-open
+                data-picker-url="{{ path('admin_media_picker') }}"
+                data-picker-mode="single"
+                data-target-input="#{{ form.mediaImageId.vars.id }}"
+                data-target-preview="[data-media-field-preview]">
+            <i class="fa fa-picture-o"></i> Chọn ảnh đại diện từ Media Library
+        </button>
+        <button type="button" class="btn btn-link" data-media-picker-clear data-target-input="#{{ form.mediaImageId.vars.id }}" data-target-preview="[data-media-field-preview]">Bỏ chọn media</button>
+    </div>
+</div>
+
+<div class="media-album-field" data-media-album-field data-album-input="#{{ form.albumItems.vars.id }}">
+    <div class="media-album-header">
+        <h4>Album ảnh</h4>
+        <button type="button"
+                class="btn btn-outline-primary"
+                data-media-picker-open
+                data-picker-url="{{ path('admin_media_picker') }}"
+                data-picker-mode="multiple"
+                data-album-input="#{{ form.albumItems.vars.id }}"
+                data-album-grid="[data-media-album-grid]">
+            <i class="fa fa-plus"></i> Thêm ảnh từ Media Library
+        </button>
+    </div>
+    <p class="text-muted">Kéo thả để sắp xếp. Có thể sửa alt/caption riêng cho từng ảnh trong album.</p>
+    <div class="media-album-grid" data-media-album-grid data-initial-album="{{ albumJson|e('html_attr') }}"></div>
+</div>
+
+<div class="modal fade media-picker-modal" id="mediaPickerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Chọn ảnh từ Media Library</h4>
+            </div>
+            <div class="modal-body" data-media-picker-content>
+                <div class="text-center text-muted">Đang tải...</div>
+            </div>
+        </div>
+    </div>
+</div>

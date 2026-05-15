@@ -56,6 +56,14 @@ class PageType extends AbstractType
                 'required' => false,
                 'allow_delete' => true,
             ])
+            ->add('mediaImageId', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('albumItems', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
             ->add('description', TextareaType::class, [
                 'required' => false,
                 'label' => 'label.description',

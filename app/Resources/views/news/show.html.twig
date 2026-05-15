@@ -220,6 +220,7 @@
                                     {{ get_setting('addressInPost')|raw }}
                                 {% endif %}
                             </div>
+                            {{ include('news/components/album.html.twig') }}
                         </article>
                     </div>
                 </div>
@@ -299,6 +300,8 @@
                                     {{ get_setting('addressInPost')|raw }}
                                 {% endif %}
                             </div>
+
+                            {{ include('news/components/album.html.twig') }}
 
                             {# Post Footer #}
                             <footer class="post-footer">

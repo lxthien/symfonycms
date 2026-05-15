@@ -279,6 +279,14 @@ class News
      */
     private $tags;
 
+    /**
+     * @var NewsMedia[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NewsMedia", mappedBy="news", cascade={"remove"})
+     * @ORM\OrderBy({"ordering": "ASC", "id": "ASC"})
+     */
+    private $mediaItems;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -289,6 +297,7 @@ class News
         $this->category = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->mediaItems = new ArrayCollection();
     }
 
     public function getId()
@@ -723,5 +732,10 @@ class News
     {
         $comment->setNews(null);
         $this->comments->removeElement($comment);
+    }
+
+    public function getMediaItems()
+    {
+        return $this->mediaItems;
     }
 }

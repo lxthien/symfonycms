@@ -64,6 +64,7 @@
                 <span class="media-picker-thumb">
                     <img src="{{ asset(media.thumbnailPath ?: media.path) }}" alt="{{ media.alt ?: media.originalName }}">
                 </span>
+                <span class="media-picker-selected-badge"><i class="fa fa-check"></i> Đã chọn</span>
                 <strong>{{ media.originalName }}</strong>
                 <small>{{ media.width and media.height ? media.width ~ 'x' ~ media.height : media.mimeType }}</small>
             </button>

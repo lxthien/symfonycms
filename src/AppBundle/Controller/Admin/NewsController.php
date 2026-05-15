@@ -11,6 +11,8 @@ use AppBundle\Entity\Rating;
 use AppBundle\Entity\SeoRedirect;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
+use AppBundle\Media\MediaSelectionManager;
+use AppBundle\Media\NewsMediaManager;
 use AppBundle\Seo\RedirectManager;
 use AppBundle\Revision\RevisionManager;
 use AppBundle\Utils\Slugger;
@@ -160,7 +162,7 @@ class NewsController extends Controller
      * @Route("/new", name="admin_news_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request, Slugger $slugger, RevisionManager $revisionManager)
+    public function newAction(Request $request, Slugger $slugger, RevisionManager $revisionManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager)
     {
         $news = new News();
         $news->setAuthor($this->getUser());
@@ -168,6 +170,7 @@ class NewsController extends Controller
 
         $form = $this->createForm(NewsType::class, $news)
             ->add('saveAndCreateNew', SubmitType::class);
+        $form->get('albumItems')->setData($newsMediaManager->serializeAlbumForForm($news));
 
         $form->handleRequest($request);
 
@@ -180,12 +183,15 @@ class NewsController extends Controller
                 return $this->render('admin/news/new.html.twig', [
                     'news' => $news,
                     'form' => $form->createView(),
+                    'album_json' => $form->get('albumItems')->getData() ?: '[]',
                 ]);
             }
 
             try {
                 $em = $this->getDoctrine()->getManager();
+                $this->applySelectedMedia($form, $news, $mediaSelection);
                 $em->persist($news);
+                $newsMediaManager->syncAlbumFromJson($news, $form->get('albumItems')->getData());
                 $em->flush();
 
                 // Update Ordering for post
@@ -219,12 +225,14 @@ class NewsController extends Controller
             return $this->render('admin/news/new.html.twig', [
                 'news' => $news,
                 'form' => $form->createView(),
+                'album_json' => $form->get('albumItems')->getData() ?: '[]',
             ]);
         }
 
         return $this->render('admin/news/new.html.twig', [
             'news' => $news,
             'form' => $form->createView(),
+            'album_json' => $form->get('albumItems')->getData() ?: '[]',
         ]);
     }
 
@@ -234,13 +242,14 @@ class NewsController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_news_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger, RevisionManager $revisionManager, RedirectManager $redirectManager)
+    public function editAction(Request $request, News $news, Slugger $slugger, RevisionManager $revisionManager, RedirectManager $redirectManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager)
     {
         //$this->denyAccessUnlessGranted('edit', $category, 'Posts can only be edited by their authors.');
 
         $originalData = $revisionManager->extractNewsData($news);
         $oldPublicPath = $this->generateUrl('news_show', ['slug' => $news->getUrl()]);
         $form = $this->createForm(NewsType::class, $news);
+        $form->get('albumItems')->setData($newsMediaManager->serializeAlbumForForm($news));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -255,11 +264,14 @@ class NewsController extends Controller
                     'revisions' => $this->getDoctrine()->getRepository(ContentRevision::class)->findRecentByNews($news),
                     'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
                     'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
+                    'album_json' => $form->get('albumItems')->getData() ?: '[]',
                 ]);
             }
 
             try {
                 $em = $this->getDoctrine()->getManager();
+                $this->applySelectedMedia($form, $news, $mediaSelection);
+                $newsMediaManager->syncAlbumFromJson($news, $form->get('albumItems')->getData());
                 $currentData = $revisionManager->extractNewsData($news);
 
                 if ($revisionManager->hasDataChanged($originalData, $currentData)) {
@@ -299,10 +311,11 @@ class NewsController extends Controller
                 'news' => $news,
                 'form' => $form->createView(),
                 'revisions' => $this->getDoctrine()->getRepository(ContentRevision::class)->findRecentByNews($news),
-                'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
-                'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
-            ]);
-        }
+                    'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
+                    'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
+                    'album_json' => $form->get('albumItems')->getData() ?: '[]',
+                ]);
+            }
 
         return $this->render('admin/news/edit.html.twig', [
             'news' => $news,
@@ -310,7 +323,17 @@ class NewsController extends Controller
             'revisions' => $this->getDoctrine()->getRepository(ContentRevision::class)->findRecentByNews($news),
             'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
             'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
+            'album_json' => $form->get('albumItems')->getData() ?: '[]',
         ]);
+    }
+
+    private function applySelectedMedia($form, News $news, MediaSelectionManager $mediaSelection)
+    {
+        $mediaImageId = $form->has('mediaImageId') ? $form->get('mediaImageId')->getData() : null;
+
+        if ($mediaImageId) {
+            $mediaSelection->applyToNewsById($news, $mediaImageId);
+        }
     }
 
     /**

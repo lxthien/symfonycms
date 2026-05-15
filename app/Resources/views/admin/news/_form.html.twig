@@ -1,5 +1,42 @@
 {{ form_start(form, {attr: attr|default({})}) }}
-    {{ form_widget(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.title) }}
+    {{ form_row(form.url) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.scheduledAt) }}
+    {{ form_row(form.editorialNotes) }}
+    {{ form_row(form.imageFile) }}
+
+    {{ form_widget(form.mediaImageId) }}
+    {{ form_widget(form.albumItems) }}
+
+    {{ include('admin/media/_news_media_fields.html.twig', {
+        form: form,
+        object: object|default(null),
+        album_json: album_json|default('[]'),
+    }, with_context = false) }}
+
+    {{ form_row(form.description) }}
+    {{ form_row(form.contents) }}
+    {{ form_row(form.ordering) }}
+    {{ form_widget(form.categoryPrimary) }}
+    {{ form_row(form.category) }}
+    {{ form_row(form.tags) }}
+
+    <div class="card-title">
+        <h3>{{ 'label.seo'|trans }}</h3>
+    </div>
+    <hr>
+
+    {{ form_row(form.pageTitle) }}
+    {{ form_row(form.pageDescription) }}
+    {{ form_row(form.pageKeyword) }}
+    {{ form_row(form.isIndex) }}
+    {{ form_row(form.isFollow) }}
+    {{ form_row(form.autoFulfillAddress) }}
+    {{ form_row(form.template) }}
+    {{ form_row(form.qa) }}
 
     {{ include('admin/common/_slug_helper.html.twig', {
         form: form,
@@ -16,9 +53,15 @@
         <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
     </button>
 
+    {% if form.saveAndCreateNew is defined %}
+        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: button_css|default('btn btn-primary')}}) }}
+    {% endif %}
+
     {% if include_back_to_home_link|default(false) %}
         <a href="{{ path('admin_news_index') }}" class="btn btn-link">
             <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
         </a>
     {% endif %}
+
+    {{ form_rest(form) }}
 {{ form_end(form) }}
