@@ -23,6 +23,7 @@ class AdminCapabilityVoter extends Voter
             AdminCapability::MEDIA_MANAGE,
             AdminCapability::REDIRECT_MANAGE,
             AdminCapability::CONTENT_DECAY_VIEW,
+            AdminCapability::HEALTH_VIEW,
         ],
         'ROLE_AUTHOR' => [
             AdminCapability::ADMIN_ACCESS,
@@ -47,6 +48,7 @@ class AdminCapabilityVoter extends Voter
             AdminCapability::MEDIA_MANAGE,
             AdminCapability::REDIRECT_MANAGE,
             AdminCapability::CONTENT_DECAY_VIEW,
+            AdminCapability::HEALTH_VIEW,
         ],
         'ROLE_SALES' => [
             AdminCapability::ADMIN_ACCESS,

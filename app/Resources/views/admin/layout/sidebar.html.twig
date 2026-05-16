@@ -97,6 +97,15 @@
                 </li>
                 {% endif %}
 
+                {% if is_granted('CMS_HEALTH_VIEW') %}
+                <li>
+                    <a href="{{ path('admin_health_index') }}">
+                        <i class="menu-icon fa fa-heartbeat"></i>
+                        Health dashboard
+                    </a>
+                </li>
+                {% endif %}
+
                 {% if is_granted('CMS_MEDIA_MANAGE') %}
                 <li>
                     <a href="{{ path('admin_media_index') }}">

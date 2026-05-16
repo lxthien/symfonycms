@@ -1,0 +1,480 @@
+<?php
+
+namespace AppBundle\Health;
+
+use AppBundle\Entity\Media;
+use AppBundle\Entity\News;
+use AppBundle\Entity\NewsCategory;
+use AppBundle\Entity\SeoRedirect;
+use AppBundle\Entity\Tag;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RouterInterface;
+
+class HealthAuditManager
+{
+    const MAX_BROKEN_LINKS = 200;
+    const MAX_MISSING_IMAGES = 200;
+    const MAX_POSTS_WITHOUT_IMAGE = 200;
+
+    private $em;
+    private $router;
+    private $kernel;
+    private $webRoot;
+
+    public function __construct(EntityManagerInterface $em, RouterInterface $router, KernelInterface $kernel)
+    {
+        $this->em = $em;
+        $this->router = $router;
+        $this->kernel = $kernel;
+        $this->webRoot = realpath($kernel->getRootDir() . '/../web');
+    }
+
+    public function buildReport()
+    {
+        $brokenLinks = $this->findBrokenInternalLinks();
+        $missingImages = $this->findMissingImages();
+        $postsWithoutImage = $this->findPostsWithoutFeaturedImage();
+        $uploadUsage = $this->getUploadUsage();
+
+        return [
+            'generatedAt' => new \DateTime(),
+            'summary' => [
+                'brokenLinks' => count($brokenLinks),
+                'missingImages' => count($missingImages),
+                'postsWithoutImage' => count($postsWithoutImage),
+                'schemaStatus' => 'Tạm bỏ qua',
+                'mailStatus' => 'Tạm bỏ qua',
+                'uploadSize' => $uploadUsage['totalHuman'],
+                'uploadBytes' => $uploadUsage['totalBytes'],
+            ],
+            'brokenLinks' => $brokenLinks,
+            'missingImages' => $missingImages,
+            'postsWithoutImage' => $postsWithoutImage,
+            'uploadUsage' => $uploadUsage,
+            'skipped' => [
+                'schema' => 'Bài thiếu schema đang tạm bỏ qua theo yêu cầu.',
+                'mail' => 'Form lỗi gửi mail đang tạm bỏ qua theo yêu cầu.',
+            ],
+        ];
+    }
+
+    private function findBrokenInternalLinks()
+    {
+        $issues = [];
+        $seen = [];
+        $posts = $this->getPublishedContent();
+
+        foreach ($posts as $post) {
+            $links = $this->extractAttributes((string) $post->getContents(), 'a', 'href');
+
+            foreach ($links as $href) {
+                $path = $this->normalizeLocalUrl($href);
+
+                if (!$path || isset($seen[$post->getId() . ':' . $path])) {
+                    continue;
+                }
+
+                $seen[$post->getId() . ':' . $path] = true;
+
+                if (!$this->isInternalPathHealthy($path)) {
+                    $issues[] = [
+                        'post' => $post,
+                        'url' => $href,
+                        'path' => $path,
+                        'reason' => 'Không tìm thấy route, bài viết published hoặc redirect 301 phù hợp.',
+                    ];
+                }
+
+                if (count($issues) >= self::MAX_BROKEN_LINKS) {
+                    return $issues;
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    private function findMissingImages()
+    {
+        $issues = [];
+
+        foreach ($this->findMissingFeaturedImages() as $issue) {
+            $issues[] = $issue;
+        }
+
+        foreach ($this->findMissingMediaFiles() as $issue) {
+            $issues[] = $issue;
+        }
+
+        foreach ($this->findMissingContentImages() as $issue) {
+            $issues[] = $issue;
+        }
+
+        return array_slice($issues, 0, self::MAX_MISSING_IMAGES);
+    }
+
+    private function findPostsWithoutFeaturedImage()
+    {
+        return $this->em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.status = :status')
+            ->andWhere('n.postType IN (:postTypes)')
+            ->andWhere('n.images IS NULL OR n.images = :empty')
+            ->setParameter('status', News::STATUS_PUBLISHED)
+            ->setParameter('postTypes', ['post', 'page'])
+            ->setParameter('empty', '')
+            ->orderBy('n.updatedAt', 'DESC')
+            ->setMaxResults(self::MAX_POSTS_WITHOUT_IMAGE)
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function findMissingFeaturedImages()
+    {
+        $issues = [];
+        $posts = $this->em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.images IS NOT NULL')
+            ->andWhere('n.images != :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($posts as $post) {
+            $path = 'uploads/images/news/' . ltrim($post->getImages(), '/');
+
+            if (!$this->localFileExists($path)) {
+                $issues[] = [
+                    'source' => 'Bài viết/Page',
+                    'title' => $post->getTitle(),
+                    'path' => '/' . $path,
+                    'editUrl' => $post->isPage()
+                        ? $this->router->generate('admin_page_edit', ['id' => $post->getId()])
+                        : $this->router->generate('admin_news_edit', ['id' => $post->getId()]),
+                ];
+            }
+        }
+
+        $categories = $this->em->getRepository(NewsCategory::class)->createQueryBuilder('c')
+            ->where('c.images IS NOT NULL')
+            ->andWhere('c.images != :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($categories as $category) {
+            $path = 'uploads/images/newscategory/' . ltrim($category->getImages(), '/');
+
+            if (!$this->localFileExists($path)) {
+                $issues[] = [
+                    'source' => 'Danh mục',
+                    'title' => $category->getName(),
+                    'path' => '/' . $path,
+                    'editUrl' => $this->router->generate('admin_newscategory_edit', ['id' => $category->getId()]),
+                ];
+            }
+        }
+
+        return $issues;
+    }
+
+    private function findMissingMediaFiles()
+    {
+        $issues = [];
+
+        if (!class_exists(Media::class)) {
+            return $issues;
+        }
+
+        $mediaItems = $this->em->getRepository(Media::class)->findBy([], ['id' => 'DESC']);
+
+        foreach ($mediaItems as $media) {
+            foreach (['path' => $media->getPath(), 'thumbnail' => $media->getThumbnailPath(), 'webp' => $media->getWebpPath()] as $kind => $path) {
+                if ($path && !$this->localFileExists($path)) {
+                    $issues[] = [
+                        'source' => 'Media Library (' . $kind . ')',
+                        'title' => $media->getOriginalName(),
+                        'path' => '/' . ltrim($path, '/'),
+                        'editUrl' => $this->router->generate('admin_media_edit', ['id' => $media->getId()]),
+                    ];
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    private function findMissingContentImages()
+    {
+        $issues = [];
+        $seen = [];
+
+        foreach ($this->getPublishedContent() as $post) {
+            $images = $this->extractAttributes((string) $post->getContents(), 'img', 'src');
+
+            foreach ($images as $src) {
+                $path = $this->normalizeLocalUrl($src);
+
+                if (!$path || isset($seen[$post->getId() . ':' . $path])) {
+                    continue;
+                }
+
+                $seen[$post->getId() . ':' . $path] = true;
+
+                if (!$this->localFileExists($path)) {
+                    $issues[] = [
+                        'source' => 'Ảnh trong nội dung',
+                        'title' => $post->getTitle(),
+                        'path' => $path,
+                        'editUrl' => $post->isPage()
+                            ? $this->router->generate('admin_page_edit', ['id' => $post->getId()])
+                            : $this->router->generate('admin_news_edit', ['id' => $post->getId()]),
+                    ];
+                }
+
+                if (count($issues) >= self::MAX_MISSING_IMAGES) {
+                    return $issues;
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    private function getUploadUsage()
+    {
+        $paths = [
+            'Media Library' => 'uploads/media',
+            'Ảnh bài viết' => 'uploads/images/news',
+            'Ảnh danh mục' => 'uploads/images/newscategory',
+            'Banner' => 'uploads/images/banner',
+            'Sản phẩm/khác' => 'uploads/images/products',
+        ];
+        $items = [];
+        $total = 0;
+
+        foreach ($paths as $label => $path) {
+            $bytes = $this->getDirectorySize($this->webRoot . '/' . $path);
+            $total += $bytes;
+            $items[] = [
+                'label' => $label,
+                'path' => '/' . $path,
+                'bytes' => $bytes,
+                'human' => $this->formatBytes($bytes),
+            ];
+        }
+
+        return [
+            'items' => $items,
+            'totalBytes' => $total,
+            'totalHuman' => $this->formatBytes($total),
+        ];
+    }
+
+    private function getPublishedContent()
+    {
+        return $this->em->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.status = :status')
+            ->andWhere('n.postType IN (:postTypes)')
+            ->setParameter('status', News::STATUS_PUBLISHED)
+            ->setParameter('postTypes', ['post', 'page'])
+            ->orderBy('n.updatedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function extractAttributes($html, $tag, $attribute)
+    {
+        if (trim($html) === '') {
+            return [];
+        }
+
+        libxml_use_internal_errors(true);
+        $dom = new \DOMDocument();
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $html);
+        libxml_clear_errors();
+
+        $values = [];
+
+        foreach ($dom->getElementsByTagName($tag) as $node) {
+            if ($node->hasAttribute($attribute)) {
+                $values[] = trim($node->getAttribute($attribute));
+            }
+        }
+
+        return array_values(array_filter($values));
+    }
+
+    private function normalizeLocalUrl($url)
+    {
+        $url = trim((string) $url);
+
+        if ($url === '' || $url[0] === '#' || preg_match('/^(mailto:|tel:|javascript:|data:)/i', $url)) {
+            return null;
+        }
+
+        $parts = @parse_url($url);
+
+        if (!$parts || !empty($parts['host'])) {
+            $host = isset($parts['host']) ? strtolower($parts['host']) : '';
+            $requestHost = isset($_SERVER['HTTP_HOST']) ? strtolower($_SERVER['HTTP_HOST']) : '';
+
+            if ($host && $requestHost && $host !== $requestHost) {
+                return null;
+            }
+        }
+
+        $path = isset($parts['path']) ? $parts['path'] : $url;
+
+        if ($path === '') {
+            return null;
+        }
+
+        return '/' . ltrim(rawurldecode($path), '/');
+    }
+
+    private function isInternalPathHealthy($path)
+    {
+        if ($this->localFileExists($path)) {
+            return true;
+        }
+
+        if ($this->hasEnabledRedirect($path)) {
+            return true;
+        }
+
+        if (preg_match('#/([^/]+)\.html$#', $path, $matches)) {
+            $post = $this->em->getRepository(News::class)->findOneBy([
+                'url' => $matches[1],
+                'status' => News::STATUS_PUBLISHED,
+            ]);
+
+            return $post !== null;
+        }
+
+        try {
+            $route = $this->router->match($path);
+
+            if (!$this->isMatchedFrontRouteHealthy($route)) {
+                return false;
+            }
+
+            return true;
+        } catch (ResourceNotFoundException $e) {
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    private function isMatchedFrontRouteHealthy(array $route)
+    {
+        if (empty($route['_route'])) {
+            return true;
+        }
+
+        switch ($route['_route']) {
+            case 'news_category':
+                if (empty($route['level1'])) {
+                    return false;
+                }
+
+                return $this->em->getRepository(NewsCategory::class)->findOneBy([
+                    'url' => $route['level1'],
+                    'enable' => true,
+                ]) !== null;
+
+            case 'list_category':
+                if (empty($route['level1']) || empty($route['level2'])) {
+                    return false;
+                }
+
+                $parent = $this->em->getRepository(NewsCategory::class)->findOneBy([
+                    'url' => $route['level1'],
+                    'enable' => true,
+                ]);
+                $child = $this->em->getRepository(NewsCategory::class)->findOneBy([
+                    'url' => $route['level2'],
+                    'enable' => true,
+                ]);
+
+                if (!$parent || !$child || !is_object($child->getParentcat())) {
+                    return false;
+                }
+
+                return $child->getParentcat()->getId() === $parent->getId();
+
+            case 'tags':
+                if (empty($route['slug'])) {
+                    return false;
+                }
+
+                return $this->em->getRepository(Tag::class)->findOneBy([
+                    'url' => $route['slug'],
+                ]) !== null;
+
+            default:
+                return true;
+        }
+    }
+
+    private function hasEnabledRedirect($path)
+    {
+        if (!class_exists(SeoRedirect::class)) {
+            return false;
+        }
+
+        $redirect = $this->em->getRepository(SeoRedirect::class)->findOneBy([
+            'sourcePath' => $path,
+            'enable' => true,
+        ]);
+
+        return $redirect !== null;
+    }
+
+    private function localFileExists($path)
+    {
+        if (!$this->webRoot || !$path) {
+            return false;
+        }
+
+        $relative = ltrim(parse_url($path, PHP_URL_PATH) ?: $path, '/');
+        $absolute = $this->webRoot . '/' . $relative;
+
+        return is_file($absolute);
+    }
+
+    private function getDirectorySize($path)
+    {
+        if (!is_dir($path)) {
+            return 0;
+        }
+
+        $size = 0;
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
+                $size += $file->getSize();
+            }
+        }
+
+        return $size;
+    }
+
+    private function formatBytes($bytes)
+    {
+        $bytes = (float) $bytes;
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $index = 0;
+
+        while ($bytes >= 1024 && $index < count($units) - 1) {
+            $bytes /= 1024;
+            $index++;
+        }
+
+        return number_format($bytes, $index === 0 ? 0 : 2) . ' ' . $units[$index];
+    }
+}

@@ -1708,6 +1708,59 @@ body.modal-open .modal-backdrop + .modal-backdrop {
     }
 }
 
+.health-dashboard {
+    .health-summary {
+        .dashboard-mini-card {
+            min-height: 118px;
+        }
+
+        .stat-widget-one {
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-content {
+            min-width: 0;
+        }
+
+        .stat-text {
+            white-space: normal;
+        }
+
+        .stat-digit {
+            font-size: 28px;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+    }
+
+    .health-note-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+
+        .alert {
+            margin-bottom: 0;
+        }
+    }
+
+    .health-table {
+        table-layout: fixed;
+
+        th,
+        td {
+            vertical-align: middle;
+            word-break: break-word;
+        }
+
+        code {
+            display: inline-block;
+            max-width: 100%;
+            white-space: normal;
+        }
+    }
+}
+
 @media (max-width: 991px) {
     .cms-block-toolbar {
         position: static;
@@ -1753,6 +1806,12 @@ body.modal-open .modal-backdrop + .modal-backdrop {
     .media-filters {
         .media-filter-grid {
             grid-template-columns: repeat(2, minmax(180px, 1fr));
+        }
+    }
+
+    .health-dashboard {
+        .health-note-grid {
+            grid-template-columns: 1fr;
         }
     }
 }
