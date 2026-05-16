@@ -157,6 +157,49 @@ class NewsController extends Controller
     }
 
     /**
+     * Searches existing posts/pages for the content block editor.
+     *
+     * @Route("/content-block/related-search", name="admin_content_block_related_search")
+     * @Method("GET")
+     */
+    public function relatedSearchAction(Request $request)
+    {
+        $q = trim((string) $request->query->get('q'));
+        $currentId = $request->query->getInt('currentId', 0);
+
+        $qb = $this->getDoctrine()->getRepository(News::class)->createQueryBuilder('n')
+            ->where('n.postType IN (:postTypes)')
+            ->andWhere('n.status = :status')
+            ->setParameter('postTypes', ['post', 'page'])
+            ->setParameter('status', News::STATUS_PUBLISHED)
+            ->orderBy('n.updatedAt', 'DESC')
+            ->setMaxResults(12);
+
+        if ($currentId > 0) {
+            $qb->andWhere('n.id != :currentId')->setParameter('currentId', $currentId);
+        }
+
+        if ($q !== '') {
+            $qb->andWhere('n.title LIKE :q OR n.url LIKE :q OR n.description LIKE :q')
+                ->setParameter('q', '%' . $q . '%');
+        }
+
+        $items = [];
+
+        foreach ($qb->getQuery()->getResult() as $post) {
+            $items[] = [
+                'id' => $post->getId(),
+                'title' => $post->getTitle(),
+                'url' => $this->generateUrl('news_show', ['slug' => $post->getUrl()]),
+                'description' => strip_tags((string) $post->getDescription()),
+                'type' => $post->getPostType(),
+            ];
+        }
+
+        return new JsonResponse(['items' => $items]);
+    }
+
+    /**
      * Creates a new News entity.
      *
      * @Security("is_granted('CMS_CONTENT_CREATE')")

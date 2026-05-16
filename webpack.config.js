@@ -18,6 +18,7 @@ Encore
     .addStyleEntry('css/app', ['./web/assets/scss/front/app.scss'])
     .addStyleEntry('css/first', ['./web/assets/scss/front/first.scss'])
     .addStyleEntry('css/admin', ['./web/assets/scss/admin/admin.scss'])
+    .addStyleEntry('css/ckeditor-content', ['./web/assets/scss/admin/ckeditor-content.scss'])
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -18,6 +18,10 @@
     }, with_context = false) }}
 
     {{ form_row(form.description) }}
+    {{ include('admin/content_block/_toolbar.html.twig', {
+        target_editor: form.contents.vars.id,
+        current_id: object is defined and object ? object.id : 0,
+    }, with_context = false) }}
     {{ form_row(form.contents) }}
     {{ form_row(form.ordering) }}
     {{ form_widget(form.categoryPrimary) }}

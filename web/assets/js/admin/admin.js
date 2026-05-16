@@ -15,6 +15,8 @@ $(function() {
     // Init CkEditor and CKfinder
     initCkeditor();
 
+    initContentBlocks();
+
     // Update object when change the enable button toggle
     initEnableToggleButton();
 
@@ -269,12 +271,736 @@ $(function() {
                     /<style[\s\S]*?<\/style>/gi
                 ],
                 height: height + 'px',
+                allowedContent: true,
+                contentsCss: getCkeditorContentCss(),
+                bodyClass: 'news-container',
                 filebrowserBrowseUrl: '/assets/cksourceckfinder/ckfinder/ckfinder.html',
                 filebrowserUploadUrl: '/assets/cksourceckfinder/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
                 filebrowserWindowWidth: '1000',
                 filebrowserWindowHeight: '700'
             });
         });
+    }
+
+    function getCkeditorContentCss() {
+        var config = window.MINHDUY_ADMIN || {};
+
+        if (config.ckeditorContentCss) {
+            return [config.ckeditorContentCss];
+        }
+
+        return ['/build/css/ckeditor-content.css'];
+    }
+
+    function initContentBlocks() {
+        var $modal = $('[data-cms-block-modal]');
+        var $form = $('[data-cms-block-form]');
+        var $preview = $('[data-cms-block-preview]');
+        var activeEditorId = null;
+        var activeBlockType = null;
+        var activeEditorBlock = null;
+        var relatedSearchUrl = null;
+        var relatedCurrentId = 0;
+        var relatedSearchTimer = null;
+        var blockTitles = {
+            faq: 'FAQ block',
+            cta: 'CTA block',
+            pricing: 'Bảng giá',
+            gallery: 'Gallery block',
+            related: 'Related posts',
+            lead: 'Form lead'
+        };
+
+        if (!$modal.length || !$form.length) {
+            return;
+        }
+
+        $modal.appendTo('body');
+        $preview = $modal.find('[data-cms-block-preview]');
+
+        function resetBlockForm(type) {
+            $form.find('input[type="text"], input[type="url"], input[type="tel"], input[type="hidden"], textarea').val('');
+            $form.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+            $form.find('[name="blockType"]').val(type);
+            $form.find('[name="galleryMediaItems"]').val('[]');
+            $form.find('[name="relatedSelectedItems"]').val('[]');
+            $form.find('[data-cms-block-gallery-grid], [data-cms-related-selected], [data-cms-related-results]').empty();
+            $preview.empty().hide();
+        }
+
+        function showBlockForm(type, payload, editorBlock) {
+            activeBlockType = type;
+            activeEditorBlock = editorBlock || null;
+            resetBlockForm(type);
+            $modal.find('[data-cms-block-title]').text((activeEditorBlock ? 'Sửa ' : 'Chèn ') + (blockTitles[type] || 'content block'));
+            $modal.find('[data-cms-block-insert]').html('<i class="fa fa-' + (activeEditorBlock ? 'save' : 'plus') + '"></i> ' + (activeEditorBlock ? 'Cập nhật block' : 'Chèn block'));
+            $modal.find('[data-cms-block-form-type]').hide();
+            $modal.find('[data-cms-block-form-type="' + type + '"]').show();
+
+            if (payload) {
+                populateBlockForm(type, payload);
+            }
+
+            renderPreview();
+            openBlockModal();
+        }
+
+        function openBlockModal() {
+            if ($.fn.modal) {
+                $modal.modal('show');
+                $modal.addClass('show in');
+                $('.modal-backdrop').addClass('show in');
+                return;
+            }
+
+            $modal.show().addClass('show in').attr('aria-hidden', 'false');
+            $('body').addClass('modal-open');
+        }
+
+        function closeBlockModal() {
+            if ($.fn.modal) {
+                $modal.modal('hide');
+                return;
+            }
+
+            $modal.hide().removeClass('show in').attr('aria-hidden', 'true');
+            $('body').removeClass('modal-open');
+        }
+
+        function normalizeLines(value) {
+            return String(value || '')
+                .split(/\r?\n/)
+                .map(function(line) {
+                    return $.trim(line);
+                })
+                .filter(function(line) {
+                    return line !== '';
+                });
+        }
+
+        function parsePipeRows(value, columns) {
+            return normalizeLines(value).map(function(line) {
+                var parts = line.split('|').map(function(part) {
+                    return $.trim(part);
+                });
+
+                while (parts.length < columns) {
+                    parts.push('');
+                }
+
+                return parts.slice(0, columns);
+            });
+        }
+
+        function rowsToText(rows) {
+            return $.map(rows || [], function(row) {
+                return row.join(' | ');
+            }).join('\n');
+        }
+
+        function encodePayload(payload) {
+            return encodeURIComponent(JSON.stringify(payload || {}));
+        }
+
+        function decodePayload(value) {
+            try {
+                return JSON.parse(decodeURIComponent(value || ''));
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function baseBlockAttrs(type, payload) {
+            return ' data-cms-block="' + escapeHtml(type) + '" data-cms-payload="' + escapeHtml(encodePayload(payload)) + '"';
+        }
+
+        function getSelectedJson(name) {
+            try {
+                var value = JSON.parse($form.find('[name="' + name + '"]').val() || '[]');
+                return $.isArray(value) ? value : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function setSelectedJson(name, items) {
+            $form.find('[name="' + name + '"]').val(JSON.stringify(items || []));
+        }
+
+        function collectPayload(type) {
+            var selected;
+            var manualRows;
+
+            if (type === 'faq') {
+                return {items: parsePipeRows($form.find('[name="faqItems"]').val(), 2)};
+            }
+
+            if (type === 'cta') {
+                return {
+                    title: $form.find('[name="ctaTitle"]').val(),
+                    description: $form.find('[name="ctaDescription"]').val(),
+                    button: $form.find('[name="ctaButton"]').val(),
+                    url: $form.find('[name="ctaUrl"]').val() || '#'
+                };
+            }
+
+            if (type === 'pricing') {
+                return {items: parsePipeRows($form.find('[name="pricingItems"]').val(), 3)};
+            }
+
+            if (type === 'gallery') {
+                selected = getSelectedJson('galleryMediaItems').map(function(item) {
+                    return {
+                        id: item.id || '',
+                        name: item.name || '',
+                        thumb: item.thumb || '',
+                        url: item.url || item.thumb || '',
+                        alt: item.alt || item.name || '',
+                        caption: item.caption || ''
+                    };
+                });
+                manualRows = parsePipeRows($form.find('[name="galleryItems"]').val(), 3).map(function(row) {
+                    return {url: row[0], alt: row[1], caption: row[2]};
+                });
+
+                return {items: selected.concat(manualRows)};
+            }
+
+            if (type === 'related') {
+                selected = getSelectedJson('relatedSelectedItems');
+                manualRows = parsePipeRows($form.find('[name="relatedItems"]').val(), 3).map(function(row) {
+                    return {title: row[0], url: row[1], description: row[2]};
+                });
+
+                return {items: selected.concat(manualRows)};
+            }
+
+            if (type === 'lead') {
+                return {
+                    title: $form.find('[name="leadTitle"]').val() || 'Nhận tư vấn miễn phí',
+                    description: $form.find('[name="leadDescription"]').val()
+                };
+            }
+
+            return {};
+        }
+
+        function validatePayload(type, payload) {
+            if (type === 'faq' && (!payload.items || !payload.items.length)) {
+                return 'FAQ cần ít nhất một câu hỏi.';
+            }
+
+            if (type === 'cta' && !payload.title && !payload.description) {
+                return 'CTA cần tiêu đề hoặc mô tả.';
+            }
+
+            if (type === 'pricing' && (!payload.items || !payload.items.length)) {
+                return 'Bảng giá cần ít nhất một dòng.';
+            }
+
+            if (type === 'gallery' && (!payload.items || !payload.items.length)) {
+                return 'Gallery cần ít nhất một ảnh.';
+            }
+
+            if (type === 'related' && (!payload.items || !payload.items.length)) {
+                return 'Related posts cần ít nhất một bài.';
+            }
+
+            if (type === 'lead' && !payload.title) {
+                return 'Form lead cần tiêu đề.';
+            }
+
+            return '';
+        }
+
+        function buildFaqSchema(payload) {
+            var questions = $.map(payload.items || [], function(row) {
+                if (!row[0] || !row[1]) {
+                    return null;
+                }
+
+                return {
+                    '@type': 'Question',
+                    name: row[0],
+                    acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: row[1]
+                    }
+                };
+            });
+
+            if (!questions.length) {
+                return '';
+            }
+
+            return '<script type="application/ld+json">' + JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: questions
+            }) + '<\/script>';
+        }
+
+        function buildBlockHtml(type, payload) {
+            payload = payload || collectPayload(type);
+
+            if (type === 'faq') {
+                return '<section class="cms-block cms-block-faq"' + baseBlockAttrs(type, payload) + '>' +
+                    '<h2>Câu hỏi thường gặp</h2>' +
+                    $.map(payload.items || [], function(row) {
+                        return '<details class="cms-faq-item"><summary>' + escapeHtml(row[0]) + '</summary><p>' + escapeHtml(row[1]) + '</p></details>';
+                    }).join('') +
+                    buildFaqSchema(payload) +
+                    '</section>';
+            }
+
+            if (type === 'cta') {
+                return '<section class="cms-block cms-block-cta"' + baseBlockAttrs(type, payload) + '>' +
+                    '<div class="cms-block-cta-content">' +
+                    (payload.title ? '<h2>' + escapeHtml(payload.title) + '</h2>' : '') +
+                    (payload.description ? '<p>' + escapeHtml(payload.description) + '</p>' : '') +
+                    '</div>' +
+                    (payload.button ? '<a class="cms-block-button" href="' + escapeHtml(payload.url || '#') + '">' + escapeHtml(payload.button) + '</a>' : '') +
+                    '</section>';
+            }
+
+            if (type === 'pricing') {
+                return '<section class="cms-block cms-block-pricing"' + baseBlockAttrs(type, payload) + '>' +
+                    '<h2>Bảng giá tham khảo</h2>' +
+                    '<table><thead><tr><th>Hạng mục</th><th>Đơn giá</th><th>Ghi chú</th></tr></thead><tbody>' +
+                    $.map(payload.items || [], function(row) {
+                        return '<tr><td>' + escapeHtml(row[0]) + '</td><td>' + escapeHtml(row[1]) + '</td><td>' + escapeHtml(row[2]) + '</td></tr>';
+                    }).join('') +
+                    '</tbody></table>' +
+                    '</section>';
+            }
+
+            if (type === 'gallery') {
+                return '<section class="cms-block cms-block-gallery"' + baseBlockAttrs(type, payload) + '>' +
+                    '<h2>Hình ảnh thực tế</h2>' +
+                    '<div class="cms-block-gallery-grid">' +
+                    $.map(payload.items || [], function(item) {
+                        return '<figure><img src="' + escapeHtml(item.url || item.thumb || '') + '" alt="' + escapeHtml(item.alt || item.name || '') + '">' +
+                            (item.caption ? '<figcaption>' + escapeHtml(item.caption) + '</figcaption>' : '') +
+                            '</figure>';
+                    }).join('') +
+                    '</div>' +
+                    '</section>';
+            }
+
+            if (type === 'related') {
+                return '<section class="cms-block cms-block-related" data-cms-block="related" data-cms-payload="' + escapeHtml(encodePayload(payload)) + '">' +
+                    '<h2>Bài viết liên quan</h2>' +
+                    '<div class="cms-block-related-list">' +
+                    $.map(payload.items || [], function(item) {
+                        return '<a class="cms-block-related-item" href="' + escapeHtml(item.url || '#') + '">' +
+                            '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+                            (item.description ? '<span>' + escapeHtml(item.description) + '</span>' : '') +
+                            '</a>';
+                    }).join('') +
+                    '</div>' +
+                    '</section>';
+            }
+
+            if (type === 'lead') {
+                return '<section class="cms-block cms-block-lead"' + baseBlockAttrs(type, payload) + '>' +
+                    '<div><h2>' + escapeHtml(payload.title || 'Nhận tư vấn miễn phí') + '</h2>' +
+                    (payload.description ? '<p>' + escapeHtml(payload.description) + '</p>' : '') +
+                    '</div>' +
+                    '<form class="cms-block-lead-form" action="/lien-he" method="get">' +
+                    '<input type="text" name="name" placeholder="Họ tên">' +
+                    '<input type="tel" name="phone" placeholder="Số điện thoại">' +
+                    '<button type="submit">Gửi thông tin</button>' +
+                    '</form>' +
+                    '</section>';
+            }
+
+            return '';
+        }
+
+        function populateBlockForm(type, payload) {
+            if (!payload) {
+                return;
+            }
+
+            if (type === 'faq') {
+                $form.find('[name="faqItems"]').val(rowsToText(payload.items || []));
+            } else if (type === 'cta') {
+                $form.find('[name="ctaTitle"]').val(payload.title || '');
+                $form.find('[name="ctaDescription"]').val(payload.description || '');
+                $form.find('[name="ctaButton"]').val(payload.button || '');
+                $form.find('[name="ctaUrl"]').val(payload.url || '');
+            } else if (type === 'pricing') {
+                $form.find('[name="pricingItems"]').val(rowsToText(payload.items || []));
+            } else if (type === 'gallery') {
+                var mediaItems = [];
+                var manualItems = [];
+
+                $.each(payload.items || [], function(index, item) {
+                    if (item.id || item.thumb) {
+                        mediaItems.push(item);
+                        renderAlbumItem($form.find('[data-cms-block-gallery-grid]'), {
+                            id: item.id || item.url || index,
+                            name: item.name || item.alt || item.url || '',
+                            thumb: item.thumb || item.url || '',
+                            url: item.url || item.thumb || '',
+                            alt: item.alt || item.name || '',
+                            caption: item.caption || ''
+                        });
+                    } else {
+                        manualItems.push([item.url || '', item.alt || '', item.caption || '']);
+                    }
+                });
+                setSelectedJson('galleryMediaItems', mediaItems);
+                $form.find('[name="galleryItems"]').val(rowsToText(manualItems));
+            } else if (type === 'related') {
+                var backendItems = [];
+                var manualRelated = [];
+
+                $.each(payload.items || [], function(index, item) {
+                    if (item.id) {
+                        backendItems.push(item);
+                    } else {
+                        manualRelated.push([item.title || '', item.url || '', item.description || '']);
+                    }
+                });
+                setSelectedJson('relatedSelectedItems', backendItems);
+                renderRelatedSelected(backendItems);
+                $form.find('[name="relatedItems"]').val(rowsToText(manualRelated));
+            } else if (type === 'lead') {
+                $form.find('[name="leadTitle"]').val(payload.title || '');
+                $form.find('[name="leadDescription"]').val(payload.description || '');
+            }
+        }
+
+        function renderPreview() {
+            var payload = collectPayload(activeBlockType);
+            var html = buildBlockHtml(activeBlockType, payload);
+
+            $preview.html(html || '<div class="text-muted">Chưa có dữ liệu preview.</div>');
+        }
+
+        function insertIntoEditor(editorId, html) {
+            if (window.CKEDITOR && CKEDITOR.instances[editorId]) {
+                CKEDITOR.instances[editorId].insertHtml(html);
+                CKEDITOR.instances[editorId].updateElement();
+                return;
+            }
+
+            var $textarea = $('#' + editorId);
+            $textarea.val(($textarea.val() || '') + '\n' + html);
+        }
+
+        function updateEditorBlock(editorId, html) {
+            if (activeEditorBlock && activeEditorBlock.setHtml) {
+                var $replacement = $('<div>').html(html).children().first();
+
+                activeEditorBlock.setHtml($replacement.html());
+                $.each($replacement[0].attributes, function(index, attr) {
+                    activeEditorBlock.setAttribute(attr.name, attr.value);
+                });
+                CKEDITOR.instances[editorId].updateElement();
+                return;
+            }
+
+            insertIntoEditor(editorId, html);
+        }
+
+        function getBlockPayloadFromElement(element) {
+            var type = element.getAttribute('data-cms-block');
+            var payload = decodePayload(element.getAttribute('data-cms-payload')) || extractPayloadFromBlock(element, type);
+
+            return {
+                type: type === 'related-posts' ? 'related' : type,
+                payload: payload
+            };
+        }
+
+        function findCmsBlockElement(element) {
+            if (element && element.type !== CKEDITOR.NODE_ELEMENT && element.getParent) {
+                element = element.getParent();
+            }
+
+            while (element && element.type === CKEDITOR.NODE_ELEMENT) {
+                if (element.hasAttribute && element.hasAttribute('data-cms-block')) {
+                    return element;
+                }
+
+                element = element.getParent();
+            }
+
+            return null;
+        }
+
+        function extractPayloadFromBlock(element, type) {
+            var $block = $(element.$);
+            var payloadType = type === 'related-posts' ? 'related' : type;
+
+            if (payloadType === 'faq') {
+                return {
+                    items: $block.find('details').map(function() {
+                        return [
+                            $.trim($(this).find('summary').first().text()),
+                            $.trim($(this).find('p').first().text())
+                        ];
+                    }).get()
+                };
+            }
+
+            if (payloadType === 'cta') {
+                return {
+                    title: $.trim($block.find('h2').first().text()),
+                    description: $.trim($block.find('p').first().text()),
+                    button: $.trim($block.find('a').first().text()),
+                    url: $block.find('a').first().attr('href') || '#'
+                };
+            }
+
+            if (payloadType === 'pricing') {
+                return {
+                    items: $block.find('tbody tr').map(function() {
+                        var $td = $(this).find('td');
+                        return [[
+                            $.trim($td.eq(0).text()),
+                            $.trim($td.eq(1).text()),
+                            $.trim($td.eq(2).text())
+                        ]];
+                    }).get()
+                };
+            }
+
+            if (payloadType === 'gallery') {
+                return {
+                    items: $block.find('figure').map(function() {
+                        var $figure = $(this);
+                        var $img = $figure.find('img').first();
+
+                        return {
+                            url: $img.attr('src') || '',
+                            alt: $img.attr('alt') || '',
+                            caption: $.trim($figure.find('figcaption').first().text())
+                        };
+                    }).get()
+                };
+            }
+
+            if (payloadType === 'related') {
+                return {
+                    items: $block.find('a').map(function() {
+                        var $item = $(this);
+
+                        return {
+                            title: $.trim($item.find('strong').first().text()) || $.trim($item.text()),
+                            url: $item.attr('href') || '',
+                            description: $.trim($item.find('span').first().text())
+                        };
+                    }).get()
+                };
+            }
+
+            if (payloadType === 'lead') {
+                return {
+                    title: $.trim($block.find('h2').first().text()),
+                    description: $.trim($block.find('p').first().text())
+                };
+            }
+
+            return null;
+        }
+
+        function attachEditorBlockClicks(editor) {
+            if (editor._cmsBlockClickAttached) {
+                return;
+            }
+
+            editor._cmsBlockClickAttached = true;
+
+            editor.on('contentDom', function() {
+                editor.document.on('click', function(event) {
+                    var element = event.data.getTarget();
+                    var block = findCmsBlockElement(element);
+
+                    if (!block) {
+                        return;
+                    }
+
+                    var data = getBlockPayloadFromElement(block);
+
+                    if (!data.type || !data.payload) {
+                        return;
+                    }
+
+                    activeEditorId = editor.name;
+                    relatedSearchUrl = $('[data-cms-block-toolbar][data-target-editor="' + activeEditorId + '"]').data('related-search-url');
+                    relatedCurrentId = $('[data-cms-block-toolbar][data-target-editor="' + activeEditorId + '"]').data('current-id') || 0;
+                    event.data.preventDefault();
+                    showBlockForm(data.type, data.payload, block);
+                });
+            });
+
+            editor.on('doubleclick', function(event) {
+                var element = event.data.element;
+                var block = findCmsBlockElement(element);
+
+                if (!block) {
+                    return;
+                }
+
+                var data = getBlockPayloadFromElement(block);
+
+                if (!data.type || !data.payload) {
+                    return;
+                }
+
+                activeEditorId = editor.name;
+                relatedSearchUrl = $('[data-cms-block-toolbar][data-target-editor="' + activeEditorId + '"]').data('related-search-url');
+                relatedCurrentId = $('[data-cms-block-toolbar][data-target-editor="' + activeEditorId + '"]').data('current-id') || 0;
+                showBlockForm(data.type, data.payload, block);
+            });
+        }
+
+        function renderRelatedSelected(items) {
+            var $selected = $form.find('[data-cms-related-selected]');
+            $selected.empty();
+
+            $.each(items || [], function(index, item) {
+                var $item = $('<div>').addClass('cms-related-selected-item').attr('data-related-index', index);
+                $('<strong>').text(item.title || '').appendTo($item);
+                $('<span>').text(item.url || '').appendTo($item);
+                $('<button type="button" class="btn btn-link btn-sm" data-cms-related-remove>&times;</button>').appendTo($item);
+                $selected.append($item);
+            });
+        }
+
+        function addRelatedItem(item) {
+            var items = getSelectedJson('relatedSelectedItems');
+            var exists = false;
+
+            $.each(items, function(index, selected) {
+                if (String(selected.url) === String(item.url)) {
+                    exists = true;
+                }
+            });
+
+            if (!exists) {
+                items.push(item);
+                setSelectedJson('relatedSelectedItems', items);
+                renderRelatedSelected(items);
+                renderPreview();
+            }
+        }
+
+        function searchRelatedPosts(query) {
+            var $results = $form.find('[data-cms-related-results]');
+
+            if (!relatedSearchUrl || query.length < 2) {
+                $results.empty();
+                return;
+            }
+
+            $results.html('<div class="text-muted">Đang tìm...</div>');
+
+            $.ajax({
+                type: 'GET',
+                url: relatedSearchUrl,
+                data: {
+                    q: query,
+                    currentId: relatedCurrentId || 0
+                },
+                success: function(response) {
+                    var items = response.items || [];
+
+                    if (!items.length) {
+                        $results.html('<div class="text-muted">Không tìm thấy bài phù hợp.</div>');
+                        return;
+                    }
+
+                    $results.empty();
+                    $.each(items, function(index, item) {
+                        var $item = $('<button type="button" class="cms-related-result" data-cms-related-add></button>');
+                        $item.data('related-item', item);
+                        $('<strong>').text(item.title || '').appendTo($item);
+                        $('<span>').text(item.url || '').appendTo($item);
+                        $results.append($item);
+                    });
+                },
+                error: function() {
+                    $results.html('<div class="text-danger">Không tìm được bài viết.</div>');
+                }
+            });
+        }
+
+        $(document).on('click', '[data-cms-block-open]', function(event) {
+            event.preventDefault();
+
+            var $toolbar = $(this).closest('[data-cms-block-toolbar]');
+            activeEditorId = $toolbar.data('target-editor');
+            relatedSearchUrl = $toolbar.data('related-search-url');
+            relatedCurrentId = $toolbar.data('current-id') || 0;
+            showBlockForm($(this).data('cms-block-open'));
+        });
+
+        $(document).on('input', '[data-cms-block-form] input, [data-cms-block-form] textarea', function() {
+            renderPreview();
+        });
+
+        $(document).on('change', '[name="galleryMediaItems"], [name="relatedSelectedItems"]', function() {
+            renderPreview();
+        });
+
+        $(document).on('input', '[name="relatedSearch"]', function() {
+            var query = $(this).val();
+            window.clearTimeout(relatedSearchTimer);
+            relatedSearchTimer = window.setTimeout(function() {
+                searchRelatedPosts(query);
+            }, 250);
+        });
+
+        $(document).on('click', '[data-cms-related-add]', function() {
+            addRelatedItem($(this).data('related-item'));
+        });
+
+        $(document).on('click', '[data-cms-related-remove]', function() {
+            var index = $(this).closest('[data-related-index]').data('related-index');
+            var items = getSelectedJson('relatedSelectedItems');
+            items.splice(index, 1);
+            setSelectedJson('relatedSelectedItems', items);
+            renderRelatedSelected(items);
+            renderPreview();
+        });
+
+        $(document).on('click', '[data-cms-block-preview-toggle]', function(event) {
+            event.preventDefault();
+            renderPreview();
+            $preview.toggle();
+        });
+
+        $(document).on('click', '[data-cms-block-insert]', function(event) {
+            event.preventDefault();
+
+            var payload = collectPayload(activeBlockType);
+            var validationError = validatePayload(activeBlockType, payload);
+
+            if (validationError) {
+                alert(validationError);
+                return;
+            }
+
+            var html = buildBlockHtml(activeBlockType, payload);
+            updateEditorBlock(activeEditorId, html);
+            closeBlockModal();
+        });
+
+        if (window.CKEDITOR) {
+            CKEDITOR.on('instanceReady', function(event) {
+                attachEditorBlockClicks(event.editor);
+            });
+
+            $.each(CKEDITOR.instances, function(id, editor) {
+                if (editor.status === 'ready') {
+                    attachEditorBlockClicks(editor);
+                }
+            });
+        }
     }
 
     /**
@@ -1363,6 +2089,7 @@ $(function() {
             pickerState.mode = $button.data('picker-mode') || 'single';
             pickerState.albumInput = $($button.data('album-input'));
             pickerState.albumGrid = $($button.data('album-grid'));
+            pickerState.fromContentBlock = $button.closest('[data-cms-block-modal]').length > 0;
 
             showModal();
             loadPicker($button.data('picker-url'));
@@ -1395,6 +2122,9 @@ $(function() {
 
                 if (added) {
                     $item.addClass('is-selected').attr('aria-pressed', 'true');
+                    if (pickerState.albumInput && pickerState.albumInput.length) {
+                        pickerState.albumInput.trigger('change');
+                    }
                 }
                 return;
             }
@@ -1544,7 +2274,7 @@ $(function() {
             event.preventDefault();
 
             var $grid = $(this).closest('[data-media-album-grid]');
-            var $input = $($grid.closest('[data-media-album-field]').data('album-input'));
+            var $input = getAlbumInputForGrid($grid);
             var $albumItem = $(this).closest('[data-media-album-item]');
             var mediaId = $albumItem.data('media-id');
             $albumItem.remove();
@@ -1556,7 +2286,7 @@ $(function() {
 
         $(document).on('input', '[data-media-album-alt], [data-media-album-caption]', function() {
             var $grid = $(this).closest('[data-media-album-grid]');
-            var $input = $($grid.closest('[data-media-album-field]').data('album-input'));
+            var $input = getAlbumInputForGrid($grid);
             syncAlbumInput($grid, $input);
         });
 
@@ -1592,8 +2322,16 @@ $(function() {
                 $target.before($dragged);
             }
 
-            syncAlbumInput($grid, $($grid.closest('[data-media-album-field]').data('album-input')));
+            syncAlbumInput($grid, getAlbumInputForGrid($grid));
         });
+    }
+
+    function getAlbumInputForGrid($grid) {
+        if ($grid.is('[data-cms-block-gallery-grid]')) {
+            return $('#cmsBlockGalleryItems');
+        }
+
+        return $($grid.closest('[data-media-album-field]').data('album-input'));
     }
 
     function addMediaToAlbum($grid, $input, item) {
@@ -1623,6 +2361,9 @@ $(function() {
             .addClass('media-album-item')
             .attr('data-media-album-item', '')
             .attr('data-media-id', item.id)
+            .attr('data-media-name', item.name || '')
+            .attr('data-media-thumb', item.thumb || '')
+            .attr('data-media-url', item.url || item.thumb || '')
             .attr('draggable', 'true');
 
         $('<div>')
@@ -1668,6 +2409,9 @@ $(function() {
 
             items.push({
                 id: $item.data('media-id'),
+                name: $item.data('media-name') || '',
+                thumb: $item.data('media-thumb') || '',
+                url: $item.data('media-url') || '',
                 alt: $item.find('[data-media-album-alt]').val() || '',
                 caption: $item.find('[data-media-album-caption]').val() || ''
             });
