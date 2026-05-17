@@ -1025,6 +1025,78 @@ $(function() {
     }
 
     function initMakePrimaryCategory() {
+        var $tree = $('[data-category-tree]');
+
+        if ($tree.length) {
+            $tree.each(function() {
+                var $container = $(this);
+                var $primaryInput = $($container.data('primary-target'));
+
+                function syncRows() {
+                    var primaryId = String($primaryInput.val() || '');
+                    var firstCheckedId = '';
+
+                    $container.find('.news-category-tree-row').each(function() {
+                        var $row = $(this);
+                        var $checkbox = $row.find('.news-category-checkbox');
+                        var $radio = $row.find('.news-category-primary-radio');
+                        var categoryId = String($checkbox.data('category-id') || $checkbox.val() || '');
+                        var isChecked = $checkbox.is(':checked');
+
+                        if (isChecked && !firstCheckedId) {
+                            firstCheckedId = categoryId;
+                        }
+
+                        $radio.prop('disabled', !isChecked);
+                        $radio.prop('checked', isChecked && primaryId === categoryId);
+                        $row.toggleClass('is-selected', isChecked);
+                        $row.toggleClass('is-primary', isChecked && primaryId === categoryId);
+                    });
+
+                    if (primaryId && !$container.find('.news-category-primary-radio:checked').length) {
+                        $primaryInput.val('');
+                    }
+                }
+
+                $container.on('change', '.news-category-checkbox', function() {
+                    var categoryId = String($(this).data('category-id') || $(this).val() || '');
+
+                    if (!this.checked && String($primaryInput.val() || '') === categoryId) {
+                        $primaryInput.val('');
+                    }
+
+                    syncRows();
+                });
+
+                $container.on('change', '.news-category-primary-radio', function() {
+                    if (!this.checked) {
+                        return;
+                    }
+
+                    var $row = $(this).closest('.news-category-tree-row');
+                    var $checkbox = $row.find('.news-category-checkbox');
+
+                    $checkbox.prop('checked', true);
+                    $primaryInput.val($(this).val());
+                    syncRows();
+                });
+
+                $container.closest('form').on('submit', function() {
+                    if (!$primaryInput.val()) {
+                        var $firstChecked = $container.find('.news-category-checkbox:checked').first();
+
+                        if ($firstChecked.length) {
+                            $primaryInput.val($firstChecked.data('category-id') || $firstChecked.val());
+                        }
+                    }
+                });
+
+                syncRows();
+            });
+
+            return;
+        }
+
         var categoryPrimaryId = $('#news_categoryPrimary').val();
 
         $("#news_category .checkbox").each(function() {
@@ -1291,6 +1363,12 @@ $(function() {
             function hasCategory() {
                 if (!checkCategory) {
                     return true;
+                }
+
+                var $tree = $('[data-category-tree]');
+
+                if ($tree.length) {
+                    return $tree.find('.news-category-checkbox:checked').length > 0;
                 }
 
                 return $('#' + fieldIds.category + ' input[type="checkbox"]:checked').length > 0;

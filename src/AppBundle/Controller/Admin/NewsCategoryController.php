@@ -11,6 +11,7 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Category\NewsCategoryTreeBuilder;
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Media\MediaSelectionManager;
@@ -39,13 +40,19 @@ class NewsCategoryController extends Controller
      * @Route("/", name="admin_newscategory_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(NewsCategoryTreeBuilder $treeBuilder)
     {
         $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository(NewsCategory::class)->findAll();
+        $categories = $em->getRepository(NewsCategory::class)
+            ->createQueryBuilder('c')
+            ->leftJoin('c.parentcat', 'parent')
+            ->addSelect('parent')
+            ->getQuery()
+            ->getResult();
 
         return $this->render('admin/newscategory/index.html.twig', [
-            'objects' => $categories
+            'categoryTree' => $treeBuilder->flatten($categories),
+            'totalCategories' => count($categories),
         ]);
     }
 

@@ -28,37 +28,80 @@
                     <div class="card">
                         <div class="card-header">
                             <strong class="card-title">{{ 'title.categories'|trans }}</strong>
+                            <span class="badge badge-primary">{{ totalCategories }}</span>
                         </div>
                         <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <table class="table table-striped table-bordered admin-list-table category-tree-table">
+                                <colgroup>
+                                    <col class="category-tree-col-name">
+                                    <col class="category-tree-col-parent">
+                                    <col class="category-tree-col-url">
+                                    <col class="category-tree-col-status">
+                                    <col class="category-tree-col-date">
+                                    <col class="category-tree-col-date">
+                                    <col class="category-tree-col-actions">
+                                </colgroup>
                                 <thead>
                                     <tr>
                                         <th>{{ 'label.name'|trans }}</th>
                                         <th>{{ 'label.parentcat'|trans }}</th>
                                         <th>{{ 'label.url'|trans }}</th>
+                                        <th class="text-center">Status</th>
                                         <th>{{ 'label.published_at'|trans }}</th>
                                         <th>{{ 'Updated' }}</th>
-                                        <th>{{ 'label.actions'|trans }}</th>
+                                        <th class="text-center">{{ 'label.actions'|trans }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for row in objects %}
-                                    <tr>
-                                        <td><a class="btn-link" href="{{ path('admin_news_list_by_category', {categoryId: row.id}) }}">{{ row.getName() }}<a></td>
-                                        <td>{{ row.getParentcat() }}</td>
-                                        <td>{{ row.getUrl() }}</td>
-                                        <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
-                                        <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
-                                        <td>
-                                            <div class="item-actions">
-                                                <a href="{{ path('admin_newscategory_edit', {id: row.id}) }}" class="btn-sm btn-edit">
-                                                    <i class="fa fa-edit" aria-hidden="true"></i>
-                                                </a>
+                                    {% for item in categoryTree %}
+                                        {% set row = item.category %}
+                                        <tr class="{{ item.depth == 0 ? 'category-tree-parent' : 'category-tree-child' }}">
+                                            <td class="category-tree-name">
+                                                <span class="category-tree-indent" style="--category-depth: {{ item.depth > 0 ? item.depth - 1 : 0 }}"></span>
+                                                {% if item.depth > 0 %}
+                                                    <i class="fa fa-file-text category-tree-file" aria-hidden="true"></i>
+                                                {% else %}
+                                                    <i class="fa fa-folder category-tree-folder" aria-hidden="true"></i>
+                                                {% endif %}
+                                                <a class="btn-link" href="{{ path('admin_news_list_by_category', {categoryId: row.id}) }}">{{ row.getName() }}</a>
+                                            </td>
+                                            <td>
+                                                {% if item.parent %}
+                                                    {{ item.parent.name }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <code>{{ row.getUrl() }}</code>
+                                            </td>
+                                            <td class="text-center">
+                                                {% if item.hasCycle %}
+                                                    <span class="badge badge-danger">Cycle</span>
+                                                {% elseif item.isOrphan %}
+                                                    <span class="badge badge-warning">Orphan</span>
+                                                {% elseif row.getEnable() %}
+                                                    <span class="badge badge-success">Online</span>
+                                                {% else %}
+                                                    <span class="badge badge-secondary">Offline</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                            <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                            <td class="text-center">
+                                                <div class="item-actions">
+                                                    <a href="{{ path('admin_newscategory_edit', {id: row.id}) }}" class="btn-sm btn-edit" title="Edit">
+                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                    </a>
 
-                                                {{ include('admin/newscategory/_delete_form.html.twig', {category: row}, with_context = false) }}
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                    {{ include('admin/newscategory/_delete_form.html.twig', {category: row}, with_context = false) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Chưa có danh mục.</td>
+                                        </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>

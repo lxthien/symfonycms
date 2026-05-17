@@ -34,7 +34,7 @@ class ScheduledPublishCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $now = new \DateTime();
+        $now = new \DateTime('now', new \DateTimeZone('Asia/Ho_Chi_Minh'));
 
         $scheduledPosts = $this->em->getRepository(News::class)->createQueryBuilder('n')
             ->where('n.status = :status')

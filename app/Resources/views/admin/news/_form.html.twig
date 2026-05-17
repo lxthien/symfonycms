@@ -25,7 +25,10 @@
     {{ form_row(form.contents) }}
     {{ form_row(form.ordering) }}
     {{ form_widget(form.categoryPrimary) }}
-    {{ form_row(form.category) }}
+    {{ include('admin/news/_category_tree_field.html.twig', {
+        form: form,
+        category_tree: category_tree|default([]),
+    }, with_context = false) }}
     {{ form_row(form.tags) }}
 
     <div class="card-title">

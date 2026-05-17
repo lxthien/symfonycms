@@ -4,12 +4,12 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
+use AppBundle\Form\Type\LocalDateTimeType;
 use AppBundle\Form\Type\TagsInputType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -44,10 +44,8 @@ class NewsType extends AbstractType
                 ],
                 'label' => 'Trạng thái',
             ])
-            ->add('scheduledAt', DateTimeType::class, [
+            ->add('scheduledAt', LocalDateTimeType::class, [
                 'required' => false,
-                'widget' => 'single_text',
-                'html5' => true,
                 'label' => 'Ngày đặt lịch',
                 'attr' => ['class' => 'js-scheduled-at'],
             ])

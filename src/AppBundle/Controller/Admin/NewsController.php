@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
 
+use AppBundle\Category\NewsCategoryTreeBuilder;
 use AppBundle\Entity\ContentRevision;
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
@@ -206,7 +207,7 @@ class NewsController extends Controller
      * @Route("/new", name="admin_news_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request, Slugger $slugger, RevisionManager $revisionManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager)
+    public function newAction(Request $request, Slugger $slugger, RevisionManager $revisionManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager, NewsCategoryTreeBuilder $categoryTreeBuilder)
     {
         $news = new News();
         $news->setAuthor($this->getUser());
@@ -228,6 +229,7 @@ class NewsController extends Controller
                     'news' => $news,
                     'form' => $form->createView(),
                     'album_json' => $form->get('albumItems')->getData() ?: '[]',
+                    'category_tree' => $this->getCategoryTree($categoryTreeBuilder),
                 ]);
             }
 
@@ -270,6 +272,7 @@ class NewsController extends Controller
                 'news' => $news,
                 'form' => $form->createView(),
                 'album_json' => $form->get('albumItems')->getData() ?: '[]',
+                'category_tree' => $this->getCategoryTree($categoryTreeBuilder),
             ]);
         }
 
@@ -277,6 +280,7 @@ class NewsController extends Controller
             'news' => $news,
             'form' => $form->createView(),
             'album_json' => $form->get('albumItems')->getData() ?: '[]',
+            'category_tree' => $this->getCategoryTree($categoryTreeBuilder),
         ]);
     }
 
@@ -287,7 +291,7 @@ class NewsController extends Controller
      * @Route("/{id}/edit", requirements={"id": "\d+"}, name="admin_news_edit")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, News $news, Slugger $slugger, RevisionManager $revisionManager, RedirectManager $redirectManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager)
+    public function editAction(Request $request, News $news, Slugger $slugger, RevisionManager $revisionManager, RedirectManager $redirectManager, MediaSelectionManager $mediaSelection, NewsMediaManager $newsMediaManager, NewsCategoryTreeBuilder $categoryTreeBuilder)
     {
         //$this->denyAccessUnlessGranted('edit', $category, 'Posts can only be edited by their authors.');
 
@@ -310,6 +314,7 @@ class NewsController extends Controller
                     'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
                     'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
                     'album_json' => $form->get('albumItems')->getData() ?: '[]',
+                    'category_tree' => $this->getCategoryTree($categoryTreeBuilder),
                 ]);
             }
 
@@ -359,6 +364,7 @@ class NewsController extends Controller
                     'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
                     'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
                     'album_json' => $form->get('albumItems')->getData() ?: '[]',
+                    'category_tree' => $this->getCategoryTree($categoryTreeBuilder),
                 ]);
             }
 
@@ -369,7 +375,20 @@ class NewsController extends Controller
             'latestAutosave' => $this->getDoctrine()->getRepository(ContentRevision::class)->findLatestAutosaveByNews($news),
             'revisionDiffs' => $this->getRevisionDiffs($news, $revisionManager),
             'album_json' => $form->get('albumItems')->getData() ?: '[]',
+            'category_tree' => $this->getCategoryTree($categoryTreeBuilder),
         ]);
+    }
+
+    private function getCategoryTree(NewsCategoryTreeBuilder $categoryTreeBuilder)
+    {
+        $categories = $this->getDoctrine()->getRepository(NewsCategory::class)
+            ->createQueryBuilder('c')
+            ->leftJoin('c.parentcat', 'parent')
+            ->addSelect('parent')
+            ->getQuery()
+            ->getResult();
+
+        return $categoryTreeBuilder->flatten($categories);
     }
 
     private function applySelectedMedia($form, News $news, MediaSelectionManager $mediaSelection)
