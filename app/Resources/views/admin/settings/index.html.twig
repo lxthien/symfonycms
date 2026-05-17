@@ -1,0 +1,80 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_setting_index' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{% trans from 'settings' %}settings{% endtrans %}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="default-tab">
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">{% trans from 'settings' %}general{% endtrans %}</a>
+                                        <a class="nav-item nav-link" id="nav-seo-tab" data-toggle="tab" href="#nav-seo" role="tab" aria-controls="nav-seo" aria-selected="false">{% trans from 'settings' %}seo{% endtrans %}</a>
+                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">{% trans from 'settings' %}contact{% endtrans %}</a>
+                                        <a class="nav-item nav-link" id="nav-social-networks-tab" data-toggle="tab" href="#nav-social-networks" role="tab" aria-controls="nav-social-networks" aria-selected="false">{% trans from 'settings' %}social_networks{% endtrans %}</a>
+                                    </div>
+                                </nav>
+
+                                {{ form_start(settings_form) }}
+                                    <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                            {% for field in settings_groups.general %}
+                                                <div class="form-group">
+                                                    {{ form_label(attribute(settings_form, field)) }}
+                                                    {{ form_errors(attribute(settings_form, field)) }}
+                                                    {{ form_widget(attribute(settings_form, field)) }}
+                                                    {% if field == 'listCategoryOnHomepage' %}
+                                                        <small class="form-text text-muted">Example: 15,5</small>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <div class="tab-pane fade" id="nav-seo" role="tabpanel" aria-labelledby="nav-seo-tab">
+                                            {% for field in settings_groups.seo %}
+                                                <div class="form-group">
+                                                    {{ form_label(attribute(settings_form, field)) }}
+                                                    {{ form_errors(attribute(settings_form, field)) }}
+                                                    {{ form_widget(attribute(settings_form, field)) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                            {% for field in settings_groups.contact %}
+                                                <div class="form-group">
+                                                    {{ form_label(attribute(settings_form, field)) }}
+                                                    {{ form_errors(attribute(settings_form, field)) }}
+                                                    {{ form_widget(attribute(settings_form, field)) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <div class="tab-pane fade" id="nav-social-networks" role="tabpanel" aria-labelledby="nav-social-networks-tab">
+                                            {% for field in settings_groups.social_networks %}
+                                                <div class="form-group">
+                                                    {{ form_label(attribute(settings_form, field)) }}
+                                                    {{ form_errors(attribute(settings_form, field)) }}
+                                                    {{ form_widget(attribute(settings_form, field)) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+
+                                        <input class="btn btn-primary" type="submit" value="{% trans from 'settings' %}save{% endtrans %}" />
+                                    </div>
+                                {{ form_end(settings_form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

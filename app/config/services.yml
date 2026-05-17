@@ -37,6 +37,14 @@ services:
     AppBundle\Twig\AppExtension:
         $locales: '%app_locales%'
 
+    AppBundle\Twig\SettingsExtension:
+        tags:
+            - { name: twig.extension }
+
+    settings_manager:
+        alias: AppBundle\Settings\SettingsManager
+        public: true
+
     AppBundle\EventListener\CommentNotificationSubscriber:
         $sender: '%app.notifications.email_sender%'
 

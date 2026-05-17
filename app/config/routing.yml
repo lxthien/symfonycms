@@ -53,6 +53,3 @@ list_category:
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
 
-settings:
-    resource: "@DmishhSettingsBundle/Resources/config/routing.yml"
-    prefix: /admin/settings
