@@ -34,7 +34,7 @@ function intHandleFormComment() {
 }
 
 function intHandleFormReplyComment() {
-    var $commentReply = $('.comment-reply-link');
+    var $commentReply = $('.comment-reply-link, .comment-reply-btn');
     var $formComment = $('#form-comment');
 
     $commentReply.click(function(e) {

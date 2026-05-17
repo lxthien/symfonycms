@@ -206,9 +206,9 @@ class NewsController extends Controller
         $comments = $this->getDoctrine()
             ->getRepository(Comment::class)
             ->createQueryBuilder('c')
-            ->where('c.news_id = :news_id')
+            ->where('c.news = :news')
             ->andWhere('c.approved = :approved')
-            ->setParameter('news_id', $post->getId())
+            ->setParameter('news', $post)
             ->setParameter('approved', 1)
             ->getQuery()->getResult();
 
@@ -455,9 +455,9 @@ class NewsController extends Controller
         $comments = $this->getDoctrine()
             ->getRepository(Comment::class)
             ->createQueryBuilder('c')
-            ->where('c.news_id = :news_id')
+            ->where('c.news = :news')
             ->andWhere('c.approved = :approved')
-            ->setParameter('news_id', $post->getId())
+            ->setParameter('news', $post)
             ->setParameter('approved', 1)
             ->getQuery()->getResult();
 
@@ -763,9 +763,11 @@ class NewsController extends Controller
     {
         $comment = new Comment();
         $comment->setIp($this->container->get('request_stack')->getCurrentRequest()->getClientIp());
-        $comment->setNewsId($post->getId());
+        $comment->setNews($post);
 
-        $form = $this->createFormBuilder($comment)
+        $form = $this->createFormBuilder($comment, array(
+            'csrf_protection' => false,
+        ))
             ->setAction($this->generateUrl('handle_comment_form'))
             ->add('content', TextareaType::class, array(
                 'required' => true,
@@ -775,8 +777,8 @@ class NewsController extends Controller
             ->add('author', TextType::class, array('label' => 'label.author'))
             ->add('phone', TextType::class, array('label' => 'label.phone'))
             ->add('ip', HiddenType::class)
-            ->add('news_id', HiddenType::class)
-            ->add('comment_id', HiddenType::class)
+            ->add('news_id', HiddenType::class, array('mapped' => false, 'data' => $post->getId()))
+            ->add('comment_id', HiddenType::class, array('mapped' => false, 'required' => false))
             ->add('send', ButtonType::class, array('label' => 'label.send'))
             ->getForm();
 
@@ -801,20 +803,52 @@ class NewsController extends Controller
             );
         } else {
             $comment = new Comment();
+            $em = $this->getDoctrine()->getManager();
+            $submittedData = (array) $request->request->get('form', array());
+            $newsId = isset($submittedData['news_id']) ? (int) $submittedData['news_id'] : 0;
+            $parentId = isset($submittedData['comment_id']) ? (int) $submittedData['comment_id'] : 0;
+            $news = $em->getRepository(News::class)->find($newsId);
 
-            $form = $this->createFormBuilder($comment)
+            if (!$news) {
+                return new Response(
+                    json_encode(
+                        array(
+                            'status' => 'error',
+                            'message' => '<div class="alert alert-warning" role="alert">' . $this->get('translator')->trans('comment.have_a_problem_on_your_request') . '</div>'
+                        )
+                    )
+                );
+            }
+
+            $comment->setNews($news);
+            $comment->setIp($request->getClientIp());
+
+            $form = $this->createFormBuilder($comment, array(
+                'csrf_protection' => false,
+            ))
                 ->add('content', TextareaType::class)
                 ->add('author', TextType::class)
                 ->add('phone', TextType::class)
                 ->add('ip', HiddenType::class)
-                ->add('news_id', HiddenType::class)
-                ->add('comment_id', HiddenType::class)
+                ->add('news_id', HiddenType::class, array('mapped' => false))
+                ->add('comment_id', HiddenType::class, array('mapped' => false, 'required' => false))
                 ->getForm();
 
             $form->handleRequest($request);
+            $comment->setNews($news);
+            $comment->setIp($request->getClientIp());
+
+            if ($form->isSubmitted()) {
+                if ($parentId > 0) {
+                    $parent = $em->getRepository(Comment::class)->find($parentId);
+
+                    if ($parent && $parent->getNewsId() === $news->getId()) {
+                        $comment->setParent($parent);
+                    }
+                }
+            }
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($comment);
                 $em->flush();
 

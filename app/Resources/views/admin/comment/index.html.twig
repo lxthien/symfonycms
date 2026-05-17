@@ -49,31 +49,73 @@
                                     <thead>
                                         <tr>
                                             <th class="admin-list-check"><input type="checkbox" data-bulk-check-all></th>
-                                            <th>{{ 'label.author'|trans }}</th>
-                                            <th>{{ 'label.response.on.post'|trans }}</th>
-                                            <th>{{ 'label.status'|trans }}</th>
-                                            <th>{{ 'label.published_at'|trans }}</th>
-                                            <th>{{ 'label.actions'|trans }}</th>
+                                            <th class="admin-comment-author-col">{{ 'label.author'|trans }}</th>
+                                            <th class="admin-comment-content-col">{{ 'label.response.on.post'|trans }}</th>
+                                            <th class="admin-comment-status-col">{{ 'label.status'|trans }}</th>
+                                            <th class="admin-comment-date-col">{{ 'label.published_at'|trans }}</th>
+                                            <th class="admin-comment-actions-col text-center">{{ 'label.actions'|trans }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for row in pagination %}
-                                            <tr>
+                                            {% set isReply = row.getParent() is not empty %}
+                                            <tr class="admin-comment-row {{ isReply ? 'is-reply' : 'is-parent' }}">
                                                 <td><input type="checkbox" name="ids[]" value="{{ row.id }}" form="admin-comment-bulk-form" data-bulk-check></td>
-                                                <td>
+                                                <td class="admin-comment-author-cell">
                                                     <strong>{{ row.getAuthor() }}</strong><br />
                                                     <a href="mailto:{{ row.getEmail() }}"><i>{{ row.getEmail() }}</i></a><br />
                                                     <span>{{ row.getPhone() }}</span><br />
                                                     <a href="{{ path('admin_comment_edit', {id: row.id}) }}"><i>{{ row.getIp() }}</i></a>
                                                 </td>
-                                                <td>
-                                                    <a href="{{ path('admin_news_edit', {id: row.getNewsId()}) }}"><strong>{{ row.getNews() }}</strong></a>
-                                                    <p>{{ row.getContent()|striptags|slice(0, 200)|raw }}</p>
+                                                <td class="admin-comment-content-cell">
+                                                    <div class="admin-comment-thread-node">
+                                                        <div class="admin-comment-thread-icon">
+                                                            {% if isReply %}
+                                                                <i class="fa fa-reply" aria-hidden="true"></i>
+                                                            {% else %}
+                                                                <i class="fa fa-comment" aria-hidden="true"></i>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="admin-comment-thread-body">
+                                                            {% if row.getNews() %}
+                                                                <a href="{{ path(row.getNews().isPage ? 'admin_page_edit' : 'admin_news_edit', {id: row.getNewsId()}) }}">
+                                                                    <strong>{{ row.getNews().getTitle() }}</strong>
+                                                                </a>
+                                                            {% else %}
+                                                                <strong class="text-danger">Bài viết không tồn tại</strong>
+                                                            {% endif %}
+                                                            {% if isReply %}
+                                                                <small class="d-block text-muted">Reply cho #{{ row.getParent().getId() }} - {{ row.getParent().getAuthor() }}</small>
+                                                            {% endif %}
+                                                            <p class="admin-comment-excerpt">{{ row.getContent()|striptags|slice(0, 260)|raw }}</p>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td>{{ row.getApproved() ? 'Đã duyệt' : 'Chờ duyệt' }}</td>
-                                                <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                                 <td>
-                                                    <div class="item-actions">
+                                                    {% if row.getApproved() %}
+                                                        <span class="badge badge-success">Đã duyệt</span>
+                                                    {% else %}
+                                                        <span class="badge badge-warning">Chờ duyệt</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                                <td class="text-center">
+                                                    <div class="item-actions admin-comment-actions">
+                                                        {% if row.getApproved() %}
+                                                            <form action="{{ path('admin_comment_unapprove', {id: row.id}) }}" method="post" class="admin-inline-form">
+                                                                <input type="hidden" name="token" value="{{ csrf_token('comment_status_' ~ row.id) }}">
+                                                                <button type="submit" class="btn-sm btn-link" title="Bỏ duyệt">
+                                                                    <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                                                </button>
+                                                            </form>
+                                                        {% else %}
+                                                            <form action="{{ path('admin_comment_approve', {id: row.id}) }}" method="post" class="admin-inline-form">
+                                                                <input type="hidden" name="token" value="{{ csrf_token('comment_status_' ~ row.id) }}">
+                                                                <button type="submit" class="btn-sm btn-link text-success" title="Duyệt nhanh">
+                                                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                                                </button>
+                                                            </form>
+                                                        {% endif %}
                                                         <a href="{{ path('admin_comment_edit', {id: row.id}) }}" class="btn-sm btn-edit">
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </a>

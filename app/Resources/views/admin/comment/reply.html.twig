@@ -16,6 +16,13 @@
                         <div class="card-body">
                             <div id="pay-invoice">
                                 <div class="card-body">
+                                    {% if parentComment is defined %}
+                                        <div class="alert alert-info">
+                                            <strong>Đang trả lời:</strong> {{ parentComment.author }}
+                                            <div>{{ parentComment.content|striptags|slice(0, 220) }}</div>
+                                        </div>
+                                    {% endif %}
+
                                     {{ form_start(form) }}
                                         {{ form_row(form.content) }}
                                         {{ form_row(form.approved) }}
