@@ -1,12 +1,13 @@
-{% if comments|length > 0 %}
+{% set comment_threads = commentThreads|default([]) %}
+{% if comment_threads|length > 0 %}
     <div class="comments-section" id="list-comments">
         <h3 class="section-title">
             <i class="fas fa-comments"></i>
             <span>{{ 'comments.count' | trans({ '%count%': comments|length }) }}</span>
         </h3>
         <div class="comments-list">
-            {% for comment in comments %}
-                {% if comment.getCommentId is null %}
+            {% for thread in comment_threads %}
+                {% set comment = thread.comment %}
                 {% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
                 <div class="comment-item {{ loop.first ? 'first' : '' }}" id="comment-{{ comment.getId() }}">
                     <div class="comment-avatar">
@@ -24,8 +25,7 @@
                             <i class="fas fa-reply"></i> {{ 'comment.reply'|trans }}
                         </a>
                         
-                        {% for replyComment in comments %}
-                            {% if replyComment.getCommentId is same as (comment.getId()) %}
+                        {% for replyComment in thread.replies %}
                             <div class="comment-reply">
                                 <div class="comment-avatar">
                                     <img
@@ -40,11 +40,9 @@
                                     <div class="comment-content">{{ replyComment.getContent()|raw }}</div>
                                 </div>
                             </div>
-                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
-                {% endif %}
             {% endfor %}
         </div>
     </div>

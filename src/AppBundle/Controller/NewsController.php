@@ -48,89 +48,115 @@ class NewsController extends Controller
      */
     public function listAction($level1, $level2 = null, $page = 1)
     {
-        $category = $this->getDoctrine()
-            ->getRepository(NewsCategory::class)
-            ->findOneBy(array('url' => $level1, 'enable' => 1));
+        $em = $this->getDoctrine()->getManager();
+        $categoryRepository = $em->getRepository(NewsCategory::class);
+        $category = $categoryRepository->findOneBy(array('url' => $level1, 'enable' => true));
 
         if (!$category) {
             throw $this->createNotFoundException("The item does not exist");
         }
 
+        $currentCategory = $category;
+        $subCategory = null;
+        $listCategories = array();
+        $listCategoriesIds = array($category->getId());
+
         if (!empty($level2)) {
-            $subCategory = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->findOneBy(array('url' => $level2, 'enable' => 1));
+            $subCategory = $categoryRepository->findOneBy(array('url' => $level2, 'enable' => true));
 
             if (!$subCategory) {
                 throw $this->createNotFoundException("The item does not exist");
             }
 
-            if ($subCategory->getParentcat()->getId() != $category->getId()) {
+            if (!is_object($subCategory->getParentcat()) || $subCategory->getParentcat()->getId() != $category->getId()) {
                 return $this->redirectToRoute('homepage', [], 301);
+            }
+
+            $currentCategory = $subCategory;
+            $listCategoriesIds = array($subCategory->getId());
+        } else {
+            $listCategories = $categoryRepository
+                ->createQueryBuilder('c')
+                ->where('c.parentcat = :parentcat')
+                ->andWhere('c.enable = :enabled')
+                ->setParameter('parentcat', $category)
+                ->setParameter('enabled', true)
+                ->orderBy('c.name', 'ASC')
+                ->getQuery()
+                ->getResult();
+
+            foreach ($listCategories as $value) {
+                $listCategoriesIds[] = $value->getId();
             }
         }
 
         // Init breadcrum for category page
-        $breadcrumbs = $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
+        $breadcrumbs = $this->buildBreadcrums($currentCategory, null, null);
 
-        $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
-        $orderingData = (array) (json_decode($ordering));
-        $orderingKey = array_keys($orderingData);
+        $ordering = $this->resolveCategoryOrdering($currentCategory, $category);
 
-        $listCategories = array();
-
-        if (empty($level2)) {
-            // Get all post for this category and sub category
-            $listCategoriesIds[] = $category->getId();
-
-            $allSubCategories = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->createQueryBuilder('c')
-                ->where('c.parentcat = (:parentcat)')
-                ->setParameter('parentcat', $category->getId())
-                ->getQuery()->getResult();
-
-            foreach ($allSubCategories as $value) {
-                $listCategories[] = $value;
-                $listCategoriesIds[] = $value->getId();
-            }
-
-            $news = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('n')
-                ->leftJoin('n.category', 't')
-                ->where('t.id IN (:listCategoriesIds)')
-                ->andWhere('n.status = :status')
-                ->setParameter('listCategoriesIds', $listCategoriesIds)
-                ->setParameter('status', 'published')
-                ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                ->getQuery()->getResult();
-        } else {
-            $news = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('n')
-                ->leftJoin('n.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->andWhere('n.status = :status')
-                ->setParameter('newscategory_id', $subCategory->getId())
-                ->setParameter('status', 'published')
-                ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                ->getQuery()->getResult();
-        }
+        $query = $em->getRepository(News::class)
+            ->createQueryBuilder('n')
+            ->select('DISTINCT n')
+            ->leftJoin('n.category', 't')
+            ->where('t.id IN (:listCategoriesIds)')
+            ->andWhere('n.status = :status')
+            ->andWhere('n.postType = :postType')
+            ->setParameter('listCategoriesIds', array_values(array_unique($listCategoriesIds)))
+            ->setParameter('status', News::STATUS_PUBLISHED)
+            ->setParameter('postType', 'post')
+            ->orderBy('n.' . $ordering['field'], $ordering['direction'])
+            ->getQuery();
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $news,
-            $page,
+            $query,
+            max(1, (int) $page),
             $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
         );
 
         return $this->render('news/list.html.twig', [
             'baseUrl' => !empty($level2) ? $this->generateUrl('list_category', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL) : $this->generateUrl('news_category', array('level1' => $level1), UrlGeneratorInterface::ABSOLUTE_URL),
-            'category' => !empty($level2) ? $subCategory : $category,
+            'category' => $currentCategory,
             'listCategories' => count($listCategories) > 0 ? $listCategories : NULL,
             'pagination' => $pagination
         ]);
+    }
+
+    private function resolveCategoryOrdering(NewsCategory $currentCategory, NewsCategory $parentCategory)
+    {
+        $sortBy = $currentCategory->getSortBy() ?: $parentCategory->getSortBy();
+        $orderingData = $sortBy ? json_decode($sortBy, true) : null;
+
+        if (!is_array($orderingData) || count($orderingData) === 0) {
+            $orderingData = array('createdAt' => 'DESC');
+        }
+
+        $field = key($orderingData);
+        $direction = strtoupper((string) current($orderingData));
+        $allowedFields = array(
+            'createdAt' => 'createdAt',
+            'updatedAt' => 'updatedAt',
+            'publishedAt' => 'publishedAt',
+            'ordering' => 'ordering',
+            'viewCounts' => 'viewCounts',
+            'title' => 'title',
+            'name' => 'title',
+            'id' => 'id',
+        );
+
+        if (!isset($allowedFields[$field])) {
+            $field = 'createdAt';
+        }
+
+        if (!in_array($direction, array('ASC', 'DESC'), true)) {
+            $direction = 'DESC';
+        }
+
+        return array(
+            'field' => $allowedFields[$field],
+            'direction' => $direction,
+        );
     }
 
     /**
@@ -144,14 +170,37 @@ class NewsController extends Controller
     public function showAction($slug, Request $request, NewsViewTracker $viewTracker)
     {
         $previewToken = $request->query->get('preview_token');
-        $repo = $this->getDoctrine()->getRepository(News::class);
+        $em = $this->getDoctrine()->getManager();
+        $postRepository = $em->getRepository(News::class);
 
         if ($previewToken) {
-            // Secure preview: only accessible with a valid token
-            $post = $repo->findOneBy(['previewToken' => $previewToken, 'url' => $slug]);
+            if (!$this->isValidPreviewToken($previewToken)) {
+                throw $this->createNotFoundException("The item does not exist");
+            }
+
+            // Secure preview: only accessible with a valid token.
+            $post = $postRepository->createQueryBuilder('n')
+                ->leftJoin('n.category', 'c')
+                ->addSelect('c')
+                ->where('n.previewToken = :previewToken')
+                ->andWhere('n.url = :slug')
+                ->setParameter('previewToken', $previewToken)
+                ->setParameter('slug', $slug)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
         } else {
-            // Normal access: only published content
-            $post = $repo->findOneBy(array('url' => $slug, 'status' => 'published'));
+            // Normal access: only published content.
+            $post = $postRepository->createQueryBuilder('n')
+                ->leftJoin('n.category', 'c')
+                ->addSelect('c')
+                ->where('n.url = :slug')
+                ->andWhere('n.status = :status')
+                ->setParameter('slug', $slug)
+                ->setParameter('status', News::STATUS_PUBLISHED)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
         }
 
         if (!$post) {
@@ -160,57 +209,13 @@ class NewsController extends Controller
 
         $viewCookie = $viewTracker->track($post, $request);
 
-        $categoryPrimary = $request->query->get('cat');
-
-        if (!$categoryPrimary) {
-            if ($post->getCategoryPrimary() > 0) {
-                $categoryPrimary = $post->getCategoryPrimary();
-            } else {
-                if (!$post->getCategory()->isEmpty()) {
-                    $categoryPrimary = $post->getCategory()[0]->getId();
-                }
-            }
-        } else {
-            $catPrimary = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->findOneByUrl($categoryPrimary);
-
-            $categoryPrimary = $catPrimary->getId();
-        }
-
-        if ($categoryPrimary > 0) {
-            $category = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->find($categoryPrimary);
-
-            // Get news related
-            $relatedNews = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('r')
-                ->leftJoin('r.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->andWhere('r.id <> :id')
-                ->andWhere('r.postType = :postType')
-                ->andWhere('r.status = :status')
-                ->setParameter('newscategory_id', $categoryPrimary)
-                ->setParameter('id', $post->getId())
-                ->setParameter('postType', $post->getPostType())
-                ->setParameter('status', 'published')
-                ->setMaxResults(16)
-                ->orderBy('r.createdAt', 'DESC')
-                ->getQuery()
-                ->getResult();
-        }
+        $category = $this->resolvePrimaryCategory($post, $request->query->get('cat'));
+        $categoryPrimary = $category ? $category->getId() : 0;
+        $relatedNews = $category ? $this->findRelatedNews($post, $categoryPrimary, 16) : array();
 
         // Get the list comment for post
-        $comments = $this->getDoctrine()
-            ->getRepository(Comment::class)
-            ->createQueryBuilder('c')
-            ->where('c.news = :news')
-            ->andWhere('c.approved = :approved')
-            ->setParameter('news', $post)
-            ->setParameter('approved', 1)
-            ->getQuery()->getResult();
+        $comments = $this->findApprovedComments($post);
+        $commentThreads = $this->buildCommentThreads($comments);
 
         // Render form comment for post.
         $form = $this->renderFormComment($post);
@@ -223,79 +228,197 @@ class NewsController extends Controller
             ->add('rating', RatingType::class)
             ->getForm();
 
-
-        // Get rating of the post
-        $repositoryRating = $this->getDoctrine()->getManager();
-
-        $queryRating = $repositoryRating->createQuery(
-            'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
-            FROM AppBundle:Rating r
-            WHERE r.news_id = :news_id'
-        )->setParameter('news_id', $post->getId());
-
-        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
+        $rating = $this->getRatingSummary($post);
 
         // Init breadcrum for the post
         $breadcrumbs = $this->buildBreadcrums(null, $post, null, $categoryPrimary);
 
         // Filter content to support Lazy Loading
         $contentsLazy = $this->lazyloadContent($post);
+        $articleBody = $this->strip_tags_content($contentsLazy);
 
         $qAs = $post->getQa();
+        $imageSize = $this->getPostImageSize($post);
+        $template = $post->isPage() ? 'news/page.html.twig' : 'news/show.html.twig';
+        $parameters = array(
+            'post' => $post,
+            'qAs' => !empty($qAs) ? json_decode($qAs) : NULL,
+            'contentsLazy' => $contentsLazy,
+            'form' => $form->createView(),
+            'formRating' => $formRating->createView(),
+            'rating' => $rating['display'],
+            'ratingPercent' => $rating['percent'],
+            'ratingValue' => $rating['value'],
+            'ratingCount' => $rating['count'],
+            'comments' => $comments,
+            'commentThreads' => $commentThreads,
+            'imageSize' => $imageSize,
+        );
 
-        if ($post->isPage()) {
-            $imagePath = $this->helper->asset($post, 'imageFile');
-            $imagePath = substr($imagePath, 1);
-            $imageSize = @getimagesize($imagePath);
-
-            $response = $this->render('news/page.html.twig', [
-                'post' => $post,
-                'qAs' => !empty($qAs) ? json_decode($qAs) : NULL,
-                'contentsLazy' => $contentsLazy,
-                'form' => $form->createView(),
-                'formRating' => $formRating->createView(),
-                'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue' => round($rating['ratingValue']),
-                'ratingCount' => round($rating['ratingCount']),
-                'comments' => $comments,
-                'imageSize' => $imageSize
-            ]);
-
-            if ($viewCookie) {
-                $response->headers->setCookie($viewCookie);
-            }
-
-            return $response;
-        } else {
-            $imagePath = $this->helper->asset($post, 'imageFile');
-            $imagePath = substr($imagePath, 1);
-            $imageSize = @getimagesize($imagePath);
-
-            $response = $this->render('news/show.html.twig', [
-                'post' => $post,
-                'qAs' => !empty($qAs) ? json_decode($qAs) : NULL,
-                'contentsLazy' => $contentsLazy,
-                'articleBody' => $this->strip_tags_content($contentsLazy),
-                'wordCount' => str_word_count($this->strip_tags_content($contentsLazy)),
-                'relatedNews' => !empty($relatedNews) ? $relatedNews : NULL,
-                'form' => $form->createView(),
-                'formRating' => $formRating->createView(),
-                'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue' => round($rating['ratingValue']),
-                'ratingCount' => round($rating['ratingCount']),
-                'comments' => $comments,
-                'imageSize' => $imageSize,
-                'category' => !empty($category) ? $category : NULL
-            ]);
-
-            if ($viewCookie) {
-                $response->headers->setCookie($viewCookie);
-            }
-
-            return $response;
+        if (!$post->isPage()) {
+            $parameters['articleBody'] = $articleBody;
+            $parameters['wordCount'] = str_word_count($articleBody);
+            $parameters['relatedNews'] = !empty($relatedNews) ? $relatedNews : NULL;
+            $parameters['category'] = $category;
         }
+
+        $response = $this->render($template, $parameters);
+
+        if ($viewCookie) {
+            $response->headers->setCookie($viewCookie);
+        }
+
+        return $response;
+    }
+
+    private function isValidPreviewToken($previewToken)
+    {
+        return is_string($previewToken) && preg_match('/^[a-f0-9]{32,64}$/i', $previewToken);
+    }
+
+    private function resolvePrimaryCategory(News $post, $categoryParam = null)
+    {
+        $categoryRepository = $this->getDoctrine()->getRepository(NewsCategory::class);
+
+        if ($categoryParam) {
+            $category = ctype_digit((string) $categoryParam)
+                ? $categoryRepository->find((int) $categoryParam)
+                : $categoryRepository->findOneByUrl($categoryParam);
+
+            if ($category) {
+                return $category;
+            }
+        }
+
+        if ($post->getCategoryPrimary() > 0) {
+            $category = $categoryRepository->find($post->getCategoryPrimary());
+
+            if ($category) {
+                return $category;
+            }
+        }
+
+        if (!$post->getCategory()->isEmpty()) {
+            return $post->getCategory()->first();
+        }
+
+        return null;
+    }
+
+    private function findRelatedNews(News $post, $categoryPrimary, $limit)
+    {
+        return $this->getDoctrine()
+            ->getRepository(News::class)
+            ->createQueryBuilder('r')
+            ->leftJoin('r.category', 't')
+            ->where('t.id = :newscategory_id')
+            ->andWhere('r.id <> :id')
+            ->andWhere('r.postType = :postType')
+            ->andWhere('r.status = :status')
+            ->setParameter('newscategory_id', $categoryPrimary)
+            ->setParameter('id', $post->getId())
+            ->setParameter('postType', $post->getPostType())
+            ->setParameter('status', News::STATUS_PUBLISHED)
+            ->setMaxResults($limit)
+            ->orderBy('r.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function findApprovedComments(News $post)
+    {
+        return $this->getDoctrine()
+            ->getRepository(Comment::class)
+            ->createQueryBuilder('c')
+            ->leftJoin('c.parent', 'parentComment')
+            ->addSelect('parentComment')
+            ->where('c.news = :news')
+            ->andWhere('c.approved = :approved')
+            ->setParameter('news', $post)
+            ->setParameter('approved', true)
+            ->orderBy('c.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function getRatingSummary(News $post)
+    {
+        $rating = $this->getDoctrine()->getManager()->createQuery(
+            'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
+            FROM AppBundle:Rating r
+            WHERE r.news_id = :news_id'
+        )
+            ->setParameter('news_id', $post->getId())
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+
+        $value = !empty($rating['ratingValue']) ? (float) $rating['ratingValue'] : 0;
+        $count = !empty($rating['ratingCount']) ? (int) $rating['ratingCount'] : 0;
+        $percent = $value > 0 ? number_format(($value * 100) / 5, 2) : '0';
+
+        return array(
+            'display' => $value > 0 ? str_replace('.0', '', number_format($value, 1)) : 0,
+            'percent' => str_replace('.00', '', $percent),
+            'value' => round($value),
+            'count' => $count,
+        );
+    }
+
+    private function getPostImageSize(News $post)
+    {
+        $imagePath = $this->helper->asset($post, 'imageFile');
+
+        if (!$imagePath) {
+            return false;
+        }
+
+        $imagePath = ltrim($imagePath, '/');
+        $candidates = array(
+            $imagePath,
+            $this->get('kernel')->getRootDir() . '/../web/' . $imagePath,
+        );
+
+        foreach ($candidates as $candidate) {
+            if (is_file($candidate)) {
+                return @getimagesize($candidate);
+            }
+        }
+
+        return false;
+    }
+
+    private function buildCommentThreads(array $comments)
+    {
+        $threads = array();
+        $rootIndexes = array();
+
+        foreach ($comments as $comment) {
+            $parent = $comment->getParent();
+
+            if (!$parent) {
+                $rootIndexes[$comment->getId()] = count($threads);
+                $threads[] = array(
+                    'comment' => $comment,
+                    'replies' => array(),
+                );
+            }
+        }
+
+        foreach ($comments as $comment) {
+            $parent = $comment->getParent();
+
+            if (!$parent) {
+                continue;
+            }
+
+            $parentId = $parent->getId();
+
+            if (isset($rootIndexes[$parentId])) {
+                $threads[$rootIndexes[$parentId]]['replies'][] = $comment;
+            }
+        }
+
+        return $threads;
     }
 
     private function strip_tags_content($string)

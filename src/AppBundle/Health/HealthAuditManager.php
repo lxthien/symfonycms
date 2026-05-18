@@ -23,6 +23,12 @@ class HealthAuditManager
     private $router;
     private $kernel;
     private $webRoot;
+    private $publishedContentCache;
+    private $localFileCache = [];
+    private $redirectCache = [];
+    private $postUrlCache = [];
+    private $categoryUrlCache = [];
+    private $tagUrlCache = [];
 
     public function __construct(EntityManagerInterface $em, RouterInterface $router, KernelInterface $kernel)
     {
@@ -277,7 +283,11 @@ class HealthAuditManager
 
     private function getPublishedContent()
     {
-        return $this->em->getRepository(News::class)->createQueryBuilder('n')
+        if ($this->publishedContentCache !== null) {
+            return $this->publishedContentCache;
+        }
+
+        $this->publishedContentCache = $this->em->getRepository(News::class)->createQueryBuilder('n')
             ->where('n.status = :status')
             ->andWhere('n.postType IN (:postTypes)')
             ->setParameter('status', News::STATUS_PUBLISHED)
@@ -285,6 +295,8 @@ class HealthAuditManager
             ->orderBy('n.updatedAt', 'DESC')
             ->getQuery()
             ->getResult();
+
+        return $this->publishedContentCache;
     }
 
     private function extractAttributes($html, $tag, $attribute)
@@ -348,12 +360,7 @@ class HealthAuditManager
         }
 
         if (preg_match('#/([^/]+)\.html$#', $path, $matches)) {
-            $post = $this->em->getRepository(News::class)->findOneBy([
-                'url' => $matches[1],
-                'status' => News::STATUS_PUBLISHED,
-            ]);
-
-            return $post !== null;
+            return $this->publishedPostExists($matches[1]);
         }
 
         try {
@@ -383,24 +390,15 @@ class HealthAuditManager
                     return false;
                 }
 
-                return $this->em->getRepository(NewsCategory::class)->findOneBy([
-                    'url' => $route['level1'],
-                    'enable' => true,
-                ]) !== null;
+                return $this->categoryExists($route['level1']);
 
             case 'list_category':
                 if (empty($route['level1']) || empty($route['level2'])) {
                     return false;
                 }
 
-                $parent = $this->em->getRepository(NewsCategory::class)->findOneBy([
-                    'url' => $route['level1'],
-                    'enable' => true,
-                ]);
-                $child = $this->em->getRepository(NewsCategory::class)->findOneBy([
-                    'url' => $route['level2'],
-                    'enable' => true,
-                ]);
+                $parent = $this->findCategoryByUrl($route['level1']);
+                $child = $this->findCategoryByUrl($route['level2']);
 
                 if (!$parent || !$child || !is_object($child->getParentcat())) {
                     return false;
@@ -413,9 +411,7 @@ class HealthAuditManager
                     return false;
                 }
 
-                return $this->em->getRepository(Tag::class)->findOneBy([
-                    'url' => $route['slug'],
-                ]) !== null;
+                return $this->tagExists($route['slug']);
 
             default:
                 return true;
@@ -428,12 +424,18 @@ class HealthAuditManager
             return false;
         }
 
+        if (isset($this->redirectCache[$path])) {
+            return $this->redirectCache[$path];
+        }
+
         $redirect = $this->em->getRepository(SeoRedirect::class)->findOneBy([
             'sourcePath' => $path,
             'enable' => true,
         ]);
 
-        return $redirect !== null;
+        $this->redirectCache[$path] = $redirect !== null;
+
+        return $this->redirectCache[$path];
     }
 
     private function localFileExists($path)
@@ -445,7 +447,57 @@ class HealthAuditManager
         $relative = ltrim(parse_url($path, PHP_URL_PATH) ?: $path, '/');
         $absolute = $this->webRoot . '/' . $relative;
 
-        return is_file($absolute);
+        if (!array_key_exists($absolute, $this->localFileCache)) {
+            $this->localFileCache[$absolute] = is_file($absolute);
+        }
+
+        return $this->localFileCache[$absolute];
+    }
+
+    private function publishedPostExists($url)
+    {
+        $url = (string) $url;
+
+        if (!array_key_exists($url, $this->postUrlCache)) {
+            $this->postUrlCache[$url] = $this->em->getRepository(News::class)->findOneBy([
+                'url' => $url,
+                'status' => News::STATUS_PUBLISHED,
+            ]) !== null;
+        }
+
+        return $this->postUrlCache[$url];
+    }
+
+    private function categoryExists($url)
+    {
+        return $this->findCategoryByUrl($url) !== null;
+    }
+
+    private function findCategoryByUrl($url)
+    {
+        $url = (string) $url;
+
+        if (!array_key_exists($url, $this->categoryUrlCache)) {
+            $this->categoryUrlCache[$url] = $this->em->getRepository(NewsCategory::class)->findOneBy([
+                'url' => $url,
+                'enable' => true,
+            ]);
+        }
+
+        return $this->categoryUrlCache[$url];
+    }
+
+    private function tagExists($url)
+    {
+        $url = (string) $url;
+
+        if (!array_key_exists($url, $this->tagUrlCache)) {
+            $this->tagUrlCache[$url] = $this->em->getRepository(Tag::class)->findOneBy([
+                'url' => $url,
+            ]) !== null;
+        }
+
+        return $this->tagUrlCache[$url];
     }
 
     private function getDirectorySize($path)
