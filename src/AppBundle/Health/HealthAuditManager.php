@@ -17,6 +17,7 @@ class HealthAuditManager
     const MAX_BROKEN_LINKS = 200;
     const MAX_MISSING_IMAGES = 200;
     const MAX_POSTS_WITHOUT_IMAGE = 200;
+    const MAX_OUTDATED_POSTS = 200;
 
     private $em;
     private $router;
@@ -36,6 +37,7 @@ class HealthAuditManager
         $brokenLinks = $this->findBrokenInternalLinks();
         $missingImages = $this->findMissingImages();
         $postsWithoutImage = $this->findPostsWithoutFeaturedImage();
+        $outdatedPosts = $this->findOutdatedData();
         $uploadUsage = $this->getUploadUsage();
 
         return [
@@ -44,6 +46,7 @@ class HealthAuditManager
                 'brokenLinks' => count($brokenLinks),
                 'missingImages' => count($missingImages),
                 'postsWithoutImage' => count($postsWithoutImage),
+                'outdatedPosts' => count($outdatedPosts),
                 'schemaStatus' => 'Đã tự tạo bằng Schema Builder',
                 'mailStatus' => 'Tạm bỏ qua',
                 'uploadSize' => $uploadUsage['totalHuman'],
@@ -52,6 +55,7 @@ class HealthAuditManager
             'brokenLinks' => $brokenLinks,
             'missingImages' => $missingImages,
             'postsWithoutImage' => $postsWithoutImage,
+            'outdatedPosts' => $outdatedPosts,
             'uploadUsage' => $uploadUsage,
             'skipped' => [
                 'schema' => 'Schema cho site, bài viết/page và danh mục được tạo tự động; field JSON-LD override vẫn được giữ cho trường hợp đặc biệt.',
@@ -476,5 +480,108 @@ class HealthAuditManager
         }
 
         return number_format($bytes, $index === 0 ? 0 : 2) . ' ' . $units[$index];
+    }
+
+    private function findOutdatedData()
+    {
+        $issues = [];
+        $currentYear = (int) date('Y');
+        $posts = $this->getPublishedContent();
+
+        foreach ($posts as $post) {
+            $notes = (string) $post->getEditorialNotes();
+            
+            // Check if we should ignore ALL outdated years
+            if (stripos($notes, '[ignore-outdated]') !== false || stripos($notes, '[ignore-outdated:all]') !== false) {
+                continue;
+            }
+
+            // Check if we should ignore specific years
+            $ignoredYears = [];
+            if (preg_match('/\[ignore-outdated:([\d,]+)\]/i', $notes, $matches)) {
+                $ignoredYears = array_map('intval', explode(',', $matches[1]));
+            }
+
+            $matchedYears = [];
+            
+            // Helper closure to verify if a year is outdated and not ignored
+            $isOutdatedAndNotIgnored = function ($yr) use ($currentYear, $ignoredYears) {
+                $yrInt = (int)$yr;
+                return $yrInt < $currentYear && $yrInt >= 2015 && !in_array($yrInt, $ignoredYears, true);
+            };
+
+            // Check Title
+            if (preg_match_all('/\b(20\d{2})\b/', $post->getTitle(), $matches)) {
+                foreach ($matches[1] as $yr) {
+                    if ($isOutdatedAndNotIgnored($yr)) {
+                        $matchedYears[(int)$yr]['title'] = true;
+                    }
+                }
+            }
+
+            // Check Content
+            if (preg_match_all('/\b(20\d{2})\b/', strip_tags((string) $post->getContents()), $matches)) {
+                foreach ($matches[1] as $yr) {
+                    if ($isOutdatedAndNotIgnored($yr)) {
+                        $matchedYears[(int)$yr]['contents'] = true;
+                    }
+                }
+            }
+
+            // Check Description
+            if (preg_match_all('/\b(20\d{2})\b/', (string) $post->getDescription(), $matches)) {
+                foreach ($matches[1] as $yr) {
+                    if ($isOutdatedAndNotIgnored($yr)) {
+                        $matchedYears[(int)$yr]['description'] = true;
+                    }
+                }
+            }
+
+            // Check Page Title / Meta Title
+            if ($post->getPageTitle() && preg_match_all('/\b(20\d{2})\b/', $post->getPageTitle(), $matches)) {
+                foreach ($matches[1] as $yr) {
+                    if ($isOutdatedAndNotIgnored($yr)) {
+                        $matchedYears[(int)$yr]['pageTitle'] = true;
+                    }
+                }
+            }
+
+            // Check Page Description / Meta Description
+            if ($post->getPageDescription() && preg_match_all('/\b(20\d{2})\b/', $post->getPageDescription(), $matches)) {
+                foreach ($matches[1] as $yr) {
+                    if ($isOutdatedAndNotIgnored($yr)) {
+                        $matchedYears[(int)$yr]['pageDescription'] = true;
+                    }
+                }
+            }
+
+            if (!empty($matchedYears)) {
+                $reasons = [];
+                foreach ($matchedYears as $yr => $fields) {
+                    $fieldNames = [];
+                    if (isset($fields['title'])) $fieldNames[] = 'Tiêu đề';
+                    if (isset($fields['contents'])) $fieldNames[] = 'Nội dung';
+                    if (isset($fields['description'])) $fieldNames[] = 'Mô tả';
+                    if (isset($fields['pageTitle'])) $fieldNames[] = 'SEO Tiêu đề';
+                    if (isset($fields['pageDescription'])) $fieldNames[] = 'SEO Mô tả';
+                    
+                    $reasons[] = sprintf("Năm %d trong (%s)", $yr, implode(', ', $fieldNames));
+                }
+
+                $issues[] = [
+                    'post' => $post,
+                    'reason' => implode('; ', $reasons),
+                    'editUrl' => $post->isPage()
+                        ? $this->router->generate('admin_page_edit', ['id' => $post->getId()])
+                        : $this->router->generate('admin_news_edit', ['id' => $post->getId()]),
+                ];
+
+                if (count($issues) >= self::MAX_OUTDATED_POSTS) {
+                    return $issues;
+                }
+            }
+        }
+
+        return $issues;
     }
 }

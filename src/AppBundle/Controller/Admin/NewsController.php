@@ -12,6 +12,7 @@ use AppBundle\Entity\Rating;
 use AppBundle\Entity\SeoRedirect;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
+use AppBundle\InternalLink\InternalLinkSuggestionManager;
 use AppBundle\Media\MediaSelectionManager;
 use AppBundle\Media\NewsMediaManager;
 use AppBundle\Seo\RedirectManager;
@@ -163,41 +164,34 @@ class NewsController extends Controller
      * @Route("/content-block/related-search", name="admin_content_block_related_search")
      * @Method("GET")
      */
-    public function relatedSearchAction(Request $request)
+    public function relatedSearchAction(Request $request, InternalLinkSuggestionManager $suggestionManager)
     {
         $q = trim((string) $request->query->get('q'));
         $currentId = $request->query->getInt('currentId', 0);
 
-        $qb = $this->getDoctrine()->getRepository(News::class)->createQueryBuilder('n')
-            ->where('n.postType IN (:postTypes)')
-            ->andWhere('n.status = :status')
-            ->setParameter('postTypes', ['post', 'page'])
-            ->setParameter('status', News::STATUS_PUBLISHED)
-            ->orderBy('n.updatedAt', 'DESC')
-            ->setMaxResults(12);
+        if ($request->query->get('mode') === 'suggest') {
+            $post = $currentId > 0
+                ? $this->getDoctrine()->getRepository(News::class)->find($currentId)
+                : null;
 
-        if ($currentId > 0) {
-            $qb->andWhere('n.id != :currentId')->setParameter('currentId', $currentId);
+            $items = $suggestionManager->suggest($post, [
+                'title' => $request->query->get('title', ''),
+                'description' => $request->query->get('description', ''),
+                'keywords' => $request->query->get('keywords', ''),
+                'categoryIds' => $request->query->get('categoryIds', []),
+                'tagNames' => $request->query->get('tagNames', []),
+                'primaryCategoryId' => $request->query->getInt('primaryCategoryId', 0),
+            ], 10);
+
+            return new JsonResponse([
+                'items' => $items,
+                'generatedAt' => (new \DateTime())->format(\DateTime::ATOM),
+            ]);
         }
 
-        if ($q !== '') {
-            $qb->andWhere('n.title LIKE :q OR n.url LIKE :q OR n.description LIKE :q')
-                ->setParameter('q', '%' . $q . '%');
-        }
-
-        $items = [];
-
-        foreach ($qb->getQuery()->getResult() as $post) {
-            $items[] = [
-                'id' => $post->getId(),
-                'title' => $post->getTitle(),
-                'url' => $this->generateUrl('news_show', ['slug' => $post->getUrl()]),
-                'description' => strip_tags((string) $post->getDescription()),
-                'type' => $post->getPostType(),
-            ];
-        }
-
-        return new JsonResponse(['items' => $items]);
+        return new JsonResponse([
+            'items' => $suggestionManager->search($q, $currentId, 12),
+        ]);
     }
 
     /**

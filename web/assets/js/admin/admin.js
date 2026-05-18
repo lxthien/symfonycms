@@ -28,6 +28,8 @@ $(function() {
 
     initSeoRealtimeChecklist();
 
+    initInternalLinkSuggestions();
+
     initDashboardCharts();
 
     initMediaUploadDropzone();
@@ -1521,6 +1523,255 @@ $(function() {
             }
 
             render();
+        });
+    }
+
+    function initInternalLinkSuggestions() {
+        $('[data-internal-link-suggestions]').each(function() {
+            var $panel = $(this);
+            var requestUrl = $panel.data('url');
+            var currentId = $panel.data('current-id') || 0;
+            var prefix = $panel.data('form-prefix');
+            var editorId = $panel.data('editor-id');
+            var $form = $panel.closest('form');
+            var $status = $panel.find('[data-internal-link-status]');
+            var $list = $panel.find('[data-internal-link-list]');
+            var $body = $panel.find('[data-internal-link-body]');
+            var $toggle = $panel.find('[data-internal-link-toggle]');
+            var debounceTimer = null;
+            var lastRequest = null;
+            var hasLoaded = false;
+
+            if (!requestUrl || !prefix) {
+                return;
+            }
+
+            function getFieldValue(fieldId) {
+                if (window.CKEDITOR && CKEDITOR.instances[fieldId]) {
+                    return CKEDITOR.instances[fieldId].getData();
+                }
+
+                return $('#' + fieldId).val() || '';
+            }
+
+            function cleanText(value) {
+                return $.trim($('<div>').html(value || '').text().replace(/\s+/g, ' '));
+            }
+
+            function collectCategoryIds() {
+                var ids = [];
+
+                $('[data-category-tree] .news-category-checkbox:checked').each(function() {
+                    ids.push($(this).data('category-id') || $(this).val());
+                });
+
+                if (!ids.length) {
+                    $('#' + prefix + '_category input[type="checkbox"]:checked').each(function() {
+                        ids.push($(this).val());
+                    });
+                }
+
+                return ids;
+            }
+
+            function collectTagNames() {
+                var raw = $('#' + prefix + '_tags').val() || '';
+
+                if (!raw && $('#' + prefix + '_tags').siblings('.bootstrap-tagsinput').length) {
+                    raw = $('#' + prefix + '_tags').siblings('.bootstrap-tagsinput').find('.tag').map(function() {
+                        return $.trim($(this).text());
+                    }).get().join(',');
+                }
+
+                return $.map(String(raw).split(/[,;]+/), function(tag) {
+                    tag = $.trim(tag);
+                    return tag ? tag : null;
+                });
+            }
+
+            function renderEmpty(message) {
+                $list.empty();
+                $status.removeClass('text-danger').addClass('text-muted').text(message);
+            }
+
+            function setCollapsed(isCollapsed) {
+                $panel.attr('data-internal-link-collapsed', isCollapsed ? '1' : '0');
+                $body.toggle(!isCollapsed);
+                $toggle.attr('aria-expanded', isCollapsed ? 'false' : 'true');
+                $toggle.html(
+                    isCollapsed
+                        ? '<i class="fa fa-chevron-down" aria-hidden="true"></i> Mở rộng'
+                        : '<i class="fa fa-chevron-up" aria-hidden="true"></i> Thu nhỏ'
+                );
+
+                if (!isCollapsed && !hasLoaded) {
+                    requestSuggestions();
+                }
+            }
+
+            function insertLink(item) {
+                var html = '<a href="' + escapeHtml(item.url || '#') + '">' + escapeHtml(item.title || item.url || 'Link') + '</a>';
+
+                if (window.CKEDITOR && CKEDITOR.instances[editorId]) {
+                    CKEDITOR.instances[editorId].insertHtml(html);
+                    CKEDITOR.instances[editorId].fire('change');
+                    return;
+                }
+
+                var $textarea = $('#' + editorId);
+                $textarea.val(($textarea.val() || '') + html).trigger('change');
+            }
+
+            function renderItems(items) {
+                $list.empty();
+
+                if (!items.length) {
+                    renderEmpty('Chưa có gợi ý phù hợp. Hãy thêm category, tag hoặc keyword rõ hơn.');
+                    return;
+                }
+
+                $status.removeClass('text-danger').addClass('text-muted').text(items.length + ' gợi ý phù hợp để chèn link nội bộ.');
+
+                $.each(items, function(index, item) {
+                    var $item = $('<div>').addClass('internal-link-suggestion-item');
+                    var $main = $('<div>').addClass('internal-link-suggestion-main').appendTo($item);
+                    var $meta = $('<div>').addClass('internal-link-suggestion-meta').appendTo($item);
+                    var $actions = $('<div>').addClass('internal-link-suggestion-actions').appendTo($item);
+
+                    $('<strong>').text(item.title || '').appendTo($main);
+                    $('<span>').text(item.url || '').appendTo($main);
+
+                    if (item.reasons && item.reasons.length) {
+                        $('<small>').text(item.reasons.join(' · ')).appendTo($meta);
+                    }
+
+                    $('<span>').addClass('internal-link-score').text((item.score || 0) + ' điểm').appendTo($meta);
+
+                    $('<button type="button" class="btn btn-primary btn-xs" data-internal-link-insert>')
+                        .html('<i class="fa fa-link" aria-hidden="true"></i> Chèn link')
+                        .data('item', item)
+                        .appendTo($actions);
+
+                    $('<button type="button" class="btn btn-link btn-xs" data-internal-link-copy>')
+                        .text('Copy URL')
+                        .data('url', item.url || '')
+                        .appendTo($actions);
+
+                    $list.append($item);
+                });
+            }
+
+            function requestSuggestions() {
+                var title = getFieldValue(prefix + '_title');
+                var description = cleanText(getFieldValue(prefix + '_description')) + ' ' + cleanText(getFieldValue(prefix + '_pageDescription'));
+                var keywords = getFieldValue(prefix + '_pageKeyword');
+                var categoryIds = collectCategoryIds();
+                var tagNames = collectTagNames();
+
+                if (!$.trim(title + description + keywords) && !categoryIds.length && !tagNames.length) {
+                    renderEmpty('Nhập tiêu đề, keyword, tag hoặc chọn danh mục để hệ thống gợi ý link.');
+                    return;
+                }
+
+                if (lastRequest) {
+                    lastRequest.abort();
+                }
+
+                $status.removeClass('text-danger').addClass('text-muted').text('Đang tìm bài liên quan...');
+                hasLoaded = true;
+
+                lastRequest = $.ajax({
+                    type: 'GET',
+                    url: requestUrl,
+                    data: {
+                        mode: 'suggest',
+                        currentId: currentId,
+                        title: title,
+                        description: description,
+                        keywords: keywords,
+                        categoryIds: categoryIds,
+                        tagNames: tagNames,
+                        primaryCategoryId: $('#' + prefix + '_categoryPrimary').val() || ''
+                    },
+                    success: function(response) {
+                        renderItems(response.items || []);
+                    },
+                    error: function(xhr) {
+                        if (xhr.statusText === 'abort') {
+                            return;
+                        }
+
+                        $list.empty();
+                        $status.removeClass('text-muted').addClass('text-danger').text('Chưa lấy được gợi ý link nội bộ.');
+                    }
+                });
+            }
+
+            function scheduleRequest() {
+                if ($panel.attr('data-internal-link-collapsed') === '1') {
+                    return;
+                }
+
+                window.clearTimeout(debounceTimer);
+                debounceTimer = window.setTimeout(requestSuggestions, 350);
+            }
+
+            $panel.on('click', '[data-internal-link-toggle]', function(event) {
+                event.preventDefault();
+                setCollapsed($panel.attr('data-internal-link-collapsed') !== '1');
+            });
+
+            $panel.on('click', '[data-internal-link-refresh]', function(event) {
+                event.preventDefault();
+                setCollapsed(false);
+                requestSuggestions();
+            });
+
+            $panel.on('click', '[data-internal-link-insert]', function(event) {
+                event.preventDefault();
+                insertLink($(this).data('item') || {});
+            });
+
+            $panel.on('click', '[data-internal-link-copy]', function(event) {
+                event.preventDefault();
+                var $button = $(this);
+                var url = $(this).data('url') || '';
+                var originalText = $button.text();
+
+                function markCopied() {
+                    $button
+                        .removeClass('btn-link')
+                        .addClass('btn-success')
+                        .html('<i class="fa fa-check" aria-hidden="true"></i> Đã copy');
+
+                    window.setTimeout(function() {
+                        $button.removeClass('btn-success').addClass('btn-link').text(originalText);
+                    }, 1600);
+                }
+
+                if (navigator.clipboard && url) {
+                    navigator.clipboard.writeText(url).then(markCopied, function() {
+                        window.prompt('Copy URL:', url);
+                    });
+                    return;
+                }
+
+                if (url) {
+                    window.prompt('Copy URL:', url);
+                }
+            });
+
+            $form.on('keyup change input', 'input, textarea, select', scheduleRequest);
+
+            if (window.CKEDITOR) {
+                CKEDITOR.on('instanceReady', function(event) {
+                    if (event.editor.name === editorId || event.editor.name === prefix + '_description') {
+                        event.editor.on('change', scheduleRequest);
+                    }
+                });
+            }
+
+            setCollapsed($panel.data('internal-link-collapsed') !== 0);
         });
     }
 

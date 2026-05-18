@@ -6,7 +6,7 @@
     <div class="content mt-3 health-dashboard">
         <div class="animated fadeIn">
             <div class="row health-summary">
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg">
                     <div class="card dashboard-mini-card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg">
                     <div class="card dashboard-mini-card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg">
                     <div class="card dashboard-mini-card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -48,7 +48,21 @@
                     </div>
                 </div>
 
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg">
+                    <div class="card dashboard-mini-card">
+                        <div class="card-body">
+                            <div class="stat-widget-one">
+                                <div class="stat-icon dib"><i class="ti-calendar text-warning border-warning" style="color: #ff9800; border-color: #ff9800;"></i></div>
+                                <div class="stat-content dib">
+                                    <div class="stat-text">Bài chứa năm cũ</div>
+                                    <div class="stat-digit">{{ report.summary.outdatedPosts }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg">
                     <div class="card dashboard-mini-card">
                         <div class="card-body">
                             <div class="stat-widget-one">
@@ -71,12 +85,15 @@
                             <span class="text-muted pull-right">Cập nhật: {{ report.generatedAt|date('d/m/Y H:i:s') }}</span>
                         </div>
                         <div class="card-body">
-                            <div class="health-note-grid">
-                                <div class="alert alert-info">
+                            <div class="health-note-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                                <div class="alert alert-info" style="margin-bottom: 0;">
                                     <strong>Schema:</strong> {{ report.skipped.schema }}
                                 </div>
-                                <div class="alert alert-info">
+                                <div class="alert alert-info" style="margin-bottom: 0;">
                                     <strong>Mail form:</strong> {{ report.skipped.mail }}
+                                </div>
+                                <div class="alert alert-info" style="margin-bottom: 0;">
+                                    <strong>Bỏ qua năm cũ:</strong> Để loại trừ một năm cụ thể khỏi kiểm tra (ví dụ do nghị định/điều khoản còn hiệu lực), hãy thêm <code>[ignore-outdated:2024]</code> hoặc <code>[ignore-outdated:all]</code> vào mục <strong>Ghi chú biên tập</strong> khi sửa bài viết/trang.
                                 </div>
                             </div>
                             <p class="text-muted">Các danh sách lỗi được giới hạn tối đa 200 dòng mỗi loại để tránh audit quá nặng trên production.</p>
@@ -239,6 +256,50 @@
                                         {% else %}
                                             <tr>
                                                 <td colspan="3" class="text-center text-muted">Tất cả bài published đã có ảnh đại diện.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Bài viết & Trang chứa thông tin năm cũ (Cần cập nhật)</strong>
+                            <span class="badge badge-warning">{{ report.summary.outdatedPosts }}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered admin-list-table health-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Bài viết/Page</th>
+                                            <th>Thông tin phát hiện</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in report.outdatedPosts %}
+                                            <tr>
+                                                <td>
+                                                    {{ item.post.title }}
+                                                    <small class="d-block text-muted">{{ item.post.url }}.html</small>
+                                                </td>
+                                                <td><span class="text-danger">{{ item.reason }}</span></td>
+                                                <td class="text-center">
+                                                    <a href="{{ item.editUrl }}" class="btn-sm" title="Sửa">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted">Không phát hiện bài viết nào chứa thông tin năm cũ cần cập nhật.</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

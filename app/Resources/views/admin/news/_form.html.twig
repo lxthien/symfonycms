@@ -56,6 +56,11 @@
         check_category: form.category is defined,
     }) }}
 
+    {{ include('admin/news/_internal_link_suggestions.html.twig', {
+        form: form,
+        object: object|default(null),
+    }) }}
+
     <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
         <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
     </button>

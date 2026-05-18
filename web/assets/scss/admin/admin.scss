@@ -769,8 +769,114 @@
     }
 }
 
+.internal-link-suggestions {
+    margin: 0 0 30px;
+    padding: 20px 22px;
+    border: 1px solid #dce4ec;
+    border-radius: 4px;
+    background: #fff;
+
+    .internal-link-suggestions-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+
+        h4 {
+            margin: 0 0 4px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        p {
+            margin: 0;
+            color: #7b8a8b;
+        }
+    }
+
+    .internal-link-suggestions-header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    &[data-internal-link-collapsed='1'] {
+        .internal-link-suggestions-body {
+            display: none;
+        }
+    }
+
+    .internal-link-suggestions-status {
+        margin-bottom: 10px;
+    }
+}
+
+.internal-link-suggestions-list {
+    display: grid;
+    gap: 10px;
+}
+
+.internal-link-suggestion-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 18px;
+    align-items: center;
+    padding: 12px 14px;
+    border: 1px solid #e4ebf2;
+    border-radius: 4px;
+    background: #f8fafc;
+}
+
+.internal-link-suggestion-main {
+    min-width: 0;
+
+    strong,
+    span {
+        display: block;
+    }
+
+    strong {
+        color: #1f2933;
+        line-height: 1.35;
+    }
+
+    span {
+        margin-top: 4px;
+        color: #007b55;
+        font-size: 13px;
+        word-break: break-word;
+    }
+}
+
+.internal-link-suggestion-meta {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    color: #7b8a8b;
+    font-size: 13px;
+}
+
+.internal-link-score {
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: #e7f1ff;
+    color: #0069d9;
+    font-weight: 600;
+}
+
+.internal-link-suggestion-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 @media (max-width: 767px) {
-    .seo-realtime-checklist {
+    .seo-realtime-checklist,
+    .internal-link-suggestions {
         .seo-realtime-header {
             display: block;
         }
@@ -778,6 +884,22 @@
         .seo-realtime-score {
             margin-top: 15px;
             width: 100%;
+        }
+    }
+
+    .internal-link-suggestions {
+        .internal-link-suggestions-header,
+        .internal-link-suggestion-item {
+            display: block;
+        }
+
+        .internal-link-suggestions-header-actions {
+            justify-content: flex-start;
+            margin-top: 12px;
+        }
+
+        .internal-link-suggestion-actions {
+            margin-top: 10px;
         }
     }
 }
