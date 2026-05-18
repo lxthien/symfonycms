@@ -5,7 +5,8 @@
     "description": "Symfony Demo Application",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle/"
+            "AppBundle\\": "src/AppBundle/",
+            "Application\\Migrations\\": "app/DoctrineMigrations/"
         },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
@@ -19,6 +20,7 @@
         "blackknight467/star-rating-bundle": "^2.0",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-fixtures-bundle": "^2.2",
+        "doctrine/doctrine-migrations-bundle": "^1.3",
         "doctrine/orm": "^2.5",
         "erusev/parsedown": "^1.5",
         "excelwebzone/recaptcha-bundle": "^1.5",
@@ -41,8 +43,9 @@
         "whiteoctober/breadcrumbs-bundle": "^1.4"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer"            : "^2.0",
-        "symfony/phpunit-bridge"               : "^3.0"
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "phpunit/phpunit": "6.5",
+        "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
         "symfony-scripts": [
