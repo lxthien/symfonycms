@@ -41,90 +41,28 @@
 
 {% block structuredReview %}
     {% if ratingCount > 0 %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "CreativeWorkSeries",
-        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "{{ rating }}",
-            "ratingCount": "{{ ratingCount }}",
-            "bestRating" : "5",
-            "worstRating": "1"
-        }
-    }
-    </script>
-    {% endif %}
-    
-    {% if post.getQa() != null %}
-        {{ post.getQa()|raw }}
-    {% else %}
         <script type="application/ld+json">
         {
             "@context": "https://schema.org/",
-            "@type": "WebPage",
-            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage",
-            "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-            "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-            "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-            "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-            "isPartOf": {
-                "@id": "https://xaydungminhduy.com/#website"
-            },
-            "primaryImageOfPage": {
-                "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-            },
-            "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
-            "inLanguage": "vi-VN"
-        }
-        </script>
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org/",
-            "@type": "BlogPosting",
-            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#blogposting",
-            "mainEntityOfPage": {
-                "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-            },
-            "headline": "{{ post.getTitle() }}",
-            "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-            "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
-            "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-            "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-            "articleSection": "{{ category.getName() }}",
-            "articleBody": "{{ articleBody }}",
-            "author": {
-                "@type": "Person",
-                "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person"
-            },
-            "publisher": {
-                "@type": "Organization",
-                "@id": "https://xaydungminhduy.com/#organization"
-            },
-            "image": {
-                "@type": "ImageObject",
-                "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-                "url": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-                "height": "800",
-                "width": "420"
-            },
-            "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-            "wordCount": "{{ wordCount }}",
-            "inLanguage": "vi-VN",
-            "commentCount": "{{ comments|length }}",
-            "isPartOf": {
-                "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-            }{% if keywords is not null %},
-            "keywords": [
-                {% for keyword in keywords %}
-                "{{ keyword|trim }}"{% if loop.last == false %},{% endif %}
-                {% endfor %}
-            ]
-            {% endif %}
+            "@type": "CreativeWorkSeries",
+            "name": {{ (post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle())|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }},
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "{{ rating }}",
+                "ratingCount": "{{ ratingCount }}",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
         }
         </script>
     {% endif %}
+
+    {{ schema_news(post, {
+        category: category|default(null),
+        wordCount: wordCount|default(0),
+        comments: comments|default([]),
+        image: imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter)
+    }) }}
 {% endblock %}
 
 {% block body %}

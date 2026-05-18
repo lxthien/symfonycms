@@ -44,7 +44,7 @@ class HealthAuditManager
                 'brokenLinks' => count($brokenLinks),
                 'missingImages' => count($missingImages),
                 'postsWithoutImage' => count($postsWithoutImage),
-                'schemaStatus' => 'Tạm bỏ qua',
+                'schemaStatus' => 'Đã tự tạo bằng Schema Builder',
                 'mailStatus' => 'Tạm bỏ qua',
                 'uploadSize' => $uploadUsage['totalHuman'],
                 'uploadBytes' => $uploadUsage['totalBytes'],
@@ -54,7 +54,7 @@ class HealthAuditManager
             'postsWithoutImage' => $postsWithoutImage,
             'uploadUsage' => $uploadUsage,
             'skipped' => [
-                'schema' => 'Bài thiếu schema đang tạm bỏ qua theo yêu cầu.',
+                'schema' => 'Schema cho site, bài viết/page và danh mục được tạo tự động; field JSON-LD override vẫn được giữ cho trường hợp đặc biệt.',
                 'mail' => 'Form lỗi gửi mail đang tạm bỏ qua theo yêu cầu.',
             ],
         ];

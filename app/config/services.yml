@@ -41,6 +41,18 @@ services:
         tags:
             - { name: twig.extension }
 
+    AppBundle\Schema\SchemaBuilder:
+        arguments:
+            $router: '@router'
+            $settings: '@settings_manager'
+            $uploaderHelper: '@vich_uploader.templating.helper.uploader_helper'
+
+    AppBundle\Twig\SchemaExtension:
+        arguments:
+            $schemaBuilder: '@AppBundle\Schema\SchemaBuilder'
+        tags:
+            - { name: twig.extension }
+
     settings_manager:
         alias: AppBundle\Settings\SettingsManager
         public: true

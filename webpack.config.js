@@ -19,7 +19,7 @@ Encore
     })
     .cleanupOutputBeforeBuild()
     .enableVersioning(Encore.isProduction())
-    .disableSingleRuntimeChunk()
+    .enableSingleRuntimeChunk()
     .createSharedEntry('js/common', './web/assets/js/common.js')
     .addEntry('js/app', './web/assets/js/front/app.js')
     .addEntry('js/admin', './web/assets/js/admin/admin.js')

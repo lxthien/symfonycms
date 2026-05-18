@@ -87,9 +87,12 @@ class NewsCategoryType extends AbstractType
                 'label' => 'Follow',
             ])
             ->add('schemaMarkup', TextareaType::class, [
-                'attr' => ['rows' => '12'],
+                'attr' => [
+                    'rows' => '12',
+                    'placeholder' => '{"@context":"https://schema.org","@type":"CollectionPage",...}',
+                ],
                 'required' => false,
-                'label' => 'Schema Markup',
+                'label' => 'Schema JSON-LD override',
             ])
         ;
     }

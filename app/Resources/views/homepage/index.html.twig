@@ -17,10 +17,6 @@
     <meta property="og:image:height" content="420" />
 {% endblock %}
 
-{% block structuredOrganization %}
-    {{ get_setting('localBusiness')|raw }}
-{% endblock %}
-
 {% block body %}
     <main class="wrapper-container">
         {{ include('news/components/listPrices.html.twig') }}

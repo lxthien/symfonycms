@@ -127,8 +127,11 @@ class NewsType extends AbstractType
             ])
             ->add('qa', TextareaType::class, [
                 'required' => false,
-                'attr' => ['rows' => '10'],
-                'label' => 'Q&A',
+                'attr' => [
+                    'rows' => '10',
+                    'placeholder' => '{"@context":"https://schema.org","@type":"FAQPage",...}',
+                ],
+                'label' => 'Schema/FAQ JSON-LD override',
             ])
         ;
     }
