@@ -60,6 +60,10 @@ services:
     AppBundle\EventListener\CommentNotificationSubscriber:
         $sender: '%app.notifications.email_sender%'
 
+    AppBundle\EventListener\AuditDoctrineSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+
     AppBundle\EventListener\RedirectToPreferredLocaleSubscriber:
         $locales: '%app_locales%'
         $defaultLocale: '%locale%'

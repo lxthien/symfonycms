@@ -16,6 +16,7 @@ final class AdminCapability
     const REDIRECT_MANAGE = 'CMS_REDIRECT_MANAGE';
     const CONTENT_DECAY_VIEW = 'CMS_CONTENT_DECAY_VIEW';
     const HEALTH_VIEW = 'CMS_HEALTH_VIEW';
+    const AUDIT_LOG_VIEW = 'CMS_AUDIT_LOG_VIEW';
     const BANNER_MANAGE = 'CMS_BANNER_MANAGE';
     const CONTACT_MANAGE = 'CMS_CONTACT_MANAGE';
     const SETTINGS_MANAGE = 'CMS_SETTINGS_MANAGE';
@@ -36,6 +37,7 @@ final class AdminCapability
             self::REDIRECT_MANAGE,
             self::CONTENT_DECAY_VIEW,
             self::HEALTH_VIEW,
+            self::AUDIT_LOG_VIEW,
             self::BANNER_MANAGE,
             self::CONTACT_MANAGE,
             self::SETTINGS_MANAGE,

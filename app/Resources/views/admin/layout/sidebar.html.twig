@@ -106,6 +106,15 @@
                 </li>
                 {% endif %}
 
+                {% if is_granted('CMS_AUDIT_LOG_VIEW') %}
+                <li>
+                    <a href="{{ path('admin_audit_log_index') }}">
+                        <i class="menu-icon fa fa-history"></i>
+                        Audit log
+                    </a>
+                </li>
+                {% endif %}
+
                 {% if is_granted('CMS_MEDIA_MANAGE') %}
                 <li>
                     <a href="{{ path('admin_media_index') }}">

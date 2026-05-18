@@ -2,19 +2,22 @@
 
 namespace AppBundle\Settings;
 
+use AppBundle\Audit\AuditLogManager;
 use Doctrine\DBAL\Connection;
 
 class SettingsManager
 {
     private $connection;
     private $definitions;
+    private $auditLogManager;
     private $loaded = false;
     private $settings = array();
 
-    public function __construct(Connection $connection, SettingsDefinitionProvider $definitionProvider)
+    public function __construct(Connection $connection, SettingsDefinitionProvider $definitionProvider, AuditLogManager $auditLogManager)
     {
         $this->connection = $connection;
         $this->definitions = $definitionProvider->all();
+        $this->auditLogManager = $auditLogManager;
     }
 
     public function get($name, $owner = null, $default = null)
@@ -46,6 +49,9 @@ class SettingsManager
 
     public function setMany(array $settings, $owner = null)
     {
+        $this->load();
+        $before = $this->settings;
+
         foreach ($settings as $name => $value) {
             $this->assertKnown($name);
             $this->persist($name, $value);
@@ -53,6 +59,7 @@ class SettingsManager
         }
 
         $this->loaded = true;
+        $this->auditLogManager->logSettings($before, $this->settings);
 
         return $this;
     }
