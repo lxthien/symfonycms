@@ -1,15 +1,14 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.9.1",
+        "@symfony/webpack-encore": "^0.30.2",
         "bloodhound-js": "^1.2.1",
         "bootstrap-sass": "^3.3.7",
         "bootstrap-tagsinput": "^0.7.1",
         "bootswatch": "^3.3.7",
-        "highlight.js": "^9.12.0",
-        "imports-loader": "^0.7.1",
         "jquery": "^3.3.1",
         "node-sass": "^9.0.0",
-        "sass-loader": "^6.0.5",
+        "resolve-url-loader": "^3.1.2",
+        "sass-loader": "^10.1.1",
         "typeahead.js": "^0.11.1"
     },
     "scripts": {
@@ -23,7 +22,6 @@
         "@fortawesome/fontawesome-free": "^7.1.0",
         "bxslider": "^4.2.14",
         "chart.js": "^2.9.4",
-        "eonasdan-bootstrap-datetimepicker": "^4.17.49",
         "jquery-validation": "^1.19.0"
     }
 }

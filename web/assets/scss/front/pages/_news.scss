@@ -119,10 +119,11 @@
         }
 
         .toc-content {
-            padding: 20px;
+            padding: 20px 24px;
             max-height: 500px;
             overflow-y: auto;
             transition: all 0.3s ease;
+            background: $white;
 
             &.collapsed {
                 max-height: 0;
@@ -139,39 +140,66 @@
                 display: none;
             }
 
+            // Target all div items from CKEditor inside TOC to reset inline styles
+            div[style*="margin-left"] {
+                margin-left: 0 !important;
+            }
+
             div[style*="margin-left:30px"],
             div[style*="margin-left: 30px"] {
                 position: relative;
-                padding-left: 20px;
-                margin-bottom: 8px;
+                padding-left: 24px;
+                margin-bottom: 12px;
 
                 &::before {
                     content: "";
                     position: absolute;
-                    left: 0;
-                    top: 10px;
-                    width: 6px;
-                    height: 6px;
+                    left: 2px;
+                    top: 9px;
+                    width: 7px;
+                    height: 7px;
                     background: $secondaryColor;
                     border-radius: 50%;
+                    box-shadow: 0 0 0 3px rgba($secondaryColor, 0.15);
+                }
+
+                > a {
+                    font-weight: 600;
+                    color: $gray800;
                 }
             }
 
             div[style*="margin-left:60px"],
             div[style*="margin-left: 60px"] {
                 position: relative;
-                padding-left: 35px;
-                margin-bottom: 6px;
+                padding-left: 28px;
+                margin-bottom: 10px;
+                margin-top: -2px;
 
                 &::before {
-                    content: "";
+                    content: "\f105";
+                    font-family: "Font Awesome 5 Free";
+                    font-weight: 900;
                     position: absolute;
-                    left: 15px;
-                    top: 10px;
-                    width: 5px;
-                    height: 5px;
-                    background: $secondaryColor;
-                    border-radius: 50%;
+                    left: 10px;
+                    top: 2px;
+                    color: $gray400;
+                    font-size: 13px;
+                    transition: transform $transitionFast;
+                }
+
+                > a {
+                    font-weight: 400;
+                    color: $gray600;
+                    font-size: 14.5px;
+                    font-style: normal;
+                }
+
+                &:hover {
+                    &::before {
+                        color: $primaryColor;
+                        transform: translateX(3px);
+                    }
                 }
             }
 
@@ -179,12 +207,13 @@
                 color: $gray700;
                 text-decoration: none;
                 font-size: 15px;
-                line-height: 1.6;
+                line-height: 1.5;
                 transition: all $transitionFast;
+                display: inline-block;
 
                 &:hover {
                     color: $primaryColor;
-                    padding-left: 5px;
+                    transform: translateX(4px);
                 }
             }
         }
@@ -741,7 +770,7 @@
                         height: 120px;
                         top: 35%;
                         left: 0;
-                        background: url("../../../images/arrow-left.png") no-repeat;
+                        background: url("/assets/images/arrow-left.png") no-repeat;
                         background-color: rgba(0, 0, 0, 0.3);
                         background-size: 40px;
                     }
@@ -751,7 +780,7 @@
                         height: 120px;
                         top: 35%;
                         right: 0;
-                        background: url("../../../images/arrow-right.png") no-repeat;
+                        background: url("/assets/images/arrow-right.png") no-repeat;
                         background-color: rgba(0, 0, 0, 0.3);
                         background-size: 40px;
                     }

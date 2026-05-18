@@ -27,8 +27,6 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-            new CodeExplorerBundle\CodeExplorerBundle(),
             new AppBundle\AppBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(), // used for initial population of non-SQLite databases in production envs
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
@@ -55,13 +53,6 @@ class AppKernel extends Kernel
 
             if ('dev' === $this->getEnvironment()) {
                 $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
-                $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-            }
-
-            if ('test' === $this->getEnvironment()) {
-                // this bundle makes it easier to work with databases in PHPUnit
-                // tests, so it's only loaded for the 'test' environment
-                $bundles[] = new DAMA\DoctrineTestBundle\DAMADoctrineTestBundle();
             }
         }
 

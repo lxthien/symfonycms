@@ -1,3 +1,7 @@
+const crypto = require("crypto");
+const crypto_orig_createHash = crypto.createHash;
+crypto.createHash = algorithm => crypto_orig_createHash(algorithm == "md4" ? "sha256" : algorithm);
+
 var Encore = require('@symfony/webpack-encore');
 
 Encore
@@ -8,9 +12,15 @@ Encore
         "window.Bloodhound": require.resolve('bloodhound-js'),
         "jQuery.tagsinput": "bootstrap-tagsinput"
     })
-    .enableSassLoader()
+    .enableSassLoader(function(options) {
+        options.sourceMap = true;
+    }, {
+        resolveUrlLoader: true
+    })
+    .cleanupOutputBeforeBuild()
     .enableVersioning(Encore.isProduction())
-    .createSharedEntry('js/common', ['jquery'])
+    .disableSingleRuntimeChunk()
+    .createSharedEntry('js/common', './web/assets/js/common.js')
     .addEntry('js/app', './web/assets/js/front/app.js')
     .addEntry('js/admin', './web/assets/js/admin/admin.js')
     .addEntry('js/search', './web/assets/js/admin/search.js')

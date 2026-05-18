@@ -5,8 +5,7 @@
     "description": "Symfony Demo Application",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle/",
-            "CodeExplorerBundle\\": "src/CodeExplorerBundle/"
+            "AppBundle\\": "src/AppBundle/"
         },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
@@ -19,7 +18,6 @@
         "ext-pdo_sqlite": "*",
         "blackknight467/star-rating-bundle": "^2.0",
         "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/doctrine-cache-bundle": "^1.2",
         "doctrine/doctrine-fixtures-bundle": "^2.2",
         "doctrine/orm": "^2.5",
         "erusev/parsedown": "^1.5",
@@ -30,25 +28,20 @@
         "knplabs/knp-menu-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "^2.8",
         "liip/imagine-bundle": "^1.9",
-        "paragonie/random_compat": "2.0",
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "stof/doctrine-extensions-bundle": "^1.2",
         "symfony/cache": "^3.3",
         "symfony/monolog-bundle": "^3.0",
-        "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/symfony": "^3.3",
         "twig/extensions": "^1.5",
         "twig/twig": "^1.28 || ^2.0",
         "vich/uploader-bundle": "^1.4",
-        "white-october/pagerfanta-bundle": "^1.0",
         "whiteoctober/breadcrumbs-bundle": "^1.4"
     },
     "require-dev": {
-        "dama/doctrine-test-bundle"            : "^3.0",
         "friendsofphp/php-cs-fixer"            : "^2.0",
-        "sensio/generator-bundle"              : "^3.0",
         "symfony/phpunit-bridge"               : "^3.0"
     },
     "scripts": {
