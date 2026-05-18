@@ -29,9 +29,4 @@
         </whitelist>
     </filter>
 
-    <listeners>
-        <!-- it begins a database transaction before every testcase and rolls it back after
-             the test finished, so tests can manipulate the database without affecting other tests -->
-        <listener class="\DAMA\DoctrineTestBundle\PHPUnit\LegacyPHPUnitListener" />
-    </listeners>
 </phpunit>
