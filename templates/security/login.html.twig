@@ -1,0 +1,63 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block sidebar %}{% endblock %}
+{% block header_panel %}{% endblock %}
+{% block flash_messages %}{% endblock %}
+
+{% block body_class 'bg-dark' %}
+
+{% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
+
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <div class="sufee-login d-flex align-content-center flex-wrap">
+                    <div class="container">
+                        <div class="login-content">
+                            <div class="login-logo">
+                                <a href="{{ path('homepage') }}">
+                                    <img class="align-content" src="{{ asset('assets/sufeeadmin/images/logo.png') }}" alt="">
+                                </a>
+                            </div>
+                            <div class="login-form">
+                                <form action="{{ path('app_security_check') }}" method="post">
+                                    <div class="form-group">
+                                        <label for="username">Username hoặc email</label>
+                                        <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" autocomplete="username" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Mật khẩu</label>
+                                        <input type="password" id="password" name="_password" required="required" autocomplete="current-password" class="form-control" />
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                                            Ghi nhớ đăng nhập
+                                        </label>
+                                        <label class="pull-right">
+                                            <a href="{{ path('app_resetting_request') }}">Quên mật khẩu?</a>
+                                        </label>
+                                    </div>
+
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                                    <input type="submit" id="_submit" name="_submit" value="Đăng nhập" class="btn btn-primary btn-flat m-b-30 m-t-30" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

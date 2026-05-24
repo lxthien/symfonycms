@@ -1,0 +1,154 @@
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: false
+
+    App\Command\:
+        resource: '../src/Command'
+
+    App\Security\:
+        resource: '../src/Security'
+
+    App\Health\:
+        resource: '../src/Health'
+
+    App\InternalLink\:
+        resource: '../src/InternalLink'
+
+    App\Seo\:
+        resource: '../src/Seo'
+
+    App\Category\:
+        resource: '../src/Category'
+
+    App\Revision\:
+        resource: '../src/Revision'
+
+    App\Audit\:
+        resource: '../src/Audit'
+
+    App\Utils\:
+        resource: '../src/Utils'
+
+    App\Media\:
+        resource: '../src/Media'
+
+    App\Settings\:
+        resource: '../src/Settings'
+
+    App\Schema\:
+        resource: '../src/Schema'
+
+    App\Breadcrumb\:
+        resource: '../src/Breadcrumb'
+
+    App\Twig\:
+        resource: '../src/Twig'
+
+    App\Validator\:
+        resource: '../src/Validator'
+
+    App\EventListener\:
+        resource: '../src/EventListener'
+
+    App\Analytics\:
+        resource: '../src/Analytics'
+
+    App\Menu\:
+        resource: '../src/Menu'
+
+    App\DataFixtures\:
+        resource: '../src/DataFixtures'
+
+    App\Form\:
+        resource: '../src/Form'
+
+    App\Repository\:
+        resource: '../src/Repository'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    App\Controller\:
+        resource: '../src/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    # Autowiring can't guess the constructor arguments that are not type-hinted with
+    # classes (e.g. container parameters) so you must define those arguments explicitly
+    App\Command\ListUsersCommand:
+        arguments:
+            $emailSender: '%app.notifications.email_sender%'
+
+    # when the service definition only contains arguments, you can omit the
+    # 'arguments' key and define the arguments just below the service class
+    App\Twig\AppExtension:
+        $locales: '%app_locales%'
+
+    App\Twig\SettingsExtension:
+        tags:
+            - { name: twig.extension }
+
+    App\Schema\SchemaBuilder:
+        arguments:
+            $router: '@router'
+            $settings: '@settings_manager'
+            $uploaderHelper: '@Vich\UploaderBundle\Templating\Helper\UploaderHelper'
+
+    App\Twig\SchemaExtension:
+        arguments:
+            $schemaBuilder: '@App\Schema\SchemaBuilder'
+        tags:
+            - { name: twig.extension }
+
+    App\Form\Type\RecaptchaType:
+        arguments:
+            $publicKey: '%app.recaptcha.public_key%'
+            $locale: '%locale%'
+
+    App\Validator\Constraints\RecaptchaValidator:
+        arguments:
+            $privateKey: '%app.recaptcha.private_key%'
+        tags:
+            - { name: validator.constraint_validator }
+
+    white_october_breadcrumbs:
+        alias: App\Breadcrumb\BreadcrumbManager
+        public: true
+
+    settings_manager:
+        alias: App\Settings\SettingsManager
+        public: true
+
+    App\EventListener\CommentNotificationSubscriber:
+        $sender: '%app.notifications.email_sender%'
+
+    App\EventListener\AuditDoctrineSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    App\EventListener\RedirectToPreferredLocaleSubscriber:
+        $locales: '%app_locales%'
+        $defaultLocale: '%locale%'
+
+    App\Menu\Builder:
+        public: true
+        tags:
+            - { name: knp_menu.menu_builder, method: mainMenu, alias: main_menu }
+
+    app.form.registration:
+        class: App\Form\RegistrationType
+        tags:
+            - { name: form.type, alias: app_user_registration }
+    app.form.profile:
+        class: App\Form\ProfileFormType
+        tags:
+            - { name: form.type, alias: app_user_profile }
+    convertImages:
+        alias: App\Utils\ConvertImages
+        public: true

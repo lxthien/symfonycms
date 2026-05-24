@@ -1,0 +1,42 @@
+security:
+    enable_authenticator_manager: true
+
+    password_hashers:
+        App\Entity\User:
+            algorithm: bcrypt
+
+    role_hierarchy:
+        ROLE_STAFF:       ROLE_USER
+        ROLE_CONTRIBUTOR: ROLE_STAFF
+        ROLE_AUTHOR:      ROLE_CONTRIBUTOR
+        ROLE_SEO:         ROLE_STAFF
+        ROLE_SALES:       ROLE_STAFF
+        ROLE_EDITOR:      [ROLE_AUTHOR, ROLE_SEO]
+        ROLE_ADMIN:       [ROLE_EDITOR, ROLE_SALES]
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    providers:
+        app_user_provider:
+            id: App\Security\UserProvider
+
+    firewalls:
+        main:
+            pattern: ^/
+            lazy: true
+            user_checker: App\Security\UserChecker
+            form_login:
+                provider: app_user_provider
+                login_path: app_security_login
+                check_path: app_security_check
+                enable_csrf: true
+                default_target_path: admin_dashboard_index
+
+            logout:
+                path: app_security_logout
+                target: app_security_login
+
+    access_control:
+        - { path: ^/login$, role: PUBLIC_ACCESS }
+        - { path: ^/register, role: PUBLIC_ACCESS }
+        - { path: ^/resetting, role: PUBLIC_ACCESS }
+        - { path: ^/admin/, role: ROLE_STAFF }

@@ -1,0 +1,51 @@
+{% set comment_threads = commentThreads|default([]) %}
+{% if comment_threads|length > 0 %}
+    <div class="comments-section" id="list-comments">
+        <h3 class="section-title">
+            <i class="fas fa-comments"></i>
+            <span>{{ 'comments.count' | trans({ '%count%': comments|length }) }}</span>
+        </h3>
+        <div class="comments-list">
+            {% for thread in comment_threads %}
+                {% set comment = thread.comment %}
+                {% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
+                {% set userWebpPath = convert_images.webpConvert(userPath, '', true) %}
+                {% set userAvatar = userWebpPath ? absolute_url(userWebpPath) : absolute_url(userPath) %}
+                <div class="comment-item {{ loop.first ? 'first' : '' }}" id="comment-{{ comment.getId() }}">
+                    <div class="comment-avatar">
+                        <img
+                            src="{{ userAvatar }}"
+                            alt="{{ comment.getAuthor() }}"
+                            loading="lazy" />
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">{{ comment.getAuthor() }}</span>
+                        </div>
+                        <div class="comment-content">{{ comment.getContent()|raw }}</div>
+                        <a class="comment-reply-btn" id="comment-reply" href="#" data-post-id="{{ comment.getId() }}">
+                            <i class="fas fa-reply"></i> {{ 'comment.reply'|trans }}
+                        </a>
+                        
+                        {% for replyComment in thread.replies %}
+                            <div class="comment-reply">
+                                <div class="comment-avatar">
+                                    <img
+                                        src="{{ userAvatar }}"
+                                        alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
+                                        loading="lazy" />
+                                </div>
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <span class="comment-author">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</span>
+                                    </div>
+                                    <div class="comment-content">{{ replyComment.getContent()|raw }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

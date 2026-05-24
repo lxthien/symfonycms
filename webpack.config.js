@@ -5,7 +5,7 @@ crypto.createHash = algorithm => crypto_orig_createHash(algorithm == "md4" ? "sh
 var Encore = require('@symfony/webpack-encore');
 
 Encore
-    .setOutputPath('web/build/')
+    .setOutputPath('public/build/')
     .setPublicPath('/build')
     .autoProvidejQuery()
     .autoProvideVariables({
@@ -20,15 +20,15 @@ Encore
     .cleanupOutputBeforeBuild()
     .enableVersioning(Encore.isProduction())
     .enableSingleRuntimeChunk()
-    .createSharedEntry('js/common', './web/assets/js/common.js')
-    .addEntry('js/app', './web/assets/js/front/app.js')
-    .addEntry('js/admin', './web/assets/js/admin/admin.js')
-    .addEntry('js/search', './web/assets/js/admin/search.js')
-    .addEntry('js/login', './web/assets/js/admin/login.js')
-    .addStyleEntry('css/app', ['./web/assets/scss/front/app.scss'])
-    .addStyleEntry('css/first', ['./web/assets/scss/front/first.scss'])
-    .addStyleEntry('css/admin', ['./web/assets/scss/admin/admin.scss'])
-    .addStyleEntry('css/ckeditor-content', ['./web/assets/scss/admin/ckeditor-content.scss'])
+    .createSharedEntry('js/common', './public/assets/js/common.js')
+    .addEntry('js/app', './public/assets/js/front/app.js')
+    .addEntry('js/admin', './public/assets/js/admin/admin.js')
+    .addEntry('js/search', './public/assets/js/admin/search.js')
+    .addEntry('js/login', './public/assets/js/admin/login.js')
+    .addStyleEntry('css/app', ['./public/assets/scss/front/app.scss'])
+    .addStyleEntry('css/first', ['./public/assets/scss/front/first.scss'])
+    .addStyleEntry('css/admin', ['./public/assets/scss/admin/admin.scss'])
+    .addStyleEntry('css/ckeditor-content', ['./public/assets/scss/admin/ckeditor-content.scss'])
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -12,10 +12,10 @@
         "typeahead.js": "^0.11.1"
     },
     "scripts": {
-        "dev-server": "./node_modules/.bin/encore dev-server",
-        "dev": "./node_modules/.bin/encore dev",
-        "watch": "./node_modules/.bin/encore dev --watch",
-        "build": "./node_modules/.bin/encore production"
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production"
     },
     "dependencies": {
         "@fancyapps/fancybox": "^3.5.6",
