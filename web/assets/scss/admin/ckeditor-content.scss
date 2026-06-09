@@ -2,28 +2,805 @@
 @import "../front/global/color_variables";
 @import "../shared/content-blocks";
 
-body {
-    padding: 18px 28px;
+// ============================================================
+// CKEditor Content CSS — mirrors .news-container on storefront
+// bodyClass trong admin.js = 'news-container'
+// ============================================================
+
+body.news-container {
     background: #fff;
     color: $gray800;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
-    line-height: 1.75;
-}
+    line-height: 1.8;
+    padding: 18px 28px;
 
-.news-container {
-    max-width: 100%;
-}
+    // ── Paragraphs ─────────────────────────────────────────
+    p {
+        margin-bottom: 18px;
 
-a {
-    color: $primaryColor2;
-}
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
 
-img {
-    max-width: 100%;
-    height: auto;
-}
+    // ── Headings ───────────────────────────────────────────
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: $robotoCondesed;
+        line-height: 1.4;
+    }
 
-h2, h3, h4, h5, h6 {
-    font-family: $robotoCondesed;
+    h2 {
+        font-size: 1.6em;
+        font-weight: 700;
+        color: $primaryColor;
+        margin: 35px 0 18px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid $gray200;
+        line-height: 1.4;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    h3 {
+        font-size: 1.35em;
+        font-weight: 700;
+        color: $gray900;
+        margin: 28px 0 15px;
+        line-height: 1.4;
+    }
+
+    h4 {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: $gray800;
+        margin: 22px 0 12px;
+    }
+
+    h5 {
+        font-size: 1.05em;
+        font-weight: 600;
+        color: $gray800;
+        margin: 18px 0 10px;
+    }
+
+    h6 {
+        font-size: 1em;
+        font-weight: 600;
+        color: $gray700;
+        margin: 15px 0 8px;
+    }
+
+    // ── Lists ──────────────────────────────────────────────
+    ul,
+    ol {
+        padding-left: 0;
+        margin-bottom: 20px;
+        margin-left: 25px;
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+
+            &::marker {
+                color: $primaryColor;
+            }
+        }
+
+        ul,
+        ol {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+
+    // Custom div lists from CKEditor indent feature
+    div[style="margin-left:30px"],
+    div[style="margin-left: 30px"] {
+        display: list-item;
+        list-style-type: disc;
+        margin-left: 25px;
+        margin-bottom: 8px;
+    }
+
+    div[style="margin-left:60px"],
+    div[style="margin-left: 60px"] {
+        display: list-item;
+        list-style-type: circle;
+        margin-left: 50px;
+        margin-bottom: 8px;
+    }
+
+    // ── Images ─────────────────────────────────────────────
+    img {
+        height: auto !important;
+        max-width: 100%;
+        border-radius: 8px;
+        margin: 15px 0;
+        display: inline-block;
+    }
+
+    figure {
+        margin: 15px 0;
+        text-align: center;
+
+        img {
+            margin: 0 0 8px;
+        }
+
+        figcaption {
+            font-size: 14px;
+            color: $gray600;
+            font-style: italic;
+        }
+    }
+
+    // ── Links ──────────────────────────────────────────────
+    a {
+        color: $primaryColor2;
+        text-decoration: none;
+        transition: all $transitionFast;
+
+        &:hover {
+            color: $primaryColor;
+            text-decoration: underline;
+        }
+    }
+
+    // ── Blockquote ─────────────────────────────────────────
+    blockquote {
+        border-left: 4px solid $secondaryColor;
+        background: $grayf1;
+        padding: 20px 25px;
+        margin: 25px 0;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: $gray700;
+        font-size: 16px;
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // ── Tables ─────────────────────────────────────────────
+    table {
+        width: 100%;
+        margin: 25px 0;
+        border-collapse: collapse;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: $shadowSm;
+
+        th {
+            background: $primaryColor;
+            color: $white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid $gray200;
+        }
+
+        tr {
+            &:nth-child(even) {
+                background: $grayf1;
+            }
+
+            &:hover {
+                background: rgba($primaryColor, 0.05);
+            }
+
+            &:last-child td {
+                border-bottom: none;
+            }
+        }
+    }
+
+    // ── Code ───────────────────────────────────────────────
+    code {
+        background: $grayf1;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #e83e8c;
+    }
+
+    pre {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 20px 0;
+
+        code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+    }
+
+    // ── Horizontal Rule ────────────────────────────────────
+    hr {
+        border: none;
+        height: 2px;
+        background: $gray200;
+        margin: 30px 0;
+    }
+
+    // ── Strong / Emphasis ──────────────────────────────────
+    strong,
+    b {
+        font-weight: 700;
+    }
+
+    em,
+    i {
+        font-style: italic;
+    }
+
+    mark {
+        background: rgba($secondaryColor, 0.2);
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+
+    // ── GEO / Table of Contents block ──────────────────────
+    // Structure từ plugin TOC (raw, trước khi JS transform):
+    //   .table-of-contents
+    //     ├── #main-toc (p)
+    //     ├── div[style="margin-left:0px"]  → h2
+    //     ├── div[style="margin-left:30px"] → h3
+    //     ├── div[style="margin-left:60px"] → h4
+    //     └── hr#hr-toc
+    //
+    // Sau khi JS transform (giống storefront):
+    //   .table-of-contents
+    //     ├── .toc-header
+    //     └── .toc-content  (.collapsed khi ẩn)
+
+    .table-of-contents {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1px solid $gray300;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        overflow: hidden;
+
+        // ── RAW state: header (#main-toc) hiển thị như header bar ──
+        // Khi chưa có JS transform, show #main-toc như một header đẹp
+        > #main-toc {
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            margin: 0;
+            background: $gradientPrimary;
+            color: $white;
+            font-weight: 700;
+            font-size: 15px;
+            font-family: $robotoCondesed;
+            font-style: normal;
+            text-decoration: none;
+
+            b, u {
+                color: $white;
+                text-decoration: none;
+                font-style: normal;
+
+                &::before {
+                    content: '≡';
+                    margin-right: 8px;
+                    font-size: 18px;
+                }
+            }
+        }
+
+        // ── RAW state: hr ẩn ──
+        > hr#hr-toc {
+            display: none;
+        }
+
+        // ── RAW state: div items trực tiếp trong .table-of-contents ──
+        > div[id$="-toc"] {
+            padding: 4px 20px;
+            background: $white;
+
+            &:first-of-type {
+                padding-top: 14px;
+            }
+
+            &:last-of-type {
+                padding-bottom: 14px;
+            }
+
+            a {
+                color: $gray700;
+                text-decoration: none;
+                font-size: 15px;
+                line-height: 1.6;
+                display: inline-block;
+                transition: all $transitionFast;
+
+                &:hover {
+                    color: $primaryColor;
+                    transform: translateX(4px);
+                }
+
+                i {
+                    font-style: normal;
+                }
+            }
+        }
+
+        // h2 level (margin-left: 0)
+        > div[style*="margin-left:0"],
+        > div[style*="margin-left: 0"] {
+            position: relative;
+            padding-left: 30px;
+
+            &::before {
+                content: '▸';
+                position: absolute;
+                left: 12px;
+                color: $secondaryColor;
+                font-weight: 700;
+                transition: transform $transitionFast;
+            }
+
+            > a {
+                font-weight: 600;
+                color: $gray800;
+            }
+        }
+
+        // h3 level (margin-left: 30px)
+        > div[style*="margin-left:30px"],
+        > div[style*="margin-left: 30px"] {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 2px;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 8px;
+                top: 11px;
+                width: 5px;
+                height: 5px;
+                background: $secondaryColor;
+                border-radius: 50%;
+            }
+
+            > a {
+                font-size: 14.5px;
+                color: $gray600;
+            }
+        }
+
+        // h4 level (margin-left: 60px)
+        > div[style*="margin-left:60px"],
+        > div[style*="margin-left: 60px"] {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 2px;
+
+            &::before {
+                content: '\f105';
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+                position: absolute;
+                left: 12px;
+                color: $gray400;
+                font-size: 12px;
+            }
+
+            > a {
+                font-size: 14px;
+                color: $gray500;
+            }
+        }
+
+        // ── TRANSFORMED state: toc-header / toc-content ──────────
+        .toc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: $gradientPrimary;
+            color: $white;
+            cursor: pointer;
+            transition: opacity $transitionFast;
+            user-select: none;
+
+            &:hover {
+                opacity: 0.92;
+            }
+
+            .toc-title {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 700;
+                font-size: 15px;
+                font-family: $robotoCondesed;
+                color: $white;
+            }
+
+            .toc-toggle {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                color: $white;
+
+                .toggle-icon {
+                    transition: transform $transitionFast;
+                }
+
+                &.collapsed .toggle-icon {
+                    transform: rotate(-90deg);
+                }
+            }
+        }
+
+        .toc-content {
+            padding: 14px 20px;
+            background: $white;
+            max-height: 500px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+
+            &.collapsed {
+                max-height: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+                overflow: hidden;
+            }
+
+            // Ẩn #main-toc cũ khi đã transform
+            #main-toc {
+                display: none !important;
+            }
+
+            // Reset margin-left inline styles trong toc-content
+            div[style*="margin-left"] {
+                margin-left: 0 !important;
+            }
+
+            // h2 items
+            div[style*="margin-left:0"],
+            div[style*="margin-left: 0"] {
+                position: relative;
+                padding: 3px 0 3px 28px;
+                margin-bottom: 4px;
+
+                &::before {
+                    content: '▸';
+                    position: absolute;
+                    left: 8px;
+                    color: $secondaryColor;
+                    font-weight: 700;
+                    transition: transform $transitionFast;
+                }
+
+                > a {
+                    font-weight: 600;
+                    color: $gray800;
+                    font-size: 15px;
+                }
+            }
+
+            // h3 items
+            div[style*="margin-left:30px"],
+            div[style*="margin-left: 30px"] {
+                position: relative;
+                padding: 2px 0 2px 28px;
+                margin-bottom: 2px;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    left: 10px;
+                    top: 12px;
+                    width: 5px;
+                    height: 5px;
+                    background: $secondaryColor;
+                    border-radius: 50%;
+                }
+
+                > a {
+                    font-size: 14.5px;
+                    color: $gray600;
+                }
+            }
+
+            // h4 items
+            div[style*="margin-left:60px"],
+            div[style*="margin-left: 60px"] {
+                position: relative;
+                padding: 2px 0 2px 40px;
+                margin-bottom: 2px;
+
+                &::before {
+                    content: '\f105';
+                    font-family: 'Font Awesome 5 Free';
+                    font-weight: 900;
+                    position: absolute;
+                    left: 20px;
+                    color: $gray400;
+                    font-size: 12px;
+                }
+
+                > a {
+                    font-size: 14px;
+                    color: $gray500;
+                }
+            }
+
+            a {
+                color: $gray700;
+                text-decoration: none;
+                font-size: 15px;
+                line-height: 1.6;
+                display: inline-block;
+                transition: all $transitionFast;
+
+                &:hover {
+                    color: $primaryColor;
+                    transform: translateX(4px);
+                }
+
+                i {
+                    font-style: normal;
+                }
+            }
+        }
+    }
+
+    // ── Key Takeaways block ───────────────────────────────
+    .key-takeaways {
+        background: var(--md-primary-light);
+        border-left: 4px solid var(--md-primary);
+        border-radius: var(--md-radius);
+        padding: 20px 24px;
+        margin: 28px 0;
+        box-shadow: var(--md-shadow);
+
+        h3 {
+            font-size: 1.05rem;
+            color: var(--md-primary-dark);
+            margin: 0 0 12px 0;
+            padding: 0;
+            border: none;
+            line-height: 1.4;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 22px;
+            list-style: none;
+
+            li {
+                position: relative;
+                padding: 6px 0 6px 8px;
+                color: var(--md-text);
+                line-height: 1.6;
+                font-size: 0.94rem;
+
+                &::before {
+                    content: "✓";
+                    position: absolute;
+                    left: -22px;
+                    top: 6px;
+                    color: var(--md-primary);
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    // ── Expert Quote ──────────────────────────────────────
+    .expert-quote {
+        background: #ffffff;
+        border: 1px solid var(--md-border);
+        border-left: 4px solid var(--md-primary);
+        border-radius: var(--md-radius);
+        padding: 24px 28px 20px 28px;
+        margin: 28px 0;
+        position: relative;
+        box-shadow: var(--md-shadow);
+
+        &::before {
+            content: "\201C";
+            position: absolute;
+            top: 8px;
+            left: 18px;
+            font-size: 3.5rem;
+            color: var(--md-primary);
+            opacity: 0.18;
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1;
+        }
+
+        p {
+            font-style: italic;
+            font-size: 0.94rem;
+            line-height: 1.65;
+            color: var(--md-text);
+            margin: 0 0 12px 0;
+            padding-left: 8px;
+        }
+
+        cite {
+            display: block;
+            text-align: right;
+            color: var(--md-primary-dark);
+            font-style: normal;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-top: 1px dashed var(--md-border);
+            padding-top: 10px;
+            margin-top: 6px;
+        }
+    }
+
+    // ── Stat Boxes ────────────────────────────────────────
+    .stat-box {
+        display: inline-flex;
+        flex-direction: column;
+        background: var(--md-primary-light);
+        border: 1px solid var(--md-primary-tint);
+        border-radius: var(--md-radius);
+        padding: 18px 22px;
+        margin: 12px 8px 12px 0;
+        min-width: 200px;
+        text-align: center;
+        box-shadow: var(--md-shadow);
+        transition: transform 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--md-primary);
+            line-height: 1.1;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--md-text);
+            line-height: 1.4;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-source {
+            font-size: 0.8rem;
+            color: var(--md-text-soft);
+            font-style: italic;
+            display: block;
+            border-top: 1px dotted var(--md-border);
+            padding-top: 6px;
+        }
+
+        &--blue {
+            background: var(--md-blue-light);
+            border-color: #C9DBF0;
+
+            .stat-number { color: var(--md-blue); }
+        }
+
+        &--green {
+            background: var(--md-green-light);
+            border-color: #C8E6D2;
+
+            .stat-number { color: var(--md-green); }
+        }
+    }
+
+    .stat-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin: 24px 0;
+
+        .stat-box {
+            margin: 0;
+            flex: 1 1 200px;
+        }
+    }
+
+    // ── Definition Block ─────────────────────────────────
+    .definition {
+        background: #FFFBF0;
+        border: 1px solid #F5DEB3;
+        border-left: 4px solid #E5A647;
+        border-radius: var(--md-radius);
+        padding: 16px 20px 16px 36px;
+        margin: 20px 0;
+        color: var(--md-text);
+        line-height: 1.65;
+        font-size: 0.94rem;
+        position: relative;
+        box-shadow: var(--md-shadow);
+
+        strong:first-child {
+            color: var(--md-primary-dark);
+            font-weight: 700;
+        }
+    }
+
+    // ── CMS Blocks (FAQ, CTA, Gallery, etc.) ─────────────
+    // Inherited via @import "../shared/content-blocks"
+    // below are minor overrides for editor context:
+
+    .cms-block {
+        border-radius: 8px;
+    }
+
+    .cms-block-faq {
+        .cms-faq-item {
+            summary {
+                font-size: 15px;
+            }
+        }
+    }
+
+    // ── Iframe (video embeds) ─────────────────────────────
+    iframe {
+        border-radius: 8px;
+        margin: 20px 0;
+        max-width: 100%;
+    }
+
+    // ── Responsive ───────────────────────────────────────
+    @media (max-width: 768px) {
+        padding: 12px 16px;
+
+        h2 {
+            font-size: 1.35em;
+        }
+
+        h3 {
+            font-size: 1.15em;
+        }
+
+        ul,
+        ol {
+            margin-left: 15px;
+        }
+
+        .stat-box {
+            min-width: 100%;
+            margin: 8px 0;
+        }
+
+        .stat-group {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .key-takeaways,
+        .expert-quote,
+        .definition {
+            padding: 16px 18px;
+            margin: 20px 0;
+        }
+    }
 }
