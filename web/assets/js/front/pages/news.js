@@ -34,7 +34,7 @@ function intHandleFormComment() {
 }
 
 function intHandleFormReplyComment() {
-    var $commentReply = $('.comment-reply-link');
+    var $commentReply = $('.comment-reply-link, .comment-reply-btn');
     var $formComment = $('#form-comment');
 
     $commentReply.click(function(e) {
@@ -52,10 +52,91 @@ function intHandleFormReplyComment() {
     });
 }
 
+function initPostGallery() {
+    $('[data-post-album]').each(function() {
+        var $album = $(this);
+        var $track = $album.find('[data-album-track]');
+        var $items = $album.find('[data-gallery-item]');
+        var $modal = $album.find('[data-gallery-modal]');
+        var $image = $album.find('[data-gallery-image]');
+        var $caption = $album.find('[data-gallery-caption-text]');
+        var currentIndex = 0;
+
+        function scrollAlbum(direction) {
+            if (!$track.length) {
+                return;
+            }
+
+            var itemWidth = $items.first().outerWidth(true) || 260;
+            $track.stop().animate({
+                scrollLeft: $track.scrollLeft() + (direction * itemWidth * 2)
+            }, 260);
+        }
+
+        function show(index) {
+            var $item = $items.eq(index);
+
+            if (!$item.length) {
+                return;
+            }
+
+            currentIndex = index;
+            $image.attr('src', $item.data('gallery-src'));
+            $image.attr('alt', $item.data('gallery-alt') || '');
+            $caption.text($item.data('gallery-caption') || '');
+            $modal.attr('aria-hidden', 'false').addClass('is-open');
+            $('body').addClass('gallery-open');
+        }
+
+        function close() {
+            $modal.attr('aria-hidden', 'true').removeClass('is-open');
+            $('body').removeClass('gallery-open');
+            $image.attr('src', '');
+        }
+
+        $items.on('click', function() {
+            show($(this).data('gallery-index') || 0);
+        });
+
+        $album.find('[data-album-prev]').on('click', function() {
+            scrollAlbum(-1);
+        });
+
+        $album.find('[data-album-next]').on('click', function() {
+            scrollAlbum(1);
+        });
+
+        $album.find('[data-gallery-close]').on('click', close);
+
+        $album.find('[data-gallery-prev]').on('click', function() {
+            show((currentIndex - 1 + $items.length) % $items.length);
+        });
+
+        $album.find('[data-gallery-next]').on('click', function() {
+            show((currentIndex + 1) % $items.length);
+        });
+
+        $(document).on('keydown', function(event) {
+            if (!$modal.hasClass('is-open')) {
+                return;
+            }
+
+            if (event.key === 'Escape') {
+                close();
+            } else if (event.key === 'ArrowLeft') {
+                show((currentIndex - 1 + $items.length) % $items.length);
+            } else if (event.key === 'ArrowRight') {
+                show((currentIndex + 1) % $items.length);
+            }
+        });
+    });
+}
+
 exports.init = function () {
 
     $('#form-comment').validate();
 
     intHandleFormComment();
     intHandleFormReplyComment();
+    initPostGallery();
 };

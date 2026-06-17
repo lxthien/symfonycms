@@ -1,8 +1,13 @@
-<!-- Custom JS -->
-<script defer fetchpriority="low" src="{{ asset('build/manifest.js') }}"></script>
-<script defer fetchpriority="low" src="{{ asset('build/js/common.js') }}"></script>
-<script defer fetchpriority="low" src="{{ asset('build/js/app.js') }}"></script>
-<script defer fetchpriority="low" src="https://kit.fontawesome.com/ff9f936e09.js" crossorigin="anonymous"></script>
-<script defer fetchpriority="low" src="{{ asset('assets/libs/lazyload/js/lazysizes.min.js') }}" async></script>
-
-{# <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51488205306afdd5" async="async"></script> #}
+<script defer src="{{ asset('build/runtime.js') }}"></script>
+<script defer src="{{ asset('build/js/common.js') }}"></script>
+<script defer src="{{ asset('build/js/app.js') }}"></script>
+<script>
+    // Lazysizes configuration to reduce forced reflows
+    window.lazySizesConfig = window.lazySizesConfig || {};
+    window.lazySizesConfig.throttleDelay = 125; // Increase delay between checks
+    window.lazySizesConfig.ricTimeout = 300; // Use requestIdleCallback with longer timeout
+    window.lazySizesConfig.loadMode = 2; // Load images more conservatively
+    window.lazySizesConfig.expand = 370; // Expand viewport range (default 370-500)
+    window.lazySizesConfig.expFactor = 1.5; // Factor for expand
+</script>
+<script async src="{{ asset('assets/libs/lazyload/js/lazysizes.min.js') }}"></script>

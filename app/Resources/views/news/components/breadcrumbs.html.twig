@@ -6,11 +6,13 @@
                 {{ wo_render_breadcrumbs() }}
 
                 {% if type is defined and type is not null %}
-                    <h1 class="title">{{ title }}</h1>
+                    <h1 class="category-title">{{ title }}</h1>
 
-                    <div class="description">
+                    {% if description %}
+                    <div class="category-description">
                         <p>{{ description|raw }}</p>
                     </div>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

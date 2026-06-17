@@ -44,29 +44,71 @@
 }
 
 .type-category {
-    color: $black;
+    background: $gradientPrimary;
+    color: $white;
     position: relative;
+    padding: 40px 0 50px;
+    margin-bottom: 0;
 
-    &:after {
-        content : "";
-        background-image: url("../../assets/images/background-breadcrumb.jpg");
-        background-size: cover;
-        opacity: 0.3;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+    @media only screen and (max-width: 767.98px) {
+        padding: 25px 0 30px;
     }
 
     .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0 0 20px;
+        font-size: 14px;
+
         li {
-            &:before {
-                color: $black;
+            color: rgba($white, 0.8);
+
+            &::before {
+                color: rgba($white, 0.6);
             }
 
             a {
-                color: $black;
+                color: rgba($white, 0.9);
+                transition: color $transitionFast;
+
+                &:hover {
+                    color: $white;
+                    text-decoration: none;
+                }
+            }
+
+            &.active {
+                color: $white;
+            }
+        }
+    }
+
+    .category-title {
+        font-size: 2.2em;
+        font-weight: 700;
+        color: $white;
+        margin: 0 0 15px;
+        line-height: 1.3;
+        font-family: $robotoCondesed;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        @media only screen and (max-width: 767.98px) {
+            font-size: 1.6em;
+            margin-bottom: 10px;
+        }
+    }
+
+    .category-description {
+        max-width: 800px;
+        
+        p {
+            color: rgba($white, 0.9);
+            font-size: 16px;
+            line-height: 1.7;
+            margin: 0;
+
+            @media only screen and (max-width: 767.98px) {
+                font-size: 14px;
             }
         }
     }

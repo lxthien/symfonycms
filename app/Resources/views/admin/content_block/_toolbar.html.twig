@@ -1,0 +1,126 @@
+<div class="cms-block-toolbar"
+     data-cms-block-toolbar
+     data-target-editor="{{ target_editor }}"
+     data-related-search-url="{{ path('admin_content_block_related_search') }}"
+     data-current-id="{{ current_id|default(0) }}">
+    <div class="cms-block-toolbar-header">
+        <strong>Content blocks</strong>
+        <span>Chèn nhanh block chuẩn vào nội dung</span>
+    </div>
+    <div class="cms-block-toolbar-actions">
+        <button type="button" class="btn btn-outline-primary btn-sm" data-cms-block-open="faq" title="FAQ">
+            <i class="fa fa-question-circle"></i> FAQ
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-cms-block-open="cta" title="CTA">
+            <i class="fa fa-bullhorn"></i> CTA
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-cms-block-open="pricing" title="Bảng giá">
+            <i class="fa fa-table"></i> Bảng giá
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-cms-block-open="gallery" title="Gallery">
+            <i class="fa fa-photo"></i> Gallery
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-cms-block-open="related" title="Related posts">
+            <i class="fa fa-link"></i> Related posts
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-cms-block-open="lead" title="Form lead">
+            <i class="fa fa-envelope"></i> Form lead
+        </button>
+    </div>
+</div>
+
+<div class="modal fade cms-block-modal" id="cmsBlockModal" tabindex="-1" role="dialog" aria-hidden="true" data-cms-block-modal>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" data-cms-block-title>Chèn content block</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div data-cms-block-form>
+                    <input type="hidden" name="blockType" value="">
+
+                    <div class="cms-block-form" data-cms-block-form-type="faq">
+                        <p class="text-muted">Mỗi dòng theo dạng: Câu hỏi | Câu trả lời</p>
+                        <textarea class="form-control" name="faqItems" rows="8" placeholder="Chi phí xây nhà phần thô bao nhiêu? | Chi phí phụ thuộc diện tích, vật tư và hiện trạng công trình.&#10;Bao lâu thì hoàn thành? | Thời gian trung bình từ 2 đến 5 tháng."></textarea>
+                    </div>
+
+                    <div class="cms-block-form" data-cms-block-form-type="cta">
+                        <div class="form-group">
+                            <label>Tiêu đề</label>
+                            <input class="form-control" name="ctaTitle" type="text" placeholder="Cần tư vấn chi phí xây dựng?">
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả</label>
+                            <textarea class="form-control" name="ctaDescription" rows="3" placeholder="Gửi thông tin, đội ngũ Minh Duy sẽ tư vấn phương án phù hợp."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Nút bấm</label>
+                            <input class="form-control" name="ctaButton" type="text" placeholder="Liên hệ ngay">
+                        </div>
+                        <div class="form-group">
+                            <label>URL</label>
+                            <input class="form-control" name="ctaUrl" type="text" placeholder="/lien-he">
+                        </div>
+                    </div>
+
+                    <div class="cms-block-form" data-cms-block-form-type="pricing">
+                        <p class="text-muted">Mỗi dòng theo dạng: Hạng mục | Đơn giá | Ghi chú</p>
+                        <textarea class="form-control" name="pricingItems" rows="8" placeholder="Xây nhà phần thô | Từ 3.600.000đ/m2 | Tùy vật tư và diện tích&#10;Hoàn thiện nhà | Từ 2.200.000đ/m2 | Báo giá sau khảo sát"></textarea>
+                    </div>
+
+                    <div class="cms-block-form" data-cms-block-form-type="gallery">
+                        <input type="hidden" id="cmsBlockGalleryItems" name="galleryMediaItems" value="[]">
+                        <button type="button"
+                                class="btn btn-outline-primary"
+                                data-media-picker-open
+                                data-picker-url="{{ path('admin_media_picker') }}"
+                                data-picker-mode="multiple"
+                                data-album-input="#cmsBlockGalleryItems"
+                                data-album-grid="[data-cms-block-gallery-grid]">
+                            <i class="fa fa-plus"></i> Chọn ảnh từ Media Library
+                        </button>
+                        <div class="media-album-grid cms-block-gallery-picker-grid" data-cms-block-gallery-grid></div>
+                        <p class="text-muted">Hoặc nhập ảnh thủ công, mỗi dòng theo dạng: URL ảnh | Alt | Caption</p>
+                        <textarea class="form-control" name="galleryItems" rows="8" placeholder="/uploads/media/example.jpg | Thi công phần thô | Công trình thực tế"></textarea>
+                    </div>
+
+                    <div class="cms-block-form" data-cms-block-form-type="related">
+                        <div class="form-group">
+                            <label>Tìm bài viết/page</label>
+                            <input class="form-control" name="relatedSearch" type="text" placeholder="Nhập tiêu đề, URL hoặc từ khóa">
+                        </div>
+                        <div class="cms-related-search-results" data-cms-related-results></div>
+                        <input type="hidden" name="relatedSelectedItems" value="[]">
+                        <div class="cms-related-selected" data-cms-related-selected></div>
+                        <p class="text-muted">Hoặc nhập thủ công, mỗi dòng theo dạng: Tiêu đề | URL | Mô tả ngắn</p>
+                        <textarea class="form-control" name="relatedItems" rows="8" placeholder="Kinh nghiệm xây nhà phần thô | /kinh-nghiem-xay-nha-phan-tho.html | Những lưu ý quan trọng trước khi thi công"></textarea>
+                    </div>
+
+                    <div class="cms-block-form" data-cms-block-form-type="lead">
+                        <div class="form-group">
+                            <label>Tiêu đề</label>
+                            <input class="form-control" name="leadTitle" type="text" placeholder="Nhận báo giá miễn phí">
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả</label>
+                            <textarea class="form-control" name="leadDescription" rows="3" placeholder="Để lại thông tin, chúng tôi sẽ liên hệ tư vấn trong thời gian sớm nhất."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-outline-secondary" data-cms-block-preview-toggle>
+                    <i class="fa fa-eye"></i> Preview
+                </button>
+                <button type="button" class="btn btn-primary" data-cms-block-insert>
+                    <i class="fa fa-plus"></i> Chèn block
+                </button>
+            </div>
+            <div class="cms-block-preview" data-cms-block-preview></div>
+        </div>
+    </div>
+</div>

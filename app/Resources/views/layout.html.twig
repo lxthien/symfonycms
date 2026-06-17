@@ -8,45 +8,35 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- dns prefetch -->
+        <!-- Resource Hints -->
         <meta http-equiv="x-dns-prefetch-control" content="on">
-        <link rel="preconnect" href="//facebook.com" crossorigin>
-        <link rel="dns-prefetch" href="//facebook.com">
+
         <link rel="preconnect" href="//www.google-analytics.com" crossorigin>
-        <link rel="dns-prefetch" href="//www.google-analytics.com">
-        <link rel="preconnect" href="//www.youtube.com" crossorigin>
-        <link rel="dns-prefetch" href="//www.youtube.com">
-        <link rel="preconnect" href="//s7.addthis.com" crossorigin>
-        <link rel="dns-prefetch" href="//s7.addthis.com">
-        <link rel="preconnect" href="//fonts.gstatic.com" crossorigin>
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" >
-        <link rel="preconnect" href="//static.xx.fbcdn.net" crossorigin>
-        <link rel="dns-prefetch" href="//static.xx.fbcdn.net" >
-        <link rel="preconnect" href="//connect.facebook.net" crossorigin>
-        <link rel="dns-prefetch" href="//connect.facebook.net" >
         <link rel="preconnect" href="//www.googletagmanager.com" crossorigin>
-        <link rel="dns-prefetch" href="//www.googletagmanager.com" >
+        <link rel="preconnect" href="//static.xx.fbcdn.net" crossorigin>
+        <link rel="preconnect" href="//connect.facebook.net" crossorigin>
         <link rel="preconnect" href="//cdnjs.cloudflare.com" crossorigin>
-        <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" >
         <link rel="preconnect" href="//images.dmca.com" crossorigin>
-        <link rel="dns-prefetch" href="//images.dmca.com" >
         
-        <!-- https://realfavicongenerator.net -->
+        <!-- Favicon -->
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         <link rel="manifest" href="/site.webmanifest">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         
-        <meta name="geo.region" content="VI-VN" />
-        <meta name="geo.placename" content="Ho Chi Minh, Viet Nam" />
-        <meta name="geo.position" content="10.735433;106.700938" />
-        <meta name="ICBM" content="10.735433;106.700938" />
-        {% block robots %}<meta name="robots" content="index, follow" />{% endblock %}
+        <meta name="geo.region" content="VI-VN">
+        <meta name="geo.placename" content="Ho Chi Minh, Viet Nam">
+        <meta name="geo.position" content="10.735433;106.700938">
+        <meta name="ICBM" content="10.735433;106.700938">
+        {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
         <meta name="revisit-after" content="1 days">
-        <meta http-equiv="content-language" content="vi">
+        
+        {# Preload critical fonts #}
+        <link rel="preload" href="{{ asset('build/fonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="{{ asset('build/fonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+        {% block lcpPreload %}{% endblock %}
 
         {% block canonical %}
             {% if app.request.attributes.get('_route') is not null %}
@@ -54,164 +44,36 @@
             {% endif %}
         {% endblock %}
         
-        <!-- Open Graph data -->
-        <meta property="og:locale" content="vi_VN" />
+        <!-- Open Graph -->
+        <meta property="og:locale" content="vi_VN">
         {% block structuredOpenGraph %}
-            <meta property="og:type" content="website" />
-            <meta property="og:title" content="{{ block('title') }}" />
-            <meta property="og:description" content="{{ block('description') }}" />
+            <meta property="og:type" content="website">
+            <meta property="og:title" content="{{ block('title') }}">
+            <meta property="og:description" content="{{ block('description') }}">
         {% endblock %}
         {% if app.request.attributes.get('_route') is not null %}
-            <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+            <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
         {% endif %}
-        <meta property="og:site_name" content="{{ get_setting('siteName') }}" />
-        <meta property="fb:app_id" content="224509460707857" />
-        <!-- Open Graph data -->
+        <meta property="og:site_name" content="{{ get_setting('siteName') }}">
+        <meta property="fb:app_id" content="224509460707857">
 
-        <!-- Twitter Card data -->
+        <!-- Twitter Card -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="@xaydungminhduy">
         <meta name="twitter:title" content="{{ block('title') }}">
         <meta name="twitter:description" content="{{ block('description') }}">
         <meta name="twitter:creator" content="@xaydungminhduy">
-        {% block twitterImage %}
-        {% endblock %}
-        <!-- Twitter Card data -->
-
-        {% block structuredOrganization %}
-        {% endblock %}
+        {% block twitterImage %}{% endblock %}
 
         {% block structuredWebSite %}
-            <script type="application/ld+json">
-            {
-                "@context": "http://schema.org",
-                "@graph": [
-                    {
-                        "@type": "Organization",
-                        "@id": "https://xaydungminhduy.com/#organization",
-                        "url": "https://xaydungminhduy.com/",
-                        "name": "Xây Dựng Minh Duy",
-                        "alternateName": [
-                            "Xây Dựng Minh Duy",
-                            "công ty xây dựng minh duy",
-                            "Xây nhà trọn gói Xây Dựng Minh Duy",
-                            "Sửa nhà trọn gói Xây Dựng Minh Duy"
-                        ],
-                        "logo": {
-                            "@type": "ImageObject",
-                            "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                            "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                            "width": "354",
-                            "height": "72"
-                        }
-                    },
-                    {
-                        "@context": "https://schema.org",
-                        "@type": "WebSite",
-                        "@id": "https://xaydungminhduy.com/#website",
-                        "url": "https://xaydungminhduy.com/",
-                        "name": "Xây Dựng Minh Duy",
-                        "alternateName": [
-                            "Xây Dựng Minh Duy",
-                            "công ty xây dựng minh duy",
-                            "Xây nhà trọn gói Xây Dựng Minh Duy",
-                            "Sửa nhà trọn gói Xây Dựng Minh Duy"
-                        ],
-                        "inLanguage": "vi-VN",
-                        "publisher": {
-                            "@type": "Organization",
-                            "@id": "https://xaydungminhduy.com/#organization"
-                        },
-                        "potentialAction": {
-                            "@type": "SearchAction",
-                            "target": "https://xaydungminhduy.com/search?q={search_term_string}",
-                            "query-input": "required name=search_term_string"
-                        }
-                    },
-                    {
-                        "@type": "Person",
-                        "url": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}",
-                        "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person",
-                        "name": "Lê Xuân Minh",
-                        "alternateName": [
-                            "Minh Le",
-                            "Le Xuan Thuy"
-                        ],
-                        "familyName": "Lê",
-                        "additionalName": "Xuân",
-                        "givenName": "Minh",
-                        "mainentityofpage": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}",
-                        "birthDate": "1988-05-21",
-                        "description": "Lê Xuân Minh là CEO công ty Xây Dựng Minh Duy - là một đơn vị chuyên cung cấp dịch vụ thiết kế nhà, thi công xây dựng, sửa chữa nhà ở dân dụng, nhà công nghiệp. Ông có hơn 10 năm kinh nghiệm và là chuyên gia hàng đầu trong lĩnh vực xây dựng.",
-                        "jobTitle": [
-                            "CEO",
-                            "Founder"
-                        ],
-                        "gender": "https://schema.org/Male",
-                        "height": "1m78",
-                        "email": "ldminh1988@gmail.com",
-                        "image": "https://xaydungminhduy.com/uploads/ckfinder/userfiles/files/leduyminh.jpg",
-                        "sameAs": [
-                            "https://www.facebook.com/profile.php?id=100011397406701",
-                            "https://www.linkedin.com/in/lexuanminh/",
-                            "https://www.pinterest.com/lexuanminhxaydungminhduy/",
-                            "https://twitter.com/lexuanminh88"
-                        ],
-                        "alumniOf": {
-                            "@type": "EducationalOrganization",
-                            "name": "University of Architecture Ho Chi Minh City",
-                            "url": "http://en.uah.edu.vn/",
-                            "@id": "kg:/m/02pydq7",
-                            "description": "Ho Chi Minh City University of Architecture (Vietnamese: Đại học Kiến trúc Thành phố Hồ Chí Minh), is the flagship university in architecture, civil engineering, design education and research in Vietnam. In addition to architecture and civil/structural engineering, the university provides higher education in several relating disciplines including urban planning, infrastructural engineering, fine arts, fashion design and building interior design. Its main campus is located in District 3, Ho Chi Minh City in addition to two provincial campuses in Da Lat and Can Tho.",
-                            "mainEntityOfPage": "http://en.uah.edu.vn/"
-                        },
-                        "contactPoint": {
-                            "@type": "ContactPoint",
-                            "telephone": "0982969379",
-                            "email": "ldminh1988@gmail.com",
-                            "availableLanguage": [
-                                "Vietnamese",
-                                "English"
-                            ]
-                        },
-                        "worksFor": {
-                            "@type": "Organization",
-                            "@id": "https://xaydungminhduy.com/#organization"
-                        },
-                        "nationality": {
-                            "@type": "Country",
-                            "@id": "kg:/m/01crd5",
-                            "url": "https://vi.wikipedia.org/wiki/Việt_Nam",
-                            "name": "Việt Nam"
-                        },
-                        "address": {
-                            "@type": "PostalAddress",
-                            "streetAddress": "271/42 Lê Văn Lương, Phường Tân Quy",
-                            "addressLocality": "Quận 7",
-                            "addressRegion": "Hồ Chí Minh",
-                            "postalCode": "700000",
-                            "addressCountry": "VN"
-                        },
-                        "birthPlace": {
-                            "@type": "Place",
-                            "url": "https://vi.wikipedia.org/wiki/Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh",
-                            "name": "Thành phố Hồ Chí Minh",
-                            "description": "Thành phố Hồ Chí Minh, còn được gọi là Sài Gòn, là thành phố lớn nhất Việt Nam và là một siêu đô thị trong tương lai gần. Đây còn là trung tâm kinh tế, giải trí, một trong hai trung tâm văn hóa và giáo dục quan trọng tại Việt Nam."
-                        },
-                        "knowsLanguage": [
-                            "English",
-                            "Vietnamese"
-                        ]
-                    }
-                ]
-            }
-        </script>
+            {{ schema_site() }}
         {% endblock %}
 
         {% block structuredReview %}
         {% endblock %}
 
         <!-- Google Tag Manager -->
+        {% if app.environment == 'prod' %}
         <script>
             document.addEventListener('DOMContentLoaded', () => { /** init gtm after 3500 seconds - this could be adjusted */
                 setTimeout(initGTM, 3500);
@@ -241,29 +103,30 @@
                 document.head.appendChild(script);
             }
         </script>
+        {% endif %}
         <!-- End Google Tag Manager -->
 
         {{ get_setting('googleAnalytic')|raw }}
 
         <style type="text/css">
-            {{ source('@web/css/first.css', ignore_missing = true) }}
+            {# Get hashed path from asset(), then use source() with @web namespace #}
+            {{ source('@web' ~ asset('build/css/first.css'), ignore_missing = false) }}
         </style>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-        <link href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-        <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
-        <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" ></noscript>
+        <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}"></noscript>
     </head>
     <body>
-        <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        <!-- End Google Tag Manager (noscript) -->
+        {% if app.environment == 'prod' %}
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PKBMR78" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        {% endif %}
         <div class="container-fluid wrapper">
             {{ include('layout/header.html.twig') }}
             {{ include('layout/menu.html.twig') }}
             {{ include('layout/slide.html.twig') }}
 
-            {% block body %}{% endblock %}
+            <main id="main-content">
+                {% block body %}{% endblock %}
+            </main>
 
             {{ include('layout/footer.html.twig') }}
             {{ include('layout/footer_UI.html.twig') }}

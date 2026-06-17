@@ -1,0 +1,47 @@
+{% set formName = form.vars.name %}
+{% set previewUrlPattern = preview_url_pattern|default(path('news_show', {slug: '__slug__'})) %}
+{% set hasImage = has_image|default(false) %}
+{% set checkCategory = check_category|default(false) %}
+
+<div class="seo-realtime-checklist"
+     data-seo-checklist
+     data-form-prefix="{{ formName }}"
+     data-preview-url-pattern="{{ previewUrlPattern }}"
+     data-has-image="{{ hasImage ? '1' : '0' }}"
+     data-check-category="{{ checkCategory ? '1' : '0' }}">
+    <div class="seo-realtime-header">
+        <div>
+            <h4>SEO checklist</h4>
+        </div>
+        <div class="seo-realtime-score seo-score-meter-warning" data-seo-score-box>
+            <strong data-seo-score>0</strong>
+            <span>/100</span>
+            <small data-seo-status>Cần cải thiện</small>
+        </div>
+    </div>
+
+    <div class="seo-preview">
+        <div class="seo-preview-title" data-seo-preview-title>Chưa có tiêu đề</div>
+        <div class="seo-preview-url" data-seo-preview-url>{{ previewUrlPattern|replace({'__slug__': 'duong-dan-bai-viet'}) }}</div>
+        <div class="seo-preview-description" data-seo-preview-description>Chưa có meta description hoặc mô tả tóm tắt.</div>
+    </div>
+
+    <div class="seo-score-meta">
+        <span><strong>Từ khóa chính:</strong> <span data-seo-primary-keyword>Chưa đặt</span></span>
+        <span><strong>Số từ:</strong> <span data-seo-word-count>0</span></span>
+        <span><strong>Title:</strong> <span data-seo-title-length>0</span> ký tự</span>
+        <span><strong>Description:</strong> <span data-seo-description-length>0</span> ký tự</span>
+    </div>
+
+    <div class="row seo-realtime-lists">
+        <div class="col-md-6">
+            <h5>Cần xử lý</h5>
+            <ul class="list-unstyled" data-seo-errors></ul>
+        </div>
+
+        <div class="col-md-6">
+            <h5>Gợi ý tối ưu</h5>
+            <ul class="list-unstyled" data-seo-warnings></ul>
+        </div>
+    </div>
+</div>

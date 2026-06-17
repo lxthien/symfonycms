@@ -1,9 +1,9 @@
-<div id="nav">
+<nav id="nav" role="navigation" aria-label="Menu chính">
     <div class="nav-container">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <nav class="navbar navbar-default">
+                    <div class="navbar navbar-default">
                         <div class="navbar-header">
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
                                 <span class="sr-only">Toggle navigation</span>
@@ -13,7 +13,7 @@
                             </button>
 
                             <a class="navbar-brand hidden-sm hidden-md hidden-lg" href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                                <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-mobile.png'), '')) }}" class="d-inline-block" alt="{{ get_setting('siteName') }}" width="55" height="45" />
+                                <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo-mobile.png'), '')) }}" class="d-inline-block" alt="{{ get_setting('siteName') }}" width="55" height="45">
                             </a>
                         </div>
 
@@ -21,15 +21,16 @@
                             {{ knp_menu_render('AppBundle:Builder:mainMenu', {
                                 'allow_safe_labels': true,
                             })|raw }}
-                            <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get">
-                                <div class="form-group">
-                                    <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}">
+                            <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get" onsubmit="return this.q.value.trim().length > 0" novalidate>
+                                <div class="form-group search-group">
+                                    <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}" required minlength="1" oninvalid="this.setCustomValidity(' ')" oninput="this.setCustomValidity('')">
+                                    <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
                                 </div>
                             </form>
                         </div>
-                    </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</nav>

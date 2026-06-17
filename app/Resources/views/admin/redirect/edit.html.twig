@@ -1,0 +1,25 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_redirect_edit' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Sửa redirect #{{ redirect.id }}</strong>
+                        </div>
+                        <div class="card-body">
+                            {{ include('admin/redirect/_form.html.twig', {
+                                form: form,
+                                button_label: 'Lưu redirect'
+                            }, with_context = false) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

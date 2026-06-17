@@ -4,6 +4,7 @@
     {{ parent() }}
 
     <link rel="stylesheet" href="{{ asset('build/css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock %}
 
 {% block javascripts %}
@@ -23,5 +24,21 @@
     
     <script src="{{ asset('assets/ivoryckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/cksourceckfinder/ckfinder/ckfinder.js') }}"></script>
+    <script>
+        window.MINHDUY_ADMIN = window.MINHDUY_ADMIN || {};
+        window.MINHDUY_ADMIN.ckeditorContentCss = "{{ asset('build/css/ckeditor-content.css') }}";
+    </script>
     <script src="{{ asset('build/js/admin.js') }}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".js-scheduled-at", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                allowInput: true,
+                time_24hr: true
+            });
+        });
+    </script>
 {% endblock %}

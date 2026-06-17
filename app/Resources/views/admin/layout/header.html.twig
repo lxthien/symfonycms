@@ -16,8 +16,8 @@
                 </a>
 
                 <div class="user-menu dropdown-menu">
-                    <a class="nav-link" href="{{ path('fos_user_profile_show') }}">
-                        <i class="fa fa- user"></i>{{ app.user.name }}
+                    <a class="nav-link" href="{{ is_granted('CMS_USER_MANAGE') ? path('admin_user_edit', {id: app.user.id}) : path('fos_user_profile_show') }}">
+                        <i class="fa fa-user"></i>{{ app.user.name }}
                     </a>
                     <a class="nav-link" href="{{ path('fos_user_security_logout') }}">
                         <i class="fa fa-power -off"></i>{{ 'menu.logout'|trans }}

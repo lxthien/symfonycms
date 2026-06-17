@@ -1,0 +1,60 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_media_edit' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Preview</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="media-edit-preview">
+                                {% if media.isImage() %}
+                                    <img src="{{ asset(media.path) }}" alt="{{ media.alt ?: media.originalName }}">
+                                {% else %}
+                                    <span class="media-file-icon"><i class="fa fa-file-pdf-o"></i></span>
+                                {% endif %}
+                            </div>
+                            <dl class="media-meta-list">
+                                <dt>File</dt>
+                                <dd>{{ media.originalName }}</dd>
+                                <dt>URL</dt>
+                                <dd><code>{{ asset(media.path) }}</code></dd>
+                                <dt>Size</dt>
+                                <dd>{{ (media.size / 1024)|number_format(1) }} KB</dd>
+                                <dt>Kích thước</dt>
+                                <dd>{{ media.width and media.height ? media.width ~ 'x' ~ media.height : '-' }}</dd>
+                                <dt>WebP</dt>
+                                <dd>{{ media.webpPath ? 'Có' : 'Không' }}</dd>
+                            </dl>
+                            {{ include('admin/common/_delete_post_confirmation.html.twig', {id: 'Media' ~ media.id}) }}
+                            <form action="{{ path('admin_media_delete', {id: media.id}) }}" method="post" data-confirmation="true" id="delete-form">
+                                <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
+                                <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#confirmationModalMedia{{ media.id }}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Xóa media
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Sửa metadata</strong>
+                        </div>
+                        <div class="card-body">
+                            {{ include('admin/media/_form.html.twig', {
+                                form: form,
+                                button_label: 'Lưu media'
+                            }, with_context = false) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

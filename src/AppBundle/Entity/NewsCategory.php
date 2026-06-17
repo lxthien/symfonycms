@@ -71,7 +71,7 @@ class NewsCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", nullable=true)
+     * @ORM\Column(name="content", type="text", nullable=true, columnDefinition="LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
      */
     private $content = null;
 
@@ -122,6 +122,20 @@ class NewsCategory
      * @ORM\Column(name="pageKeyword", type="string", length=255, nullable=true)
      */
     private $pageKeyword = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isIndex", type="boolean", options={"default": true})
+     */
+    private $isIndex = true;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isFollow", type="boolean", options={"default": true})
+     */
+    private $isFollow = true;
 
     /**
      * @var string
@@ -351,6 +365,30 @@ class NewsCategory
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setIsIndex($isIndex)
+    {
+        $this->isIndex = (bool) $isIndex;
+
+        return $this;
+    }
+
+    public function getIsIndex()
+    {
+        return $this->isIndex;
+    }
+
+    public function setIsFollow($isFollow)
+    {
+        $this->isFollow = (bool) $isFollow;
+
+        return $this;
+    }
+
+    public function getIsFollow()
+    {
+        return $this->isFollow;
     }
 
     public function setCreatedAt($createdAt)

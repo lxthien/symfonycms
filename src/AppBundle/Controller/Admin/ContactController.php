@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Controller used to manage blog contents in the backend.
  *
  * @Route("/admin/contact")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_CONTACT_MANAGE')")
  */
 
 class ContactController extends Controller

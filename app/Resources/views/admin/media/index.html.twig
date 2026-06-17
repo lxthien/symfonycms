@@ -1,0 +1,127 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_media_index' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Media Library</strong>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(upload_form, {
+                                attr: {
+                                    class: 'media-inline-upload',
+                                    'data-media-upload-form': ''
+                                }
+                            }) }}
+                                <div class="media-dropzone compact" data-media-dropzone data-file-input="#media_upload_files">
+                                    <div class="media-dropzone-icon"><i class="fa fa-cloud-upload"></i></div>
+                                    <div>
+                                        <strong>Kéo thả ảnh/file vào đây</strong>
+                                        <span>JPG, PNG, GIF, WebP, PDF</span>
+                                    </div>
+                                </div>
+
+                                <div class="media-upload-controls">
+                                    <div class="media-upload-file-input">
+                                        {{ form_widget(upload_form.files) }}
+                                        {{ form_errors(upload_form.files) }}
+                                    </div>
+                                    {{ form_widget(upload_form.folder, { attr: { class: 'form-control' } }) }}
+                                    {{ form_widget(upload_form.newFolder, { attr: { class: 'form-control', placeholder: 'Folder mới' } }) }}
+                                    {{ form_widget(upload_form.tagsText, { attr: { class: 'form-control' } }) }}
+                                    <button type="submit" class="btn btn-success" data-media-upload-submit>
+                                        <i class="fa fa-cloud-upload"></i> Upload
+                                    </button>
+                                </div>
+                                <div class="media-upload-preview" data-media-upload-preview></div>
+                                <div class="media-upload-status" data-media-upload-status aria-live="polite"></div>
+                                {{ form_rest(upload_form) }}
+                            {{ form_end(upload_form) }}
+
+                            <form class="admin-list-filters media-filters" method="get" action="{{ path('admin_media_index') }}">
+                                <div class="media-filter-grid">
+                                    <input type="text" name="q" value="{{ filters.q }}" class="form-control" placeholder="Tìm file, alt, caption, credit">
+                                    <select name="folder" class="form-control">
+                                        <option value="">Tất cả folder</option>
+                                        {% for folder in folders %}
+                                            <option value="{{ folder.id }}" {{ filters.folder == folder.id ? 'selected' : '' }}>{{ folder.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="tag" class="form-control">
+                                        <option value="">Tất cả tag</option>
+                                        {% for tag in tags %}
+                                            <option value="{{ tag.id }}" {{ filters.tag == tag.id ? 'selected' : '' }}>{{ tag.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="type" class="form-control">
+                                        <option value="">Tất cả loại</option>
+                                        <option value="image" {{ filters.type == 'image' ? 'selected' : '' }}>Ảnh</option>
+                                        <option value="pdf" {{ filters.type == 'pdf' ? 'selected' : '' }}>PDF</option>
+                                    </select>
+                                    <select name="alt" class="form-control">
+                                        <option value="">Tất cả alt</option>
+                                        <option value="missing" {{ filters.alt == 'missing' ? 'selected' : '' }}>Thiếu alt</option>
+                                    </select>
+                                </div>
+                                <div class="admin-filter-actions">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Lọc</button>
+                                    <a href="{{ path('admin_media_index') }}" class="btn btn-link">Xóa lọc</a>
+                                </div>
+                            </form>
+
+                            <div class="media-grid">
+                                {% for media in pagination %}
+                                    <div class="media-card">
+                                        <a href="{{ path('admin_media_edit', {id: media.id, modal: 1}) }}" class="media-thumb" data-media-edit>
+                                            {% if media.isImage() %}
+                                                <img src="{{ asset(media.thumbnailPath ?: media.path) }}" alt="{{ media.alt ?: media.originalName }}">
+                                            {% else %}
+                                                <span class="media-file-icon"><i class="fa fa-file-pdf-o"></i></span>
+                                            {% endif %}
+                                        </a>
+                                        <div class="media-card-body">
+                                            <a href="{{ path('admin_media_edit', {id: media.id, modal: 1}) }}" class="media-title" data-media-edit>{{ media.originalName }}</a>
+                                            <small class="text-muted">{{ media.width and media.height ? media.width ~ 'x' ~ media.height : media.mimeType }}</small>
+                                            {% if media.isImage() and not media.alt %}
+                                                <span class="badge badge-warning">Thiếu alt</span>
+                                            {% endif %}
+                                            {% if media.folder %}
+                                                <span class="badge badge-primary">{{ media.folder.name }}</span>
+                                            {% endif %}
+                                            {% for tag in media.tags %}
+                                                <span class="badge badge-default">{{ tag.name }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="media-card-actions">
+                                            <a href="{{ asset(media.path) }}" target="_blank" class="btn-sm"><i class="fa fa-external-link"></i></a>
+                                            <a href="{{ path('admin_media_edit', {id: media.id, modal: 1}) }}" class="btn-sm" data-media-edit><i class="fa fa-edit"></i></a>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p class="text-center text-muted">Chưa có media nào.</p>
+                                {% endfor %}
+                            </div>
+
+                            <div class="admin-pagination">
+                                {{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/twitter_bootstrap_v3_pagination.html.twig') }}
+                            </div>
+
+                            <div class="modal fade media-edit-modal" id="mediaEditModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content" data-media-edit-modal-content>
+                                        <div class="modal-body text-center text-muted">Đang tải...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

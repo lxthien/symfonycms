@@ -1,3 +1,327 @@
+/* Contact Page
+------------------------------------------------------------------------- */
+
+// Hero Section
+.contact-hero {
+    background: $gradientPrimary;
+    padding: 60px 0;
+    text-align: center;
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    box-sizing: border-box;
+
+    .hero-title {
+        color: $white;
+        font-size: 2.5em;
+        font-weight: 700;
+        margin: 0 0 15px;
+        font-family: $robotoCondesed;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        @media only screen and (max-width: 767.98px) {
+            font-size: 1.8em;
+        }
+    }
+
+    .hero-subtitle {
+        color: rgba($white, 0.9);
+        font-size: 18px;
+        margin: 0;
+
+        @media only screen and (max-width: 767.98px) {
+            font-size: 15px;
+        }
+    }
+}
+
+// Contact Page Content
+.contact-page {
+    padding: 60px 0;
+    background: $grayf1;
+
+    @media only screen and (max-width: 767.98px) {
+        padding: 40px 0;
+    }
+
+    .contact-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+    }
+}
+
+// Contact Info Section
+.contact-info-section {
+    .info-cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+
+        @media only screen and (max-width: 991.98px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media only screen and (max-width: 575.98px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .info-card {
+        background: $white;
+        border-radius: 16px;
+        padding: 30px 25px;
+        text-align: center;
+        box-shadow: $shadowMd;
+        transition: all $transitionNormal;
+
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: $shadowLg;
+
+            .info-icon {
+                background: $secondaryColor;
+                transform: scale(1.1);
+            }
+        }
+
+        .info-icon {
+            width: 70px;
+            height: 70px;
+            background: $gradientPrimary;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: all $transitionNormal;
+
+            i {
+                color: $white;
+                font-size: 26px;
+            }
+        }
+
+        .info-content {
+            h3 {
+                font-size: 16px;
+                font-weight: 700;
+                color: $gray900;
+                margin: 0 0 10px;
+                font-family: $robotoCondesed;
+            }
+
+            p {
+                font-size: 14px;
+                color: $gray700;
+                margin: 0;
+                line-height: 1.5;
+
+                a {
+                    color: $primaryColor2;
+                    text-decoration: none;
+                    transition: color $transitionFast;
+
+                    &:hover {
+                        color: $primaryColor;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Contact Form Section
+.contact-form-section {
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: $white;
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow: $shadowLg;
+
+        @media only screen and (max-width: 767.98px) {
+            padding: 30px 20px;
+            border-radius: 16px;
+        }
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+
+        h2 {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: $primaryColor;
+            margin: 0 0 12px;
+            font-family: $robotoCondesed;
+
+            i {
+                color: $secondaryColor;
+                margin-right: 10px;
+            }
+
+            @media only screen and (max-width: 767.98px) {
+                font-size: 1.4em;
+            }
+        }
+
+        p {
+            color: $gray600;
+            font-size: 15px;
+            margin: 0;
+        }
+    }
+
+    .alert {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        font-size: 15px;
+
+        i {
+            font-size: 18px;
+        }
+
+        &.alert-success {
+            background: rgba(#10b981, 0.1);
+            border: 1px solid #10b981;
+            color: #059669;
+        }
+
+        &.alert-danger {
+            background: rgba(#ef4444, 0.1);
+            border: 1px solid #ef4444;
+            color: #dc2626;
+        }
+    }
+
+    .contact-form {
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+
+            @media only screen and (max-width: 575.98px) {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+
+            .form-label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 600;
+                font-size: 14px;
+                color: $gray800;
+                margin-bottom: 10px;
+
+                i {
+                    color: $primaryColor;
+                    font-size: 13px;
+                }
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 14px 18px;
+                border: 2px solid $gray200;
+                border-radius: 10px;
+                font-size: 15px;
+                color: $gray800;
+                transition: all $transitionFast;
+                background: $white;
+
+                &::placeholder {
+                    color: $gray500;
+                }
+
+                &:focus {
+                    outline: none;
+                    border-color: $primaryColor;
+                    box-shadow: 0 0 0 4px rgba($primaryColor, 0.1);
+                }
+
+                &:hover:not(:focus) {
+                    border-color: $gray400;
+                }
+            }
+
+            textarea.form-control {
+                resize: vertical;
+                min-height: 140px;
+            }
+
+            .form-error-message,
+            .help-block {
+                color: #dc2626;
+                font-size: 13px;
+                margin-top: 6px;
+            }
+        }
+
+        .recaptcha-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .form-actions {
+            text-align: center;
+
+            .btn-submit {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 16px 50px;
+                background: $gradientPrimary;
+                color: $white;
+                font-size: 16px;
+                font-weight: 700;
+                border: none;
+                border-radius: 50px;
+                cursor: pointer;
+                transition: all $transitionNormal;
+                box-shadow: 0 4px 15px rgba($primaryColor, 0.3);
+
+                i {
+                    font-size: 16px;
+                    transition: transform $transitionFast;
+                }
+
+                &:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba($primaryColor, 0.4);
+
+                    i {
+                        transform: translateX(5px);
+                    }
+                }
+
+                &:active {
+                    transform: translateY(-1px);
+                }
+
+                @media only screen and (max-width: 575.98px) {
+                    width: 100%;
+                    padding: 16px 30px;
+                }
+            }
+        }
+    }
+}
+
+// Legacy styles (keeping for backwards compatibility)
 .contacts {
     .company {
         margin-bottom: 30px;

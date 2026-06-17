@@ -50,18 +50,29 @@
                                                 <img src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('admin_thumb') }}" alt="{{ row.getTitle() }}" />
                                             </div>
                                         </td>
-                                        <td><a class="btn-link" href="{{ path('admin_news_edit', {id: row.id}) }}">{{ row.getTitle() }}</a></td>
+                                        <td>
+                                            <a class="btn-link" href="{{ path('admin_news_edit', {id: row.id}) }}">{{ row.getTitle() }}</a>
+                                            <small class="d-block text-muted">
+                                                URL: {{ row.getUrl() }}
+                                            </small>
+                                        </td>
                                         <td>
                                             {% for category in row.getCategory() %}
                                                 {{ category.getName() }}{{ loop.last == false ? ', ' : '' }}
                                             {% endfor %}
                                         </td>
                                         <td>
-                                            <label class="switch switch-text switch-primary switch-pill">
-                                                <input type="checkbox" class="switch-input" {{ row.getEnable() ? 'checked="true"' : '' }} data-id="{{row.getId()}}" data-action="{{ path('admin_news_disable') }}">
-                                                <span data-on="On" data-off="Off" class="switch-label"></span>
-                                                <span class="switch-handle"></span>
-                                            </label>
+                                            {% set statusColors = {
+                                                'published': 'success',
+                                                'draft': 'secondary',
+                                                'pending_review': 'warning',
+                                                'scheduled': 'info',
+                                                'archived': 'dark',
+                                                'trash': 'danger'
+                                            } %}
+                                            <span class="badge badge-{{ statusColors[row.getStatus()] | default('secondary') }}">
+                                                {{ row.getStatusLabel() }}
+                                            </span>
                                         </td>
                                         <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                         <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>

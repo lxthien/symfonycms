@@ -1,9 +1,10 @@
-{% if comments|length > 0 %}
+{% set comment_threads = commentThreads|default([]) %}
+{% if comment_threads|length > 0 %}
     <div id="list-comments">
         <h3>{{ 'comments.count' | trans({ '%count%': comments|length }) }}</h3>
         <ul class="media-list">
-            {% for comment in comments %}
-                {% if comment.getCommentId is null %}
+            {% for thread in comment_threads %}
+                {% set comment = thread.comment %}
                 <li class="media {{ loop.first ? 'first' : '' }}" id="comment-{{ comment.getId() }}">
                     <div class="media-left">
                         <amp-img
@@ -20,8 +21,7 @@
                         <div class="comment-container">{{ comment.getContent()|raw }}</div>
                         <a class="comment-reply-link" id="comment-reply" href="#" data-post-id="{{ comment.getId() }}">{{ 'comment.reply'|trans }}</a>
                         <ul class="media-list">
-                        {% for replyComment in comments %}
-                            {% if replyComment.getCommentId is same as (comment.getId()) %}
+                        {% for replyComment in thread.replies %}
                                 <li class="media">
                                     <div class="media-left">
                                         <amp-img
@@ -38,12 +38,10 @@
                                         <div class="comment-container">{{ replyComment.getContent()|raw }}</div>
                                     </div>
                                 </li>
-                            {% endif %}
                         {% endfor %}
                         </ul>
                     </div>
                 </li>
-                {% endif %}
             {% endfor %}
         </ul>
     </div>

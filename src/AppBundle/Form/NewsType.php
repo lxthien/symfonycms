@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
+use AppBundle\Form\Type\LocalDateTimeType;
 use AppBundle\Form\Type\TagsInputType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,16 +31,40 @@ class NewsType extends AbstractType
                 'label' => 'label.title',
             ])
             ->add('url', TextType::class, [
-                'attr' => ['class' => 'url', 'readonly' => 'readonly'],
+                'attr' => ['class' => 'url slug-field'],
                 'label' => 'label.url',
             ])
-            ->add('enable', CheckboxType::class, [
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Bản nháp' => News::STATUS_DRAFT,
+                    'Chờ duyệt' => News::STATUS_PENDING_REVIEW,
+                    'Đặt lịch' => News::STATUS_SCHEDULED,
+                    'Đã xuất bản' => News::STATUS_PUBLISHED,
+                    'Lưu trữ' => News::STATUS_ARCHIVED,
+                ],
+                'label' => 'Trạng thái',
+            ])
+            ->add('scheduledAt', LocalDateTimeType::class, [
                 'required' => false,
-                'label' => 'label.enable',
+                'label' => 'Ngày đặt lịch',
+                'attr' => ['class' => 'js-scheduled-at'],
+            ])
+            ->add('editorialNotes', TextareaType::class, [
+                'required' => false,
+                'label' => 'Ghi chú biên tập',
+                'attr' => ['rows' => 3],
             ])
             ->add('imageFile', VichFileType::class, [
                 'required' => false,
                 'allow_delete' => true,
+            ])
+            ->add('mediaImageId', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('albumItems', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
@@ -81,6 +106,14 @@ class NewsType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
+            ->add('isIndex', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Index',
+            ])
+            ->add('isFollow', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Follow',
+            ])
             ->add('autoFulfillAddress', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Auto Fulfill Address'
@@ -94,8 +127,11 @@ class NewsType extends AbstractType
             ])
             ->add('qa', TextareaType::class, [
                 'required' => false,
-                'attr' => ['rows' => '10'],
-                'label' => 'Q&A',
+                'attr' => [
+                    'rows' => '10',
+                    'placeholder' => '{"@context":"https://schema.org","@type":"FAQPage",...}',
+                ],
+                'label' => 'Schema/FAQ JSON-LD override',
             ])
         ;
     }

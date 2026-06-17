@@ -1,49 +1,49 @@
-{% if comments|length > 0 %}
-    <div id="list-comments">
-        <h3><span>{{ 'comments.count' | trans({ '%count%': comments|length }) }} </span></h3>
-        <ul class="media-list">
-            {% for comment in comments %}
-                {% if comment.getCommentId is null %}
+{% set comment_threads = commentThreads|default([]) %}
+{% if comment_threads|length > 0 %}
+    <div class="comments-section" id="list-comments">
+        <h3 class="section-title">
+            <i class="fas fa-comments"></i>
+            <span>{{ 'comments.count' | trans({ '%count%': comments|length }) }}</span>
+        </h3>
+        <div class="comments-list">
+            {% for thread in comment_threads %}
+                {% set comment = thread.comment %}
                 {% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
-                <li class="media {{ loop.first ? 'first' : '' }}" id="comment-{{ comment.getId() }}">
-                    <div class="media-left">
+                <div class="comment-item {{ loop.first ? 'first' : '' }}" id="comment-{{ comment.getId() }}">
+                    <div class="comment-avatar">
                         <img
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
+                            src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
                             alt="{{ comment.getAuthor() }}"
-                            class="media-object lazyload"
-                            width="65"
-                            height="65" />
+                            loading="lazy" />
                     </div>
-                    <div class="media-body">
-                        <b class="mt-0">{{ comment.getAuthor() }}</b>
-                        <div class="comment-container">{{ comment.getContent()|raw }}</div>
-                        <a class="comment-reply-link" id="comment-reply" href="#" data-post-id="{{ comment.getId() }}">{{ 'comment.reply'|trans }}</a>
-                        <ul class="media-list">
-                        {% for replyComment in comments %}
-                            {% if replyComment.getCommentId is same as (comment.getId()) %}
-                                <li class="media">
-                                    <div class="media-left">
-                                        <img
-                                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                            data-src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
-                                            alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
-                                            class="media-object lazyload"
-                                            width="65"
-                                            height="65" />
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">{{ comment.getAuthor() }}</span>
+                        </div>
+                        <div class="comment-content">{{ comment.getContent()|raw }}</div>
+                        <a class="comment-reply-btn" id="comment-reply" href="#" data-post-id="{{ comment.getId() }}">
+                            <i class="fas fa-reply"></i> {{ 'comment.reply'|trans }}
+                        </a>
+                        
+                        {% for replyComment in thread.replies %}
+                            <div class="comment-reply">
+                                <div class="comment-avatar">
+                                    <img
+                                        src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
+                                        alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
+                                        loading="lazy" />
+                                </div>
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <span class="comment-author">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</span>
                                     </div>
-                                    <div class="media-body">
-                                        <b class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</b>
-                                        <div class="comment-container">{{ replyComment.getContent()|raw }}</div>
-                                    </div>
-                                </li>
-                            {% endif %}
+                                    <div class="comment-content">{{ replyComment.getContent()|raw }}</div>
+                                </div>
+                            </div>
                         {% endfor %}
-                        </ul>
                     </div>
-                </li>
-                {% endif %}
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 {% endif %}

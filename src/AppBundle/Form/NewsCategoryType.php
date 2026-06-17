@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,6 +44,10 @@ class NewsCategoryType extends AbstractType
                 'required' => false,
                 'allow_delete' => true,
             ])
+            ->add('mediaImageId', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
             ->add('description', TextareaType::class, [
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '300'],
                 'label' => 'label.description',
@@ -73,10 +78,21 @@ class NewsCategoryType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
-            ->add('schemaMarkup', TextareaType::class, [
-                'attr' => ['rows' => '12'],
+            ->add('isIndex', CheckboxType::class, [
                 'required' => false,
-                'label' => 'Schema Markup',
+                'label' => 'Index',
+            ])
+            ->add('isFollow', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Follow',
+            ])
+            ->add('schemaMarkup', TextareaType::class, [
+                'attr' => [
+                    'rows' => '12',
+                    'placeholder' => '{"@context":"https://schema.org","@type":"CollectionPage",...}',
+                ],
+                'required' => false,
+                'label' => 'Schema JSON-LD override',
             ])
         ;
     }

@@ -19,6 +19,30 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class News
 {
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PENDING_REVIEW = 'pending_review';
+    const STATUS_SCHEDULED = 'scheduled';
+    const STATUS_PUBLISHED = 'published';
+    const STATUS_ARCHIVED = 'archived';
+    const STATUS_TRASH = 'trash';
+
+    const VALID_STATUSES = [
+        self::STATUS_DRAFT,
+        self::STATUS_PENDING_REVIEW,
+        self::STATUS_SCHEDULED,
+        self::STATUS_PUBLISHED,
+        self::STATUS_ARCHIVED,
+        self::STATUS_TRASH,
+    ];
+
+    const STATUS_LABELS = [
+        self::STATUS_DRAFT => 'Bản nháp',
+        self::STATUS_PENDING_REVIEW => 'Chờ duyệt',
+        self::STATUS_SCHEDULED => 'Đặt lịch',
+        self::STATUS_PUBLISHED => 'Đã xuất bản',
+        self::STATUS_ARCHIVED => 'Lưu trữ',
+        self::STATUS_TRASH => 'Thùng rác',
+    ];
     /**
      * @var int
      *
@@ -78,7 +102,7 @@ class News
      * @var text
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="contents", type="text")
+     * @ORM\Column(name="contents", type="text", columnDefinition="LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
      */
     private $contents;
 
@@ -96,11 +120,47 @@ class News
     private $imageFile;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(name="enable", type="boolean")
+     * @ORM\Column(name="status", type="string", length=20, options={"default": "draft"})
      */
-    private $enable = true;
+    private $status = self::STATUS_DRAFT;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="scheduledAt", type="datetime", nullable=true)
+     */
+    private $scheduledAt;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="publishedAt", type="datetime", nullable=true)
+     */
+    private $publishedAt;
+
+    /**
+     * @var User|null
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="reviewed_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    private $reviewedBy;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="editorialNotes", type="text", nullable=true)
+     */
+    private $editorialNotes;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="previewToken", type="string", length=64, nullable=true, unique=true)
+     */
+    private $previewToken;
 
     /**
      * @var boolean
@@ -136,6 +196,20 @@ class News
      * @ORM\Column(name="pageKeyword", type="string", length=255, nullable=true)
      */
     private $pageKeyword = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isIndex", type="boolean", options={"default": true})
+     */
+    private $isIndex = true;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isFollow", type="boolean", options={"default": true})
+     */
+    private $isFollow = true;
 
     /**
      * @var text
@@ -205,6 +279,14 @@ class News
      */
     private $tags;
 
+    /**
+     * @var NewsMedia[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NewsMedia", mappedBy="news", cascade={"remove"})
+     * @ORM\OrderBy({"ordering": "ASC", "id": "ASC"})
+     */
+    private $mediaItems;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -215,6 +297,7 @@ class News
         $this->category = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->mediaItems = new ArrayCollection();
     }
 
     public function getId()
@@ -340,16 +423,113 @@ class News
         return $this->images;
     }
 
-    public function setEnable($enable)
+    // ── Publishing Workflow ──────────────────────────────────────
+
+    public function setStatus($status)
     {
-        $this->enable = $enable;
+        if (!in_array($status, self::VALID_STATUSES, true)) {
+            throw new \InvalidArgumentException(sprintf('Invalid status "%s".', $status));
+        }
+
+        $this->status = $status;
+
+        if ($status === self::STATUS_PUBLISHED && !$this->publishedAt) {
+            $this->publishedAt = new \DateTime();
+        }
 
         return $this;
     }
 
-    public function getEnable()
+    public function getStatus()
     {
-        return $this->enable;
+        return $this->status;
+    }
+
+    public function getStatusLabel()
+    {
+        return self::STATUS_LABELS[$this->status] ?? $this->status;
+    }
+
+    public function isPublished()
+    {
+        return $this->status === self::STATUS_PUBLISHED;
+    }
+
+    public function isDraft()
+    {
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    public function isScheduled()
+    {
+        return $this->status === self::STATUS_SCHEDULED;
+    }
+
+    public function setScheduledAt(\DateTime $scheduledAt = null)
+    {
+        $this->scheduledAt = $scheduledAt;
+
+        return $this;
+    }
+
+    public function getScheduledAt()
+    {
+        return $this->scheduledAt;
+    }
+
+    public function setPublishedAt(\DateTime $publishedAt = null)
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    public function setReviewedBy(User $reviewedBy = null)
+    {
+        $this->reviewedBy = $reviewedBy;
+
+        return $this;
+    }
+
+    public function getReviewedBy()
+    {
+        return $this->reviewedBy;
+    }
+
+    public function setEditorialNotes($editorialNotes)
+    {
+        $this->editorialNotes = $editorialNotes;
+
+        return $this;
+    }
+
+    public function getEditorialNotes()
+    {
+        return $this->editorialNotes;
+    }
+
+    public function setPreviewToken($previewToken)
+    {
+        $this->previewToken = $previewToken;
+
+        return $this;
+    }
+
+    public function getPreviewToken()
+    {
+        return $this->previewToken;
+    }
+
+    public function generatePreviewToken()
+    {
+        $this->previewToken = bin2hex(random_bytes(32));
+
+        return $this;
     }
 
     public function setAutoFulfillAddress($autoFulfillAddress)
@@ -415,6 +595,30 @@ class News
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setIsIndex($isIndex)
+    {
+        $this->isIndex = (bool) $isIndex;
+
+        return $this;
+    }
+
+    public function getIsIndex()
+    {
+        return $this->isIndex;
+    }
+
+    public function setIsFollow($isFollow)
+    {
+        $this->isFollow = (bool) $isFollow;
+
+        return $this;
+    }
+
+    public function getIsFollow()
+    {
+        return $this->isFollow;
     }
 
     public function setQa($qa)
@@ -528,5 +732,10 @@ class News
     {
         $comment->setNews(null);
         $this->comments->removeElement($comment);
+    }
+
+    public function getMediaItems()
+    {
+        return $this->mediaItems;
     }
 }

@@ -567,7 +567,7 @@
             </trans-unit>
             <trans-unit id="comment.thank_for_your_comment">
                 <source>comment.thank_for_your_comment</source>
-                <target>Cảm ơn ý kiến của bạn. Chúng tôi sẽ xem xét trước khi hiển thị bình luận của bạn trên trang này</target>
+                <target>Cảm ơn ý kiến của bạn. Chúng tôi sẽ kiểm tra và phản hồi lại sớm nhất!</target>
             </trans-unit>
 
             <trans-unit id="label.send">

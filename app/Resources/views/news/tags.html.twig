@@ -28,6 +28,10 @@
     <link rel="canonical" href="{{ baseUrl }}"/>
 {% endblock %}
 
+{% block robots %}
+    <meta name="robots" content="{{ tag.getIsIndex() ? 'index' : 'noindex' }}, {{ tag.getIsFollow() ? 'follow' : 'nofollow' }}">
+{% endblock %}
+
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig', {type: 'category', title: tag.getName(), description: tag.getContents() }) }}

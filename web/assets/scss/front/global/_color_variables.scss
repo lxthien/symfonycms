@@ -1,14 +1,75 @@
+// ============================================
+// COLOR PALETTE - MODERN CONSTRUCTION THEME
+// ============================================
+
+// Base Colors
 $white: #ffffff;
+$black: #000000;
+
+// Gray Scale
+$gray100: #f8f9fa;
+$gray200: #e9ecef;
+$gray300: #dee2e6;
+$gray400: #ced4da;
+$gray500: #adb5bd;
+$gray600: #6c757d;
+$gray700: #495057;
+$gray800: #343a40;
+$gray900: #212529;
+
+// Legacy gray names (for backward compatibility)
 $gray94: #F9F9F9;
 $grayf1: #f1f1f1;
-$black: #000000;
 $mercury: #e2e2e2;
-$red: #FF0000;
-$chambray: #3C5A98;
-$mineShaft: #222222;
 $gallery: #ededed;
 $geyser: #DBE0E8;
-$primaryColor: #211e1f;
-$primaryColor2: #28579d;
+$mineShaft: #222222;
+
+// Primary Colors - Corporate Blue Theme
+$primaryColor: #1e3a5f;      // Deep corporate blue for headers
+$primaryColor2: #2563a8;     // Vibrant blue for accents
+$primaryDark: #142740;       // Darker shade for depth
+
+// Secondary Colors - Vibrant Orange
+$secondaryColor: #ff6b35;    // Energetic orange for CTAs
+$secondaryLight: #ff8c5a;    // Lighter orange for hover
+
+// Accent Colors
+$accentGreen: #28a745;       // Success/Trust color
+$accentTeal: #17a2b8;        // Info color
+
+// Legacy accent colors
+$red: #FF0000;
+$chambray: #3C5A98;
 $killarney: #356649;
 $fadedJade: #3C746B;
+
+// Gradients
+$gradientPrimary: linear-gradient(135deg, $primaryColor 0%, $primaryColor2 100%);
+$gradientSecondary: linear-gradient(135deg, $secondaryColor 0%, #ff8c5a 100%);
+$gradientHeader: linear-gradient(90deg, $primaryColor 0%, darken($primaryColor2, 10%) 100%);
+
+// Shadows
+$shadowSm: 0 2px 4px rgba($black, 0.08);
+$shadowMd: 0 4px 12px rgba($black, 0.12);
+$shadowLg: 0 8px 24px rgba($black, 0.16);
+
+// Transitions
+$transitionFast: 0.2s ease;
+$transitionNormal: 0.3s ease;
+
+:root {
+    --md-primary: #F37021;            /* Cam thương hiệu Minh Duy */
+    --md-primary-dark: #D85A0F;       /* Cam đậm khi hover */
+    --md-primary-light: #FFF4EC;      /* Cam nhạt nền box */
+    --md-primary-tint: #FFE4D1;       /* Cam pastel viền box */
+    --md-blue: #1E5AA8;               /* Xanh dương cho stat phụ */
+    --md-blue-light: #EAF2FB;
+    --md-green: #2E7D4F;              /* Xanh lá cho stat tích cực */
+    --md-green-light: #E8F5EE;
+    --md-text: #1F2937;               /* Text chính */
+    --md-text-soft: #4B5563;          /* Text phụ */
+    --md-border: #E5E7EB;             /* Viền nhẹ */
+    --md-radius: 8px;                 /* Bo góc */
+    --md-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}

@@ -1,7 +1,10 @@
 {% if relatedNews|length > 0 %}
-    <div class="related-news">
-        <h3>{{ 'news.news_related'|trans }}</h3>
-        <div class="row">
+    <div class="related-posts">
+        <h3 class="section-title">
+            <i class="fas fa-newspaper"></i>
+            <span>{{ 'news.news_related'|trans }}</span>
+        </h3>
+        <div class="related-grid">
             {% for row in relatedNews %}
                 {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
                 {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_280') %}
@@ -12,31 +15,24 @@
                     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                 {% endif %}
 
-                <div class="col-xs-12 col-sm-4 col-md-3">
-                    <div class="related-wrapper">
-                        <div class="related-img">
+                <article class="related-card">
+                    <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="card-link" title="{{ row.getTitle() }}">
+                        <div class="card-image">
                             <img
-                                width="212"
-                                height="150"
-                                class="img-thumbnail lazyload"
-                                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-                                alt="{{row.getTitle()}}" >
-
-                            <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
-                                <i class="fa fa-link"></i>
-                            </a>
+                                src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                                alt="{{ row.getTitle() }}"
+                                loading="lazy" />
+                            <div class="card-overlay">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
                         </div>
-                        <h4>
-                            <a class="related-title text-center" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                <span>{{ row.getTitle() }}</span>
-                            </a>
-                        </h4>
-                        <p>{{ row.getDescription()|slice(0, 85) }}</p>
-                    </div>
-                </div>
+                        <div class="card-content">
+                            <h4 class="card-title">{{ row.getTitle() }}</h4>
+                            <p class="card-desc">{{ row.getDescription()|slice(0, 80) }}...</p>
+                        </div>
+                    </a>
+                </article>
             {% endfor %}
         </div>
     </div>
-    <div class="clearfix"></div>
 {% endif %}

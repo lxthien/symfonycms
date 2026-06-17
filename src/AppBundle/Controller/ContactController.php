@@ -25,7 +25,7 @@ class ContactController extends Controller
     public function indexAction(Request $request, \Swift_Mailer $mailer)
     {
         $contact = new Contact();
-        
+
         $form = $this->createFormBuilder($contact)
             ->add('name', TextType::class, array('label' => 'label.author'))
             ->add('email', EmailType::class, array('label' => 'label.author_email'))
@@ -35,7 +35,6 @@ class ContactController extends Controller
                 'attr' => array('rows' => '7')
             ))
             ->add('recaptcha', EWZRecaptchaType::class)
-            ->add('send', SubmitType::class, array('label' => 'label.send', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
         $form->handleRequest($request);
@@ -45,7 +44,7 @@ class ContactController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($contact);
             $em->flush();
-            
+
             if (null === $contact->getId()) {
                 $this->addFlash(
                     'error',
@@ -62,22 +61,22 @@ class ContactController extends Controller
                 );
 
                 $message = \Swift_Message::newInstance()
-                        ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
-                        ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
-                        ->setTo($this->get('settings_manager')->get('emailContact'))
-                        ->setBody(
-                            $this->renderView(
-                                'Emails/contact.html.twig',
-                                array(
-                                    'name' => $form->get('name')->getData(),
-                                    'phone' => $form->get('phone')->getData(),
-                                    'email' => $form->get('email')->getData(),
-                                    'body' => $form->get('contents')->getData()
-                                )
-                            ),
-                            'text/html'
-                        )
-                    ;
+                    ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
+                    ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
+                    ->setTo($this->get('settings_manager')->get('emailContact'))
+                    ->setBody(
+                        $this->renderView(
+                            'Emails/contact.html.twig',
+                            array(
+                                'name' => $form->get('name')->getData(),
+                                'phone' => $form->get('phone')->getData(),
+                                'email' => $form->get('email')->getData(),
+                                'body' => $form->get('contents')->getData()
+                            )
+                        ),
+                        'text/html'
+                    )
+                ;
 
                 $mailer->send($message);
 

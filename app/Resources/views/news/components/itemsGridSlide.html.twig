@@ -13,38 +13,40 @@
     {% set imagePathTablet = convert_images.webpConvert(imagePathFilterTablet, '', true) %}
 {% endif %}
 
-<div class="news-item">
-    <div class="news-item-wrapper">
-        <div class="media-thumb">
-            <picture>
-                <!--[if IE 9]><video style="display: none"><![endif]-->
-                <source
-                    data-srcset="{{ imagePathMobile != false ? asset(imagePathMobile) : asset(imagePathFilterMobile) }}"
-                    media="(max-width: 639px) 100vw" />
-                <source
-                    data-srcset="{{ imagePathTablet != false ? asset(imagePathTablet) : asset(imagePathFilterTablet) }}"
-                    media="(min-width: 640px) and (max-width: 1023px) 50vw" />
-                <source
-                    data-srcset="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                    media="(min-width: 1024px) 25vw" />
-                <!--[if IE 9]></video><![endif]-->
-                <img
-                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                    class="mr-3 img-thumbnail lazyload"
-                    alt="{{row.getTitle()}}" />
-            </picture>
-            <a class="media-thumb" title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
-                <i class="fa fa-link"></i>
-            </a>
-        </div>
-        <div class="media-body">
-            <h3 class="mt-0 mb-1">
-                <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                    <span>{{ row.getTitle() }}</span>
-                </a>
-            </h3>
-            <p>{{ row.getDescription()|slice(0, 110) }}</p>
-        </div>
-    </div>
+<div class="slide-item">
+    <article class="project-card">
+        <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="card-link" title="{{ row.getTitle() }}">
+            <div class="card-image">
+                <picture>
+                    <!--[if IE 9]><video style="display: none"><![endif]-->
+                    <source
+                        data-srcset="{{ imagePathMobile != false ? asset(imagePathMobile) : asset(imagePathFilterMobile) }}"
+                        media="(max-width: 639px) 100vw" />
+                    <source
+                        data-srcset="{{ imagePathTablet != false ? asset(imagePathTablet) : asset(imagePathFilterTablet) }}"
+                        media="(min-width: 640px) and (max-width: 1023px) 50vw" />
+                    <source
+                        data-srcset="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                        media="(min-width: 1024px) 25vw" />
+                    <!--[if IE 9]></video><![endif]-->
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                        class="lazyload"
+                        alt="{{ row.getTitle() }}" />
+                </picture>
+                <div class="card-overlay">
+                    <span class="overlay-icon"><i class="fas fa-search-plus"></i></span>
+                </div>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">{{ row.getTitle() }}</h3>
+                <p class="card-desc">{{ row.getDescription()|slice(0, 90) }}</p>
+                <span class="card-more">
+                    <span>Xem chi tiết</span>
+                    <i class="fas fa-arrow-right"></i>
+                </span>
+            </div>
+        </a>
+    </article>
 </div>

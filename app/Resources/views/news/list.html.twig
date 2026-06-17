@@ -3,8 +3,19 @@
 {% block title %}{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}{% endblock %}
 {% block description %}{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}{% endblock %}
 {% block keyword %}{{ category.getPageKeyword() }}{% endblock %}
+{% block robots %}
+    <meta name="robots" content="{{ category.getIsIndex() ? 'index' : 'noindex' }}, {{ category.getIsFollow() ? 'follow' : 'nofollow' }}">
+{% endblock %}
 
 {% set imagePathFilter = (vich_uploader_asset(category, 'imageFile') ? vich_uploader_asset(category, 'imageFile') : asset('/assets/images/xaydungminhduy-2.jpg')) | imagine_filter('news_share_800_420') %}
+
+{# LCP Optimization for Landing Page #}
+{% block lcpPreload %}
+{% if category.getContent() is not null %}
+    {# Preload Local Roboto Condensed Bold for hero title - LCP element #}
+    <link rel="preload" href="{{ asset('build/fonts/RobotoCondensed-Bold.ttf') }}" as="font" type="font/ttf" crossorigin>
+{% endif %}
+{% endblock %}
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
@@ -35,9 +46,11 @@
 {% endblock %}
 
 {% block structuredReview %}
-    {% if category.getSchemaMarkup() != null %}
-        {{ category.getSchemaMarkup()|raw }}
-    {% endif %}
+    {{ schema_category(category, {
+        baseUrl: baseUrl,
+        pagination: pagination,
+        image: absolute_url(imagePathFilter)
+    }) }}
 {% endblock %}
 
 {% block canonical %}
@@ -45,15 +58,19 @@
 {% endblock %}
 
 {% block body %}
-    {# breadcrumbs #}
-    {{ include('news/components/breadcrumbs.html.twig',
-        { type: 'category', title: (category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName()), description: category.getDescription() })
-    }}
-    
-    <div class="container wrapper-container">
-        <div class="row category-list-items">
-            <div class="col-12 col-md-12 col-lg-12">
-                {% if category.getContent() == null %}
+    {% if category.getContent() == null %}
+        {# ================================================================ #}
+        {# CATEGORY LIST VIEW - No Landing Content (Keep Original Style)   #}
+        {# ================================================================ #}
+        
+        {# breadcrumbs #}
+        {{ include('news/components/breadcrumbs.html.twig',
+            { type: 'category', title: (category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName()), description: category.getDescription() })
+        }}
+        
+        <div class="container wrapper-container">
+            <div class="row category-list-items">
+                <div class="col-12 col-md-12 col-lg-12">
                     {# List item on this page #}
                     {% if pagination|length > 0  %}
                         {# Sort items #}
@@ -74,12 +91,151 @@
                     {% else %}
                         {{ include('news/components/noRecord.html.twig') }}
                     {% endif %}
-                {% else %}
-                    <div class="category-content">
-                        {{ category.getContent()|raw }}
-                    </div>
-                {% endif %}
+                </div>
             </div>
         </div>
-    </div>
+    {% else %}
+        {# ================================================================ #}
+        {# LANDING PAGE VIEW - Has Content (New Modern Design)             #}
+        {# ================================================================ #}
+        <div class="landing-page">
+            {# Hero Section #}
+            <section class="landing-hero">
+                <div class="landing-hero-bg">
+                    <div class="hero-overlay"></div>
+                </div>
+                <div class="container">
+                    <div class="landing-hero-content">
+                        {# Breadcrumbs #}
+                        {{ wo_render_breadcrumbs() }}
+                        
+                        <h1 class="landing-hero-title">
+                            {{ category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName() }}
+                        </h1>
+                        
+                        {% if category.getDescription() %}
+                            <p class="landing-hero-desc">{{ category.getDescription()|striptags }}</p>
+                        {% endif %}
+
+                        <div class="landing-hero-cta">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-hero btn-hero-primary">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-hero btn-hero-secondary">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Nhận báo giá</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Features/Highlights Section #}
+            <section class="landing-highlights">
+                <div class="container">
+                    <div class="highlights-grid">
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">10+</span>
+                                <span class="highlight-label">Năm kinh nghiệm</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">500+</span>
+                                <span class="highlight-label">Công trình hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">100%</span>
+                                <span class="highlight-label">Khách hàng hài lòng</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">10</span>
+                                <span class="highlight-label">Năm bảo hành</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Main Content Section #}
+            <section class="landing-content-section">
+                <div class="container">
+                    <div class="landing-content-wrapper">
+                        <article class="landing-article">
+                            <div class="landing-article-content">
+                                {{ category.getContent()|raw }}
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            {# CTA Section #}
+            <section class="landing-cta-section">
+                <div class="container">
+                    <div class="cta-box">
+                        <div class="cta-content">
+                            <h3 class="cta-title">
+                                <i class="fas fa-phone-volume"></i>
+                                Liên hệ tư vấn miễn phí
+                            </h3>
+                            <p class="cta-text">Gọi ngay cho chúng tôi để được tư vấn và báo giá nhanh nhất!</p>
+                        </div>
+                        <div class="cta-actions">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-cta btn-cta-phone">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-cta btn-cta-contact">
+                                <i class="fas fa-envelope"></i>
+                                <span>Gửi yêu cầu báo giá</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Related Posts Section - if has child categories with posts #}
+            {# {% if pagination|length > 0 %}
+            <section class="landing-related-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-newspaper"></i>
+                            Bài viết liên quan
+                        </h2>
+                        <p class="section-desc">Tìm hiểu thêm thông tin hữu ích về xây dựng và thi công</p>
+                    </div>
+                    <div class="list-news-items">
+                        <div class="row">
+                            {% for row in pagination %}
+                                {{ include('news/components/itemsGrid.html.twig') }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {{ include('news/components/pagination.html.twig') }}
+                </div>
+            </section>
+            {% endif %} #}
+        </div>
+    {% endif %}
 {% endblock %}

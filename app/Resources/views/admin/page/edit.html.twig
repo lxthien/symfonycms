@@ -10,15 +10,18 @@
                     <div class="card">
                         <div class="card-header">
                             <strong class="card-title">{{ 'title.edit_news'|trans({'%id%': object.id}) }}</strong>
+                            <a class="pull-right" target="_blank" href="{{ path('news_show', {'slug': object.url, 'preview_token': object.previewToken}) }}">Preview</a>
                         </div>
                         <div class="card-body">
                             <!-- Credit Card -->
                             <div id="pay-invoice">
                                 <div class="card-body">
                                     {{ include('admin/page/_form.html.twig', {
+                                        object: object,
                                         form: form,
                                         button_label: 'action.save'|trans,
                                         include_back_to_home_link: true,
+                                        album_json: album_json|default('[]'),
                                     }, with_context = false) }}
                                 </div>
                             </div>

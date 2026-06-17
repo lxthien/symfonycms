@@ -1,34 +1,4 @@
-<div class="list-group">
-    <div class="list-group-item list-group-item-action active text-uppercase">
-        Bảng giá dịch vụ
-    </div>
-    <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi' }) }}" class="list-group-item td-list-group-item item-price" title="Bảng giá xây nhà trọn gói">
-        <i class="fa fa-solid fa-gem"></i></i><span>Bảng giá xây nhà trọn gói</span>
-    </a>
-    <a href="{{ path('news_show', {'slug': 'bao-gia-sua-nha-tron-goi' }) }}" class="list-group-item td-list-group-item item-price" title="Bảng giá sửa nhà trọn gói">
-        <i class="fa fa-solid fa-gem"></i><span>Bảng giá sửa nhà trọn gói</span>
-    </a>
-    <a href="{{ path('news_show', {'slug': 'bang-gia-xay-dung-nha-phan-tho' }) }}" class="list-group-item td-list-group-item item-price" title="Bảng giá xây nhà phần thô">
-        <i class="fa fa-solid fa-gem"></i><span>Bảng giá xây nhà phần thô</span>
-    </a>
-    <a href="{{ path('news_show', {'slug': 'dich-vu-bao-gia-sua-chua-can-ho-chung-cu' }) }}" class="list-group-item td-list-group-item item-price" title="Bảng giá sửa chữa chung cư">
-        <i class="fa fa-solid fa-gem"></i><span>Bảng giá sửa chữa chung cư</span>
-    </a>
-    <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-nha-pho' }) }}" class="list-group-item td-list-group-item item-price" title="Bảng giá thiết kế nhà phố">
-        <i class="fa fa-solid fa-gem"></i><span>Bảng giá thiết kế nhà phố</span>
-    </a>
-    <a href="{{ path('news_show', {'slug': 'don-gia-thi-cong-noi-that-chung-cu' }) }}" class="list-group-item td-list-group-item item-price" title="Thi công nội thất chung cư">
-        <i class="fa fa-solid fa-gem"></i><span>Thi công nội thất chung cư</span>
-    </a>
-    <a href="{{ path('news_show', {'slug': 'bao-gia-thiet-ke-thi-cong-quan-cafe-tron-goi-tai-tphcm' }) }}" class="list-group-item td-list-group-item item-price" title="Bảng giá thiết kế thi công quán cafe">
-        <i class="fa fa-solid fa-gem"></i><span>Bảng giá thiết kế thi công quán cafe</span>
-    </a>
-</div>
-
-<div class="list-group">
-    <div class="list-group-item list-group-item-action active text-uppercase">
-        {{ 'news.recent'|trans }}
-    </div>
+<ul class="recent-posts-list">
     {% for row in posts %}
         {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
         {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_70_50') %}
@@ -38,15 +8,21 @@
         {% else %}
             {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
         {% endif %}
-        <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
-            <img
-                class="lazyload"
-                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-                alt="{{ row.getTitle() }}"
-                width="70"
-                height="50" />
-            <span>{{ row.getTitle() }}</span>
-        </a>
+        <li class="recent-post-item">
+            <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="recent-post-link" title="{{ row.getTitle() }}">
+                <div class="recent-post-thumb">
+                    <img
+                        class="lazyload"
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                        alt="{{ row.getTitle() }}"
+                        width="80"
+                        height="60" />
+                </div>
+                <div class="recent-post-info">
+                    <h4 class="recent-post-title">{{ row.getTitle()|length > 55 ? row.getTitle()|slice(0, 55) ~ '...' : row.getTitle() }}</h4>
+                </div>
+            </a>
+        </li>
     {% endfor %}
-</div>
+</ul>

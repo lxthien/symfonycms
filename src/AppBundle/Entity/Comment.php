@@ -12,7 +12,11 @@ use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="comment")
+ * @ORM\Table(name="comment", indexes={
+ *     @ORM\Index(name="idx_comment_news", columns={"news_id"}),
+ *     @ORM\Index(name="idx_comment_parent", columns={"comment_id"}),
+ *     @ORM\Index(name="idx_comment_approved", columns={"approved"})
+ * })
  */
 
 class Comment
@@ -27,19 +31,21 @@ class Comment
     private $id;
 
     /**
-     * @var int
+     * @var Comment|null
      *
-     * @ORM\Column(name="comment_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Comment")
+     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
-    private $comment_id;
+    private $parent;
 
     /**
-     * @var int
+     * @var News
      *
-     * @ORM\Column(name="news_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\News")
+     * @ORM\JoinColumn(name="news_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @Assert\NotBlank(message="news.blank")
      */
-    private $news_id;
+    private $news;
 
     /**
      * @var string
@@ -132,26 +138,46 @@ class Comment
 
     public function setNewsId($newsId)
     {
-        $this->news_id = $newsId;
-
         return $this;
     }
 
     public function getNewsId()
     {
-        return $this->news_id;
+        return $this->news ? $this->news->getId() : null;
+    }
+
+    public function setNews(News $news = null)
+    {
+        $this->news = $news;
+
+        return $this;
+    }
+
+    public function getNews()
+    {
+        return $this->news;
     }
 
     public function setCommentId($commentId)
     {
-        $this->comment_id = $commentId;
-
         return $this;
     }
 
     public function getCommentId()
     {
-        return $this->comment_id;
+        return $this->parent ? $this->parent->getId() : null;
+    }
+
+    public function setParent(Comment $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     public function setContent($content)
@@ -250,17 +276,4 @@ class Comment
         return $this->updatedAt;
     }
 
-    public function getNews()
-    {
-        global $kernel;
-        if ('AppCache' === get_class($kernel)) {
-            $kernel = $kernel->getKernel();
-        }
-        $em = $kernel->getContainer()->get('doctrine')->getManager();
-        
-        return $em->getRepository('AppBundle:News')
-            ->findOneBy(
-                array('id'=> $this->getNewsId())
-            );
-    }
 }

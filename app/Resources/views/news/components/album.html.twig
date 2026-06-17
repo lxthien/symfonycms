@@ -1,0 +1,67 @@
+{% set albumItems = post.getMediaItems() %}
+
+{% if albumItems|length > 0 %}
+    <section class="post-album" data-post-album>
+        <div class="post-album-header">
+            <h2>Album ảnh</h2>
+        </div>
+        <div class="post-album-carousel">
+            <button type="button" class="post-album-scroll is-prev" data-album-prev aria-label="Ảnh trước">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="post-album-track" data-album-track>
+                {% for item in albumItems %}
+                    {% set media = item.getMedia() %}
+                    {% if media %}
+                        {% set imageUrl = asset(media.path) %}
+                        {% set thumbUrl = asset(media.thumbnailPath ?: media.path) %}
+                        <div class="post-album-item-wrapper">
+                            <button type="button"
+                                    class="post-album-item"
+                                    data-gallery-item
+                                    data-gallery-index="{{ loop.index0 }}"
+                                    data-gallery-src="{{ imageUrl }}"
+                                    data-gallery-alt="{{ item.getEffectiveAlt() }}"
+                                    data-gallery-caption="{{ item.getEffectiveCaption() ?: '' }}">
+                                <div class="post-album-image">
+                                    <img src="{{ thumbUrl }}" alt="{{ item.getEffectiveAlt() }}" loading="lazy">
+                                    <div class="post-album-overlay">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    </div>
+                                </div>
+                                {% if item.getEffectiveCaption() %}
+                                    <span class="post-album-caption">{{ item.getEffectiveCaption() }}</span>
+                                {% endif %}
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <button type="button" class="post-album-scroll is-next" data-album-next aria-label="Ảnh sau">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+
+        {# Lightbox Modal #}
+        <div class="post-gallery-modal" data-gallery-modal aria-hidden="true">
+            <div class="post-gallery-backdrop" data-gallery-close></div>
+            <div class="post-gallery-dialog" role="dialog" aria-modal="true">
+                <button type="button" class="post-gallery-close" data-gallery-close aria-label="Đóng">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <button type="button" class="post-gallery-nav is-prev" data-gallery-prev aria-label="Ảnh trước">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <figure>
+                    <div class="post-gallery-image-container">
+                        <img src="" alt="" data-gallery-image>
+                    </div>
+                    <figcaption data-gallery-caption-text></figcaption>
+                </figure>
+                <button type="button" class="post-gallery-nav is-next" data-gallery-next aria-label="Ảnh sau">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+{% endif %}

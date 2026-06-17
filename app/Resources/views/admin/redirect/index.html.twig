@@ -1,0 +1,106 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_redirect_index' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card add">
+                        <div class="card-body">
+                            <div class="stat-widget-one">
+                                <a href="{{ path('admin_redirect_new') }}">
+                                    <div class="stat-icon dib">
+                                        <i class="ti-plus text-success border-success"></i>
+                                    </div>
+                                    <div class="stat-content dib">
+                                        <div class="stat-text text-success">Thêm redirect</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Redirect 301</strong>
+                        </div>
+                        <div class="card-body">
+                            <form class="admin-list-filters" method="get" action="{{ path('admin_redirect_index') }}">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <input type="text" name="q" value="{{ filters.q }}" class="form-control" placeholder="Tìm URL cũ hoặc URL mới">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select name="status" class="form-control">
+                                            <option value="">Tất cả trạng thái</option>
+                                            <option value="enabled" {{ filters.status == 'enabled' ? 'selected' : '' }}>Đang bật</option>
+                                            <option value="disabled" {{ filters.status == 'disabled' ? 'selected' : '' }}>Đang tắt</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Lọc</button>
+                                        <a href="{{ path('admin_redirect_index') }}" class="btn btn-link">Xóa lọc</a>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <table class="table table-striped table-bordered admin-list-table redirect-table">
+                                <thead>
+                                    <tr>
+                                        <th>URL cũ</th>
+                                        <th>URL mới</th>
+                                        <th>Mã</th>
+                                        <th>Status</th>
+                                        <th>Hits</th>
+                                        <th>Cập nhật</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in pagination %}
+                                        <tr>
+                                            <td><code>{{ row.sourcePath }}</code></td>
+                                            <td><code>{{ row.targetPath }}</code></td>
+                                            <td>{{ row.statusCode }}</td>
+                                            <td>{{ row.enable ? 'Đang bật' : 'Đang tắt' }}</td>
+                                            <td>{{ row.hits }}</td>
+                                            <td>{{ row.updatedAt ? row.updatedAt|date('d/m/Y H:i') : '' }}</td>
+                                            <td>
+                                                <div class="item-actions">
+                                                    <a href="{{ path('admin_redirect_edit', {id: row.id}) }}" class="btn-sm">
+                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                    </a>
+                                                    {{ include('admin/common/_delete_post_confirmation.html.twig', {id: 'Redirect' ~ row.id}) }}
+                                                    <form action="{{ path('admin_redirect_delete', {id: row.id}) }}" method="post" data-confirmation="true" id="delete-form">
+                                                        <input type="hidden" name="token" value="{{ csrf_token('delete') }}">
+                                                        <button type="submit" data-toggle="modal" data-target="#confirmationModalRedirect{{ row.id }}">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Chưa có redirect nào.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="admin-pagination">
+                                {{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/twitter_bootstrap_v3_pagination.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

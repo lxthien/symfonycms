@@ -1,73 +1,61 @@
-<!-- Begin header -->
-<div class="wrapper-container header d-none hidden-xs hidden-sm">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-sm-8 col-md-6 marquee">
-                <marquee scrollamount="7">{{ get_setting('marqueeHomepage')|raw }}</marquee>
-            </div>
-            <div class="col-12 col-sm-4 col-md-6 text-right header-social hidden-xs">
-                <div class="skew-divider"></div>
-                <div class="header-social-wrapper">
-                    <span class="text-left">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/phone.png'), '')) }}" alt="Liên hệ Xây Dựng Minh Duy" width="14" height="14" />
-                        <a href="tel:{{ get_setting('hotLine2') }}">{{ get_setting('hotLine1') }}</a>
-                    </span>
-                    <span class="text-left">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/email.png'), '')) }}" alt="Liên hệ Xây Dựng Minh Duy" width="14" height="14" />
-                        <a href="mailto:{{ get_setting('emailContact') }}">{{ get_setting('emailContact') }}</a>
-                    </span>
-                    <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Minh Duy trên Facebook" rel="nofollow noreferrer">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/facebook.png'), '')) }}" alt="Xây Dựng Minh Duy trên Facebook" width="20" height="20" />
-                    </a>
-                    <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Xây Dựng Minh Duy trên Twitter" rel="nofollow noreferrer">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/twitterx.png'), '')) }}" alt="Xây Dựng Minh Duy trên Twitter" width="20" height="20" />
-                    </a>
-                    <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Xây Dựng Minh Duy trên Youtube" rel="nofollow noreferrer">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/youtube.png'), '')) }}" alt="Xây Dựng Minh Duy trên Youtube" width="20" height="20" />
-                    </a>
-                    <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Xây Dựng Minh Duy trên Linkedin" rel="nofollow noreferrer">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/linkedin.png'), '')) }}" alt="Xây Dựng Minh Duy trên Linkedin" width="20" height="20" />
-                    </a>
-                    <a target="_blank" href="{{ get_setting('linkToGooglePlus') }}" title="Xây Dựng Minh Duy trên Google Plus" rel="nofollow noreferrer">
-                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/pinterest.png'), '')) }}" alt="Xây Dựng Minh Duy trên Pinterest" width="20" height="20" />
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="wrapper-container banner d-none hidden-xs hidden-sm">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4" id="logo_top">
-                <div id="logo">								
-                    <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                        <img alt="{{ get_setting('siteName') }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}" width="354" height="72" >
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-top">
-                    <div class="wp90">
-                        <div class="info-nd" id="output">
-                            <p class="tel text-uppercase" id="header-company"></p>
-                            <p class="text-uppercase" id="header-address"></p>
-                        </div>
+<header class="site-header">
+    <div class="top-bar d-none hidden-xs hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="top-bar-left">
+                        <span class="top-info"><i class="fas fa-map-marker-alt"></i> {{ get_setting('companyAddress') }}</span>
+                        <span class="top-info"><i class="fas fa-clock"></i> Thứ 2 - Thứ 7: 7:30 - 17:30</span>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="info-top hotline-top">
-                    <div class="wp90 pull-right">
-                        <div class="info-nd">
-                            <p class="tel text-uppercase">
-                                <a href="tel:{{ get_setting('hotLine2') }}"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/iphone.png'), '')) }}" alt="Liên hệ Xây Dựng Minh Duy" width="20" height="20" /> {{ get_setting('hotLine1') }}</a>
-                            </p>
+                <div class="col-md-4">
+                    <div class="top-bar-right">
+                        <div class="social-links">
+                            <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Facebook" rel="nofollow noreferrer"><i class="fab fa-facebook-f"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Youtube" rel="nofollow noreferrer"><i class="fab fa-youtube"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Linkedin" rel="nofollow noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Twitter" rel="nofollow noreferrer"><i class="fab fa-twitter"></i></a>
+                            <a target="_blank" href="{{ get_setting('linkToGooglePlus') }}" title="Pinterest" rel="nofollow noreferrer"><i class="fab fa-pinterest-p"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- End header -->
+    <div class="main-header d-none hidden-xs hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3" id="logo_top">
+                    <div id="logo">
+                        <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
+                            <img alt="{{ get_setting('siteName') }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}" width="354" height="72" fetchpriority="high" decoding="async">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="header-contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                            <div class="contact-text">
+                                <span class="label">Hotline 24/7</span>
+                                <a href="tel:{{ get_setting('hotLine2') }}" class="value">{{ get_setting('hotLine1') }}</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="contact-text">
+                                <span class="label">Email</span>
+                                <a href="mailto:{{ get_setting('emailContact') }}" class="value">{{ get_setting('emailContact') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="header-cta">
+                        <a href="{{ path('contact') }}" class="btn-cta"><i class="fas fa-file-invoice"></i> Báo Giá Miễn Phí</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

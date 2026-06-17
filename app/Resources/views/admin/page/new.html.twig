@@ -16,31 +16,13 @@
                         <div class="card-body">
                             <div id="pay-invoice">
                                 <div class="card-body">
-                                    {{ form_start(form) }}
-                                        {{ form_row(form.title) }}
-                                        {{ form_row(form.url) }}
-                                        {{ form_row(form.description) }}
-                                        {{ form_row(form.contents) }}
-
-                                        <div class="card-title">
-                                            <h3>{{ 'label.seo'|trans }}</h3>
-                                        </div>
-                                        <hr>
-                                        
-                                        {{ form_row(form.pageTitle) }}
-                                        {{ form_row(form.pageDescription) }}
-                                        {{ form_row(form.pageKeyword) }}
-
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-save" aria-hidden="true"></i> {{ 'label.create_news'|trans }}
-                                        </button>
-
-                                        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
-                                        
-                                        <a href="{{ path('admin_page_index') }}" class="btn btn-link">
-                                            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
-                                        </a>
-                                    {{ form_end(form) }}
+                                    {{ include('admin/page/_form.html.twig', {
+                                        object: object,
+                                        form: form,
+                                        button_label: 'label.create_news'|trans,
+                                        include_back_to_home_link: true,
+                                        album_json: album_json|default('[]'),
+                                    }, with_context = false) }}
                                 </div>
                             </div>
                         </div>

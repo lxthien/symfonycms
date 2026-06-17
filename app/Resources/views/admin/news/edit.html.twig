@@ -10,16 +10,26 @@
                     <div class="card">
                         <div class="card-header">
                             <strong class="card-title">{{ 'title.edit_news'|trans({'%id%': news.id}) }}</strong>
-                            <a class="pull-right" target="_blank" href="{{ path('news_show', {'slug': news.url, 'preview' : 'true', 'preview_id' : news.id }) }}">Preview</a>
+                            <a class="pull-right" target="_blank" href="{{ path('news_show', {'slug': news.url, 'preview_token': news.previewToken}) }}">Preview</a>
                         </div>
                         <div class="card-body">
                             <!-- Credit Card -->
                             <div id="pay-invoice">
                                 <div class="card-body">
                                     {{ include('admin/news/_form.html.twig', {
+                                        object: news,
                                         form: form,
                                         button_label: 'action.save'|trans,
                                         include_back_to_home_link: true,
+                                        album_json: album_json|default('[]'),
+                                        category_tree: category_tree|default([]),
+                                    }, with_context = false) }}
+
+                                    {{ include('admin/news/_revisions.html.twig', {
+                                        news: news,
+                                        revisions: revisions,
+                                        latestAutosave: latestAutosave,
+                                        revisionDiffs: revisionDiffs
                                     }, with_context = false) }}
                                 </div>
                             </div>

@@ -1,0 +1,79 @@
+<div class="media-picker" data-media-picker>
+    {{ form_start(upload_form, {
+        attr: {
+            class: 'media-picker-upload',
+            'data-media-picker-upload-form': '',
+            'data-picker-refresh-url': path('admin_media_picker', filters|merge({type: 'image'}))
+        }
+    }) }}
+        <div class="media-picker-upload-dropzone" data-media-picker-upload-dropzone>
+            <div class="media-dropzone-icon"><i class="fa fa-cloud-upload"></i></div>
+            <div>
+                <strong>Kéo thả ảnh mới vào đây</strong>
+                <span>Hoặc bấm chọn ảnh để upload trực tiếp vào Media Library.</span>
+            </div>
+        </div>
+        <div class="media-picker-upload-controls">
+            <div class="media-upload-file-input">
+                {{ form_widget(upload_form.files) }}
+            </div>
+            {{ form_widget(upload_form.folder, { attr: { class: 'form-control' } }) }}
+            {{ form_widget(upload_form.newFolder, { attr: { class: 'form-control', placeholder: 'Folder mới' } }) }}
+            {{ form_widget(upload_form.tagsText, { attr: { class: 'form-control' } }) }}
+            <button type="submit" class="btn btn-success" data-media-picker-upload-submit>
+                <i class="fa fa-cloud-upload"></i> Upload
+            </button>
+        </div>
+        <div class="media-picker-upload-preview" data-media-picker-upload-preview></div>
+        <div class="media-picker-upload-status" data-media-picker-upload-status aria-live="polite"></div>
+        {{ form_rest(upload_form) }}
+    {{ form_end(upload_form) }}
+
+    <form class="media-picker-filters" method="get" action="{{ path('admin_media_picker') }}" data-media-picker-filter>
+        <input type="text" name="q" value="{{ filters.q }}" class="form-control" placeholder="Tìm ảnh theo tên, alt, caption">
+        <select name="folder" class="form-control">
+            <option value="">Tất cả folder</option>
+            {% for folder in folders %}
+                <option value="{{ folder.id }}" {{ filters.folder == folder.id ? 'selected' : '' }}>{{ folder.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="tag" class="form-control">
+            <option value="">Tất cả tag</option>
+            {% for tag in tags %}
+                <option value="{{ tag.id }}" {{ filters.tag == tag.id ? 'selected' : '' }}>{{ tag.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="alt" class="form-control">
+            <option value="">Tất cả alt</option>
+            <option value="missing" {{ filters.alt == 'missing' ? 'selected' : '' }}>Thiếu alt</option>
+        </select>
+        <input type="hidden" name="type" value="image">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Lọc</button>
+    </form>
+
+    <div class="media-picker-grid">
+        {% for media in pagination %}
+            <button type="button"
+                    class="media-picker-item"
+                    data-media-picker-select
+                    data-media-id="{{ media.id }}"
+                    data-media-url="{{ asset(media.path) }}"
+                    data-media-thumb="{{ asset(media.thumbnailPath ?: media.path) }}"
+                    data-media-alt="{{ media.alt ?: media.originalName }}"
+                    data-media-name="{{ media.originalName }}">
+                <span class="media-picker-thumb">
+                    <img src="{{ asset(media.thumbnailPath ?: media.path) }}" alt="{{ media.alt ?: media.originalName }}">
+                </span>
+                <span class="media-picker-selected-badge"><i class="fa fa-check"></i> Đã chọn</span>
+                <strong>{{ media.originalName }}</strong>
+                <small>{{ media.width and media.height ? media.width ~ 'x' ~ media.height : media.mimeType }}</small>
+            </button>
+        {% else %}
+            <p class="text-center text-muted">Không tìm thấy ảnh phù hợp.</p>
+        {% endfor %}
+    </div>
+
+    <div class="admin-pagination media-picker-pagination">
+        {{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/twitter_bootstrap_v3_pagination.html.twig') }}
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="modal fade" id="confirmationModal{{ id }}" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>Khôi phục revision?</h4>
+                <p>Nội dung hiện tại sẽ được thay bằng snapshot đã chọn. Hệ thống sẽ lưu thêm một revision mới trước khi hoàn tất.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="btnNo" data-dismiss="modal">
+                    <i class="fa fa-ban" aria-hidden="true"></i> Hủy
+                </button>
+                <button type="button" class="btn btn-warning" id="btnYes" data-dismiss="modal">
+                    <i class="fa fa-history" aria-hidden="true"></i> Khôi phục
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

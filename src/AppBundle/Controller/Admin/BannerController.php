@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Controller used to manage banner in the backend.
  * @Route("/admin/banner")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('CMS_BANNER_MANAGE')")
  */
 
 class BannerController extends Controller

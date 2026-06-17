@@ -1,0 +1,76 @@
+{% set scoreClass = seoAudit.score >= 90 ? 'success' : (seoAudit.score >= 80 ? 'primary' : (seoAudit.score >= 60 ? 'warning' : 'danger')) %}
+
+<div class="seo-score-checker card">
+    <a href="#seoScoreCheckerBody" class="seo-score-checker-header" data-toggle="collapse" aria-expanded="false" aria-controls="seoScoreCheckerBody">
+        <span class="seo-score-checker-title">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            SEO Score Checker
+        </span>
+        <span class="seo-score-checker-summary">
+            <span class="badge badge-{{ scoreClass }}">{{ seoAudit.score }}/100</span>
+            <span class="text-muted">{{ seoAudit.status }}</span>
+            <i class="fa fa-caret-right seo-score-checker-arrow" aria-hidden="true"></i>
+        </span>
+    </a>
+
+    <div id="seoScoreCheckerBody" class="collapse">
+        <div class="seo-score-checker-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="seo-score-meter seo-score-meter-{{ scoreClass }}">
+                        <strong>{{ seoAudit.score }}</strong>
+                        <span>/100</span>
+                        <small>{{ seoAudit.status }}</small>
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+                    <div class="seo-preview">
+                        <div class="seo-preview-title">{{ seoAudit.effectiveTitle ?: 'Chưa có tiêu đề' }}</div>
+                        <div class="seo-preview-url">{{ path('news_show', {slug: seoAudit.post.url}) }}</div>
+                        <div class="seo-preview-description">{{ seoAudit.effectiveDescription ?: 'Chưa có meta description hoặc mô tả tóm tắt.' }}</div>
+                    </div>
+
+                    <div class="seo-score-meta">
+                        <span><strong>Từ khóa chính:</strong> {{ seoAudit.primaryKeyword ?: 'Chưa đặt' }}</span>
+                        <span><strong>Số từ:</strong> {{ seoAudit.wordCount }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row seo-score-lists">
+                <div class="col-md-6">
+                    <h5>Cần xử lý</h5>
+                    {% if seoAudit.reasons|length %}
+                        <ul class="list-unstyled">
+                            {% for reason in seoAudit.reasons %}
+                                <li class="seo-score-item seo-score-item-danger">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                    {{ reason }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Không có lỗi SEO nghiêm trọng.</p>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Gợi ý tối ưu</h5>
+                    {% if seoAudit.recommendations|length %}
+                        <ul class="list-unstyled">
+                            {% for recommendation in seoAudit.recommendations %}
+                                <li class="seo-score-item seo-score-item-warning">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                    {{ recommendation }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Không có gợi ý bổ sung.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -37,10 +37,10 @@ class ProfileController extends Controller
             ->getRepository(News::class)
             ->createQueryBuilder('n')
             ->where('n.author = :author')
-            ->andWhere('n.enable = :enable')
+            ->andWhere('n.status = :status')
             ->andWhere('n.postType = :postType')
             ->setParameter('author', $user->getId())
-            ->setParameter('enable', 1)
+            ->setParameter('status', 'published')
             ->setParameter('postType', 'post')
             ->orderBy('n.createdAt', 'DESC')
             ->getQuery()->getResult();

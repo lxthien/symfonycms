@@ -3,6 +3,9 @@
 {% block title %}{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}{% endblock %}
 {% block description %}{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}{% endblock %}
 {% block keyword %}{{ post.getPageKeyword() }}{% endblock %}
+{% block robots %}
+    <meta name="robots" content="{{ post.getIsIndex() ? 'index' : 'noindex' }}, {{ post.getIsFollow() ? 'follow' : 'nofollow' }}">
+{% endblock %}
 
 {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
 {% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
@@ -14,11 +17,16 @@
 {% endif %}
 {% set keywords = post.getPageKeyword() is not null ? post.getPageKeyword()|split(',') : null %}
 
+{# LCP Optimization - Preload Local Roboto Condensed Bold for post title #}
+{% block lcpPreload %}
+    <link rel="preload" href="{{ asset('build/fonts/RobotoCondensed-Bold.ttf') }}" as="font" type="font/ttf" crossorigin>
+{% endblock %}
+
 {% block structuredOpenGraph %}
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
-    <meta property="article:author" content="admin" />
+    <meta property="article:author" content="Lê Xuân Minh" />
     <meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
     <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
     <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
@@ -33,126 +41,256 @@
 
 {% block structuredReview %}
     {% if ratingCount > 0 %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "CreativeWorkSeries",
-        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "{{ rating }}",
-            "ratingCount": "{{ ratingCount }}",
-            "bestRating" : "5",
-            "worstRating": "1"
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org/",
+            "@type": "CreativeWorkSeries",
+            "name": {{ (post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle())|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }},
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "{{ rating }}",
+                "ratingCount": "{{ ratingCount }}",
+                "bestRating": "5",
+                "worstRating": "1"
+            }
         }
-    }
-    </script>
+        </script>
     {% endif %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "WebPage",
-        "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage",
-        "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "isPartOf": {
-            "@id": "https://xaydungminhduy.com/#website"
-        },
-        "primaryImageOfPage": {
-            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
-        },
-        "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
-        "inLanguage": "vi-VN"
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "BlogPosting",
-        "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#blogposting",
-        "mainEntityOfPage": {
-            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-        },
-        "headline": "{{ post.getTitle() }}",
-        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
-        "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
-        "articleSection": "{{ category.getName() }}",
-        "articleBody": "{{ articleBody }}",
-        "author": {
-            "@type": "Person",
-            "@id": "{{ absolute_url(path('author', {'slug': 'webmaster' })) }}#person"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "@id": "https://xaydungminhduy.com/#organization"
-        },
-        "image": {
-            "@type": "ImageObject",
-            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-            "url": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-            "height": "800",
-            "width": "420"
-        },
-        "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-        "wordCount": "{{ wordCount }}",
-        "inLanguage": "vi-VN",
-        "commentCount": "{{ comments|length }}",
-        "isPartOf": {
-            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-        }{% if keywords is not null %},
-        "keywords": [
-            {% for keyword in keywords %}
-            "{{ keyword|trim }}"{% if loop.last == false %},{% endif %}
-            {% endfor %}
-        ]
-        {% endif %}
-    }
-    </script>
+
+    {{ schema_news(post, {
+        category: category|default(null),
+        wordCount: wordCount|default(0),
+        comments: comments|default([]),
+        image: imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter)
+    }) }}
 {% endblock %}
 
 {% block body %}
-    <div class="container wrapper-container wrapper-post-container">
-        <div class="row post-container {{ post.getTemplate() == '1_column' ? 'page-1-column' : 'page-1-column' }}">
-            <div class="col-12 col-md-12 {{ post.getTemplate() != '1_column' ? 'col-lg-12' : 'col-lg-12' }} wrapper-post-container-left">
-                {# breadcrumbs #}
-                {{ include('news/components/breadcrumbs.html.twig') }}
-
-                <article id="post-{{ post.getId() }}" class="news">
-                    <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
-                    <p class="post-modified-info">Ngày cập nhật: {{ post.getUpdatedAt()|date('d/m/Y') }} bởi <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank" class="last-modified-author">Lê Xuân Minh</a></p>
-                    <div class="news-container">
-                        {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
-                        {% if post.getAutoFulfillAddress() %}
-                            {{ get_setting('addressInPost')|raw }}
+    {% if post.getTemplate() == '1_column' %}
+        {# ================================================================ #}
+        {# LANDING PAGE VIEW - Modern Design                                #}
+        {# ================================================================ #}
+        <div class="landing-page">
+            {# Hero Section #}
+            <section class="landing-hero">
+                <div class="landing-hero-bg">
+                    <div class="hero-overlay"></div>
+                </div>
+                <div class="container">
+                    <div class="landing-hero-content">
+                        {# Breadcrumbs #}
+                        {{ include('news/components/breadcrumbs.html.twig') }}
+                        
+                        <h1 class="landing-hero-title">
+                            {{ post.getTitle() }}
+                        </h1>
+                        
+                        {% if post.getDescription() %}
+                            <p class="landing-hero-desc">{{ post.getDescription()|striptags }}</p>
                         {% endif %}
+
+                        <div class="landing-hero-cta">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-hero btn-hero-primary">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-hero btn-hero-secondary">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Nhận báo giá</span>
+                            </a>
+                        </div>
                     </div>
+                </div>
+            </section>
 
-                    {# List tags #}
-                    {{ include('news/components/tags.html.twig') }}
-
-                    {# Rating and Share #}
-                    <div class="rating-share-container">
-                        {{ include('news/rating/rating.html.twig') }}
+            {# Features/Highlights Section #}
+            <section class="landing-highlights">
+                <div class="container">
+                    <div class="highlights-grid">
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">10+</span>
+                                <span class="highlight-label">Năm kinh nghiệm</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">500+</span>
+                                <span class="highlight-label">Công trình hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">100%</span>
+                                <span class="highlight-label">Khách hàng hài lòng</span>
+                            </div>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="highlight-text">
+                                <span class="highlight-number">10</span>
+                                <span class="highlight-label">Năm bảo hành</span>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </section>
 
-                    {# Q&A #}
-                    {{ include('news/components/qa.html.twig') }}
+            {# Main Content Section #}
+            <section class="landing-content-section">
+                <div class="container">
+                    <div class="landing-content-wrapper">
+                        <article class="landing-article">
+                            <div class="landing-article-content news-container">
+                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                                {% if post.getAutoFulfillAddress() %}
+                                    {{ get_setting('addressInPost')|raw }}
+                                {% endif %}
+                            </div>
+                            {{ include('news/components/album.html.twig') }}
+                        </article>
+                    </div>
+                </div>
+            </section>
 
-                    {% if post.getTemplate() != '1_column' %}
-                        {{ include('news/components/related.html.twig') }}
-                    {% endif %}
-                    
-                    {# List comments #}
-                    {{ include('news/comments/list.html.twig') }}
-                    
-                    {# Render form comment #}
-                    {{ include('news/comments/form.html.twig') }}
-                </article>
+            {# CTA Section #}
+            <section class="landing-cta-section">
+                <div class="container">
+                    <div class="cta-box">
+                        <div class="cta-content">
+                            <h3 class="cta-title">
+                                <i class="fas fa-phone-volume"></i>
+                                Liên hệ tư vấn miễn phí
+                            </h3>
+                            <p class="cta-text">Gọi ngay cho chúng tôi để được tư vấn và báo giá nhanh nhất!</p>
+                        </div>
+                        <div class="cta-actions">
+                            <a href="tel:{{ get_setting('hotLine2') }}" class="btn-cta btn-cta-phone">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ get_setting('hotLine1') }}</span>
+                            </a>
+                            <a href="{{ path('contact') }}" class="btn-cta btn-cta-contact">
+                                <i class="fas fa-envelope"></i>
+                                <span>Gửi yêu cầu báo giá</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            {# Comments Section for Landing Page #}
+             <section class="landing-comments-section">
+                <div class="container">
+                    <div class="landing-content-wrapper">
+                        {{ include('news/comments/list.html.twig') }}
+                        {{ include('news/comments/form.html.twig') }}
+                    </div>
+                </div>
+            </section>
+        </div>
+    {% else %}
+        {# ================================================================ #}
+        {# BLOG POST VIEW - Standard with Sidebar                           #}
+        {# ================================================================ #}
+        {# Hero Breadcrumb #}
+        <div class="post-hero">
+            <div class="container">
+                {{ include('news/components/breadcrumbs.html.twig') }}
             </div>
         </div>
-    </div>
+
+        <div class="post-page">
+            <div class="container">
+                <div class="post-layout">
+                    {# Main Content #}
+                    <div class="post-main">
+                        <article id="post-{{ post.getId() }}" class="post-article">
+                            {# Post Header #}
+                            <header class="post-header">
+                                <h1 class="post-title">{{ post.getTitle() }}</h1>
+                                <div class="post-meta">
+                                    <span class="meta-item">
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ post.getUpdatedAt()|date('d/m/Y') }}
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="far fa-user"></i>
+                                        <a href="{{ absolute_url(path('author', {'slug': 'webmaster' })) }}" target="_blank">Lê Xuân Minh</a>
+                                    </span>
+                                </div>
+                            </header>
+
+                            {# Post Content #}
+                            <div class="post-content news-container">
+                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                                {% if post.getAutoFulfillAddress() %}
+                                    {{ get_setting('addressInPost')|raw }}
+                                {% endif %}
+                            </div>
+
+                            {{ include('news/components/album.html.twig') }}
+
+                            {# Post Footer #}
+                            <footer class="post-footer">
+                                {# Tags #}
+                                {{ include('news/components/tags.html.twig') }}
+
+                                {# Rating #}
+                                <div class="post-rating-wrapper">
+                                    {{ include('news/rating/rating.html.twig') }}
+                                </div>
+
+                                {# Share Buttons #}
+                                <div class="post-share">
+                                    <span class="share-label"><i class="fas fa-share-alt"></i> Chia sẻ:</span>
+                                    <div class="share-buttons">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-facebook" title="Chia sẻ lên Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                        <a href="https://twitter.com/intent/tweet?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&text={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-twitter" title="Chia sẻ lên Twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-linkedin" title="Chia sẻ lên LinkedIn">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                        <a href="https://pinterest.com/pin/create/button/?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&media={{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}&description={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-pinterest" title="Chia sẻ lên Pinterest">
+                                            <i class="fab fa-pinterest-p"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </footer>
+                        </article>
+
+                        {# FAQ Section #}
+                        {{ include('news/components/qa.html.twig') }}
+
+                        {# Related Posts #}
+                        {% if post.getTemplate() != '1_column' %}
+                            {{ include('news/components/related.html.twig') }}
+                        {% endif %}
+
+                        {# Comments Section #}
+                        {{ include('news/comments/list.html.twig') }}
+                        {{ include('news/comments/form.html.twig') }}
+                    </div>
+
+                    {# Sidebar #}
+                    <aside class="post-sidebar">
+                        {{ include('layout/sidebar.html.twig') }}
+                    </aside>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

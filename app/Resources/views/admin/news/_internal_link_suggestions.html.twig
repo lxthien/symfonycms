@@ -1,0 +1,33 @@
+{% set formName = form.vars.name %}
+{% set currentId = object is defined and object ? object.id : 0 %}
+
+<div class="internal-link-suggestions"
+     data-internal-link-collapsed="1"
+     data-internal-link-suggestions
+     data-url="{{ path('admin_content_block_related_search') }}"
+     data-current-id="{{ currentId }}"
+     data-form-prefix="{{ formName }}"
+     data-editor-id="{{ form.contents.vars.id }}">
+    <div class="internal-link-suggestions-header">
+        <div>
+            <h4>Gợi ý link nội bộ</h4>
+            <p>Tự gợi ý theo danh mục, tag và keyword hiện tại.</p>
+        </div>
+        <div class="internal-link-suggestions-header-actions">
+            <button type="button" class="btn btn-default btn-sm" data-internal-link-toggle aria-expanded="false">
+                <i class="fa fa-chevron-down" aria-hidden="true"></i> Mở rộng
+            </button>
+            <button type="button" class="btn btn-default btn-sm" data-internal-link-refresh>
+                <i class="fa fa-refresh" aria-hidden="true"></i> Cập nhật
+            </button>
+        </div>
+    </div>
+
+    <div class="internal-link-suggestions-body" data-internal-link-body>
+        <div class="internal-link-suggestions-status text-muted" data-internal-link-status>
+            Mở rộng block để xem gợi ý link nội bộ.
+        </div>
+
+        <div class="internal-link-suggestions-list" data-internal-link-list></div>
+    </div>
+</div>
