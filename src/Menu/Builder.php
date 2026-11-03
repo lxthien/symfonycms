@@ -119,6 +119,11 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['level1' => 'xay-dung', 'level2' => 'thiet-ke-va-thi-cong-quan-cafe']
         ]);
 
+        $menu['Xây dựng']->addChild('Dịch vụ xin giấy phép xây dựng', [
+            'route' => 'news_show',
+            'routeParameters' => ['slug' => 'dich-vu-xin-giay-phep-xay-dung']
+        ]);
+
         $menu['Xây dựng']->addChild('Dự toán chi phí', [
             'route' => 'caculator_cost_construction'
         ]);

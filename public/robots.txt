@@ -6,5 +6,32 @@ Disallow: /search?=*
 Disallow: /*?filter_by=*
 Disallow: /*?cat=*
 Disallow: /*.pdf$
+
+Content-Signal: search=yes; ai-train=no;
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: ChatGPT
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
 Sitemap: https://xaydungminhduy.com/sitemap.xml
 Sitemap: https://xaydungminhduy.com/images_sitemap.xml

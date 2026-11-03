@@ -279,29 +279,30 @@ function initTableOfContents() {
     if ($toc.length !== 1) return;
 
     var $this = $toc;
-    var $children = $this.children().not('hr#hr-toc');
 
-    // Skip if already initialized
-    if ($this.find('.toc-header').length > 0) return;
+    // Skip building if already initialized
+    if ($this.find('.toc-header').length === 0) {
+        var $children = $this.children().not('hr#hr-toc');
 
-    // Create wrapper for existing content
-    var $tocContent = $('<div class="toc-content collapsed"></div>');
-    $children.appendTo($tocContent);
+        // Create wrapper for existing content
+        var $tocContent = $('<div class="toc-content collapsed"></div>');
+        $children.appendTo($tocContent);
 
-    // Create header
-    var $tocHeader = $('<div class="toc-header">' +
-        '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
-        '<span class="toc-toggle collapsed">' +
-        '<span class="toggle-text">Hiện</span>' +
-        '<i class="fas fa-chevron-down toggle-icon"></i>' +
-        '</span>' +
-        '</div>');
+        // Create header
+        var $tocHeader = $('<div class="toc-header">' +
+            '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
+            '<span class="toc-toggle collapsed">' +
+            '<span class="toggle-text">Hiện</span>' +
+            '<i class="fas fa-chevron-down toggle-icon"></i>' +
+            '</span>' +
+            '</div>');
 
-    // Build new structure
-    $this.empty().append($tocHeader).append($tocContent);
+        // Build new structure
+        $this.empty().append($tocHeader).append($tocContent);
+    }
 
     // Toggle functionality
-    $tocHeader.on('click', function () {
+    $this.find('.toc-header').off('click').on('click', function () {
         var $toggle = $(this).find('.toc-toggle');
         var $content = $(this).siblings('.toc-content');
 

@@ -143,6 +143,8 @@
             // Target all div items from CKEditor inside TOC to reset inline styles
             div[style*="margin-left"] {
                 margin-left: 0 !important;
+                display: block !important;
+                list-style-type: none !important;
             }
 
             div[style*="margin-left:30px"],
@@ -4132,7 +4134,7 @@ ul li i:after {
 }
 
 // News Container - Independent selector for post content styling
-.news-container {
+.news-container, .page-article-content {
     font-size: 16px;
     line-height: 1.8;
     color: $gray800;
@@ -4212,6 +4214,12 @@ ul li i:after {
                 color: $primaryColor;
                 margin-bottom: 12px;
                 display: none;
+            }
+
+            div[style*="margin-left"] {
+                margin-left: 0 !important;
+                display: block !important;
+                list-style-type: none !important;
             }
 
             div[style*="margin-left:30px"],
@@ -5304,171 +5312,6 @@ ul li i:after {
             padding: 25px 20px;
         }
 
-        // Typography
-        font-size: 16px;
-        line-height: 1.8;
-        color: $gray800;
-
-        h2 {
-            font-size: 26px;
-            font-weight: 700;
-            font-family: $robotoCondesed;
-            color: $primaryColor;
-            margin: 30px 0 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid $secondaryColor;
-            display: inline-block;
-
-            &:first-child {
-                margin-top: 0;
-            }
-
-            @media only screen and (max-width: 768px) {
-                font-size: 22px;
-            }
-        }
-
-        h3 {
-            font-size: 22px;
-            font-weight: 700;
-            font-family: $robotoCondesed;
-            color: $primaryColor;
-            margin: 25px 0 15px;
-
-            @media only screen and (max-width: 768px) {
-                font-size: 19px;
-            }
-        }
-
-        h4 {
-            font-size: 18px;
-            font-weight: 700;
-            color: $primaryColor2;
-            margin: 20px 0 12px;
-        }
-
-        p {
-            margin-bottom: 18px;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-
-        ul,
-        ol {
-            margin-bottom: 20px;
-            padding-left: 25px;
-
-            li {
-                margin-bottom: 10px;
-                line-height: 1.7;
-
-                &::marker {
-                    color: $primaryColor2;
-                }
-            }
-        }
-
-        strong,
-        b {
-            font-weight: 700;
-        }
-
-        a {
-            color: $primaryColor2;
-            text-decoration: underline;
-
-            &:hover {
-                color: $secondaryColor;
-            }
-        }
-
-        // Tables
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-
-            thead {
-                background: $gradientPrimary;
-                color: $white;
-
-                th {
-                    padding: 15px 18px;
-                    text-align: left;
-                    color: $white;
-                    font-weight: 700;
-                    font-size: 15px;
-                }
-            }
-
-            tbody {
-                tr {
-                    border-bottom: 1px solid $gray200;
-                    transition: background 0.2s ease;
-
-                    &:hover {
-                        background: #f8fafc;
-                    }
-
-                    &:last-child {
-                        border-bottom: none;
-                    }
-
-                    &:nth-child(even) {
-                        background: #fafafa;
-                    }
-                }
-
-                td {
-                    padding: 14px 18px;
-                    font-size: 15px;
-                }
-            }
-        }
-
-        // Blockquote
-        blockquote {
-            margin: 25px 0;
-            padding: 20px 25px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-left: 4px solid $secondaryColor;
-            border-radius: 0 10px 10px 0;
-            font-style: italic;
-            color: $gray700;
-            font-size: 16px;
-
-            p {
-                margin: 0;
-            }
-        }
-
-        // Images
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        // Info box / Note
-        .note,
-        .info-box {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-left: 4px solid #f59e0b;
-            padding: 18px 22px;
-            border-radius: 0 10px 10px 0;
-            margin: 25px 0;
-
-            p {
-                margin: 0;
-                color: #92400e;
-            }
-        }
     }
 }
 
@@ -5588,10 +5431,10 @@ ul li i:after {
             }
         }
     }
+}
 
-
-    // Post Content Styles (Global)
-    .news-container {
+// Post Content Styles (Global)
+.news-container, .page-article-content {
         font-size: 17px;
         line-height: 1.8;
         color: #334155;
@@ -5722,7 +5565,7 @@ ul li i:after {
             margin: 40px 0 20px;
             padding-left: 20px;
             border-left: 5px solid #f97316;
-            font-family: inherit;
+            font-family: $robotoCondesed;
             line-height: 1.3;
             position: relative;
         }
@@ -5732,7 +5575,7 @@ ul li i:after {
             font-weight: 700;
             color: #1e3a5f;
             margin: 35px 0 18px;
-            font-family: inherit;
+            font-family: $robotoCondesed;
             line-height: 1.4;
         }
 
@@ -5936,7 +5779,6 @@ ul li i:after {
                     transform: translateY(-3px);
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
                 }
-            }
         }
     }
 }

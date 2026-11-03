@@ -14,6 +14,10 @@ Encore
     })
     .enableSassLoader(function(options) {
         options.sourceMap = true;
+        options.sassOptions = {
+            quietDeps: true,
+            silenceDeprecations: ['legacy-js-api', 'import']
+        };
     }, {
         resolveUrlLoader: true
     })
@@ -31,4 +35,12 @@ Encore
     .addStyleEntry('css/ckeditor-content', ['./public/assets/scss/admin/ckeditor-content.scss'])
 ;
 
-module.exports = Encore.getWebpackConfig();
+var config = Encore.getWebpackConfig();
+
+// Use polling to avoid Node 24 libuv fs-event crash on Windows
+config.watchOptions = {
+    poll: 250,
+    ignored: /node_modules/
+};
+
+module.exports = config;

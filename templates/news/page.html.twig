@@ -1,8 +1,14 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}{% endblock %}
-{% block description %}{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}{% endblock %}
-{% block keyword %}{{ post.getPageKeyword() }}{% endblock %}
+{% block title %}
+    {{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}
+{% endblock %}
+{% block description %}
+    {{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}
+{% endblock %}
+{% block keyword %}
+    {{ post.getPageKeyword() }}
+{% endblock %}
 {% block robots %}
     <meta name="robots" content="{{ post.getIsIndex() ? 'index' : 'noindex' }}, {{ post.getIsFollow() ? 'follow' : 'nofollow' }}">
 {% endblock %}
@@ -22,16 +28,16 @@
 {% endblock %}
 
 {% block structuredOpenGraph %}
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
-    <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
-    <meta property="article:author" content="Lê Xuân Minh" />
-    <meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
-    <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
-    <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
-    <meta property="og:image:alt" content="{{ post.getTitle() }}" />
-    <meta property="og:image:width" content="800" />
-    <meta property="og:image:height" content="420" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}"/>
+    <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}"/>
+    <meta property="article:author" content="Lê Xuân Minh"/>
+    <meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+    <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+    <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"/>
+    <meta property="og:image:alt" content="{{ post.getTitle() }}"/>
+    <meta property="og:image:width" content="800"/>
+    <meta property="og:image:height" content="420"/>
 {% endblock %}
 
 {% block structuredReview %}
@@ -43,10 +49,11 @@
 {% block body %}
     {# Page Hero Section #}
     <section class="page-hero">
-        <div class="container">
+        <div
+            class="container">
             {# breadcrumbs #}
             {{ include('news/components/breadcrumbs.html.twig') }}
-            
+
             <h1 class="page-hero-title">{{ post.getTitle() }}</h1>
             {% if post.getDescription() %}
                 <p class="page-hero-desc">{{ post.getDescription() }}</p>

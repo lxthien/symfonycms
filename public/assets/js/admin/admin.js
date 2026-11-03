@@ -267,6 +267,7 @@ $(function() {
     function initCkeditor() {
         $('.txt-ckeditor').each(function (e, elements) {
             var height = $(this).data("height") ? $(this).data("height") : "500";
+            var bodyClass = $(this).data("bodyclass") ? $(this).data("bodyclass") : 'news-container';
             CKEDITOR.replace(this.id, {
                 protectedSource: [
                     /<script[\s\S]*?<\/script>/gi,
@@ -275,11 +276,98 @@ $(function() {
                 height: height + 'px',
                 allowedContent: true,
                 contentsCss: getCkeditorContentCss(),
-                bodyClass: 'news-container',
+                bodyClass: bodyClass,
                 filebrowserBrowseUrl: '/assets/cksourceckfinder/ckfinder/ckfinder.html',
                 filebrowserUploadUrl: '/assets/cksourceckfinder/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
                 filebrowserWindowWidth: '1000',
-                filebrowserWindowHeight: '700'
+                filebrowserWindowHeight: '700',
+                on: {
+                    instanceReady: function (ev) {
+                        initCkeditorToc(ev.editor);
+                    },
+                    contentDom: function (ev) {
+                        // Re-init TOC khi content được load lại (undo/redo, set data...)
+                        initCkeditorToc(ev.editor);
+                    },
+                    tocInserted: function(ev) {
+                        initCkeditorToc(ev.editor);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Inject TOC toggle vào iframe của CKEditor.
+     * Mirror logic của initTableOfContents() trên storefront.
+     **/
+    function initCkeditorToc(editor) {
+        var iframeDoc = editor.document.$;
+
+        if (!iframeDoc) return;
+
+        // Tìm tất cả .table-of-contents chưa được khởi tạo
+        var tocElements = iframeDoc.querySelectorAll('.table-of-contents');
+
+        tocElements.forEach(function (toc) {
+            // Bỏ qua tạo HTML nếu đã transform rồi
+            if (!toc.querySelector('.toc-header')) {
+                var children = Array.prototype.slice.call(toc.childNodes).filter(function (node) {
+                    return !(node.nodeType === 1 && node.id === 'hr-toc');
+                });
+
+                // Tạo wrapper .toc-content (bắt đầu collapsed)
+                var tocContent = iframeDoc.createElement('div');
+                tocContent.className = 'toc-content collapsed';
+                children.forEach(function (child) {
+                    tocContent.appendChild(child);
+                });
+
+                // Tạo .toc-header
+                var tocHeader = iframeDoc.createElement('div');
+                tocHeader.className = 'toc-header';
+                tocHeader.innerHTML =
+                    '<span class="toc-title">' +
+                        '<i class="fas fa-list-ul" style="margin-right:8px;font-size:13px;"></i>' +
+                        'Nội dung bài viết' +
+                    '</span>' +
+                    '<span class="toc-toggle collapsed">' +
+                        '<span class="toggle-text" style="font-size:12px;">Hiện</span>' +
+                        '<i class="fas fa-chevron-down toggle-icon" style="font-size:11px;margin-left:4px;"></i>' +
+                    '</span>';
+
+                // Gắn vào .table-of-contents
+                toc.innerHTML = '';
+                toc.appendChild(tocHeader);
+                toc.appendChild(tocContent);
+            }
+
+            var currentHeader = toc.querySelector('.toc-header');
+            if (!currentHeader) return;
+            if (currentHeader.getAttribute('data-toc-initialized')) return;
+            currentHeader.setAttribute('data-toc-initialized', 'true');
+
+            // Toggle click
+            currentHeader.addEventListener('click', function () {
+                var toggle = currentHeader.querySelector('.toc-toggle');
+                var content = toc.querySelector('.toc-content');
+
+                if (!toggle || !content) return;
+
+                toggle.classList.toggle('collapsed');
+                content.classList.toggle('collapsed');
+
+                var toggleText = toggle.querySelector('.toggle-text');
+                if (toggleText) {
+                    toggleText.textContent = content.classList.contains('collapsed') ? 'Hiện' : 'Ẩn';
+                }
+
+                var toggleIcon = toggle.querySelector('.toggle-icon');
+                if (toggleIcon) {
+                    toggleIcon.style.transform = content.classList.contains('collapsed')
+                        ? 'rotate(-90deg)'
+                        : 'rotate(0deg)';
+                }
             });
         });
     }
