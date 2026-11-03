@@ -7,7 +7,8 @@
 // bodyClass trong admin.js = 'news-container'
 // ============================================================
 
-body.news-container {
+body.news-container,
+body.page-article-content {
     background: #fff;
     color: $gray800;
     font-family: Arial, Helvetica, sans-serif;
@@ -475,6 +476,8 @@ body.news-container {
             // Reset margin-left inline styles trong toc-content
             div[style*="margin-left"] {
                 margin-left: 0 !important;
+                display: block !important;
+                list-style-type: none !important;
             }
 
             // h2 items
@@ -801,6 +804,60 @@ body.news-container {
         .definition {
             padding: 16px 18px;
             margin: 20px 0;
+        }
+    }
+}
+
+// ── Overrides for Page Article Content ───────────────────────────────
+body.page-article-content {
+    h2 {
+        font-size: 26px;
+        font-weight: 700;
+        font-family: $robotoCondesed;
+        color: $primaryColor;
+        margin: 30px 0 20px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid $secondaryColor;
+        display: inline-block;
+        line-height: 1.4;
+    }
+
+    h3 {
+        font-size: 22px;
+        font-weight: 700;
+        font-family: $robotoCondesed;
+        color: $primaryColor;
+        margin: 25px 0 15px;
+    }
+
+    h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: $primaryColor2;
+        margin: 20px 0 12px;
+    }
+
+    ul,
+    ol {
+        margin-bottom: 20px;
+        padding-left: 25px;
+
+        li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+
+            &::marker {
+                color: $primaryColor2;
+            }
+        }
+    }
+
+    a {
+        color: $primaryColor2;
+        text-decoration: underline;
+
+        &:hover {
+            color: $secondaryColor;
         }
     }
 }

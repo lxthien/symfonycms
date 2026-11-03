@@ -1,4 +1,4 @@
-﻿(function()
+(function()
     {
         CKEDITOR.plugins.add( 'toc', {
 
@@ -64,7 +64,9 @@
                         editor.document.$.querySelectorAll('[name]').forEach(function(el){
                             el.removeAttribute("data-cke-saved-name");
                             el.removeAttribute("name");
-                        })
+                        });
+                        
+                        editor.fire('tocInserted');
                     }
                 });
 
