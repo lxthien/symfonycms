@@ -561,6 +561,11 @@ class News
         return ($this->postType == 'page') ? true : false;
     }
 
+    public function isPost()
+    {
+        return $this->postType == 'post';
+    }
+
     public function setPageTitle($pageTitle)
     {
         $this->pageTitle = $pageTitle;

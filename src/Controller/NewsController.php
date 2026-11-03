@@ -841,7 +841,7 @@ class NewsController extends AbstractController
             ]);
         }
 
-        $q = $form->getData()['q'];
+        $q = $form->getData()['q'] ?? null;
         if (!empty($q)) {
             return $this->redirectToRoute('news_search', array('q' => $q));
         }
@@ -927,7 +927,7 @@ class NewsController extends AbstractController
         } else {
             $comment = new Comment();
             $em = $this->getDoctrine()->getManager();
-            $submittedData = (array) $request->request->get('form', array());
+            $submittedData = (array) ($request->request->all()['form'] ?? array());
             $newsId = isset($submittedData['news_id']) ? (int) $submittedData['news_id'] : 0;
             $parentId = isset($submittedData['comment_id']) ? (int) $submittedData['comment_id'] : 0;
             $news = $em->getRepository(News::class)->find($newsId);
@@ -1073,7 +1073,7 @@ class NewsController extends AbstractController
      * @Route("/chi-phi-xay-dung", name="caculator_cost_construction")
      * 
      */
-    public function caculatorCostConstructionAction($type = null, Request $request)
+    public function caculatorCostConstructionAction(Request $request, $type = null)
     {
         $form = $this->createFormBuilder(null, array(
             'csrf_protection' => false,

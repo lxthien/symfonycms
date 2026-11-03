@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\NewsCategory;
 use App\Form\Type\DateTimePickerType;
 use App\Form\Type\TagsInputType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -24,7 +25,10 @@ class NewsCategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('parentcat', null, [
+            ->add('parentcat', EntityType::class, [
+                'class' => NewsCategory::class,
+                'property_path' => 'parentCategory',
+                'required' => false,
                 'attr' => ['autofocus' => true],
                 'label' => 'label.parentcat',
             ])

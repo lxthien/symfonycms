@@ -250,7 +250,7 @@ class PageController extends AbstractController
         }
 
         $action = $request->request->get('bulk_action');
-        $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
+        $ids = array_filter((array) ($request->request->all()['ids'] ?? []), 'is_numeric');
 
         if (!$ids || !in_array($action, ['publish', 'draft', 'trash', 'delete'], true)) {
             $this->addFlash('warning', 'Vui lòng chọn trang và thao tác hợp lệ.');

@@ -23,6 +23,7 @@
         "doctrine/migrations": "^3.2",
         "doctrine/orm": "^2.14",
         "doctrine/persistence": "^3.4",
+        "egulias/email-validator": "^4.0",
         "erusev/parsedown": "^1.5",
         "ezyang/htmlpurifier": "^4.7",
         "knplabs/knp-menu-bundle": "^3.0",

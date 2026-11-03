@@ -179,8 +179,8 @@ class NewsController extends AbstractController
                 'title' => $request->query->get('title', ''),
                 'description' => $request->query->get('description', ''),
                 'keywords' => $request->query->get('keywords', ''),
-                'categoryIds' => $request->query->get('categoryIds', []),
-                'tagNames' => $request->query->get('tagNames', []),
+                'categoryIds' => (array) ($request->query->all()['categoryIds'] ?? []),
+                'tagNames' => (array) ($request->query->all()['tagNames'] ?? []),
                 'primaryCategoryId' => $request->query->getInt('primaryCategoryId', 0),
             ], 10);
 
@@ -631,7 +631,7 @@ class NewsController extends AbstractController
         }
 
         $action = $request->request->get('bulk_action');
-        $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
+        $ids = array_filter((array) ($request->request->all()['ids'] ?? []), 'is_numeric');
 
         if (!$ids || !in_array($action, ['publish', 'unpublish', 'archive', 'trash', 'delete'], true)) {
             $this->addFlash('warning', 'Vui lòng chọn bài viết và thao tác hợp lệ.');

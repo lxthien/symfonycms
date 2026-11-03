@@ -16,6 +16,7 @@ use App\Entity\Contact;
 use App\Entity\News;
 use App\Form\Type\RecaptchaType;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 class ContactController extends AbstractController
@@ -63,8 +64,7 @@ class ContactController extends AbstractController
 
                 $message = (new Email())
                     ->subject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
-                    ->from('hotro.xaydungminhduy@gmail.com')
-                    ->replyTo($this->get('settings_manager')->get('siteName'))
+                    ->from(new Address('hotro.xaydungminhduy@gmail.com', (string) $this->get('settings_manager')->get('siteName')))
                     ->to($this->get('settings_manager')->get('emailContact'))
                     ->html(
                         $this->renderView(

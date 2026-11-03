@@ -214,7 +214,7 @@ class CommentController extends AbstractController
         }
 
         $action = $request->request->get('bulk_action');
-        $ids = array_filter((array) $request->request->get('ids'), 'is_numeric');
+        $ids = array_filter((array) ($request->request->all()['ids'] ?? []), 'is_numeric');
 
         if (!$ids || !in_array($action, ['approve', 'unapprove', 'delete'], true)) {
             $this->addFlash('warning', 'Vui lòng chọn bình luận và thao tác hợp lệ.');

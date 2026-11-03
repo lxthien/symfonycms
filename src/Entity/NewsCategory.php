@@ -178,7 +178,7 @@ class NewsCategory
 
     public function __construct()
     {
-        $this->parentcat = new ArrayCollection();
+        $this->children = new ArrayCollection();
         $this->news = new ArrayCollection();
     }
 
@@ -224,6 +224,21 @@ class NewsCategory
 
     public function getParentcat() {
         return $this->parentcat != null ? $this->parentcat : 'root';
+    }
+
+    /**
+     * Dùng cho form: trả về entity cha hoặc null (getParentcat() trả 'root' khi không có cha).
+     */
+    public function getParentCategory(): ?NewsCategory
+    {
+        return $this->parentcat;
+    }
+
+    public function setParentCategory(?NewsCategory $parent = null)
+    {
+        $this->parentcat = $parent;
+
+        return $this;
     }
 
     public function getChildren() {
