@@ -5613,6 +5613,20 @@ ul li i:after {
             display: block;
         }
 
+        // Ảnh là block nên text-align của đoạn chứa ảnh (CKEditor) không còn tác dụng: căn bằng margin
+        [style*="text-align:center"] img,
+        [style*="text-align: center"] img,
+        .text-center img {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        [style*="text-align:right"] img,
+        [style*="text-align: right"] img {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
         figcaption {
             text-align: center;
             font-size: 14px;

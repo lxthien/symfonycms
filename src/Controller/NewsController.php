@@ -509,8 +509,9 @@ class NewsController extends AbstractController
     }
 
     /**
+     * AMP đã bỏ: link /amp/{slug}.html cũ chuyển 301 về bài thường (giống rule nginx trên live).
+     *
      * @Route("amp/{slug}.html",
-     *      defaults={"_format"="html"},
      *      name="amp_show",
      *      requirements={
      *          "slug": "[^/\.]++"
@@ -518,143 +519,12 @@ class NewsController extends AbstractController
      */
     public function ampShowAction($slug, Request $request)
     {
-        $post = $this->getDoctrine()
-            ->getRepository(News::class)
-            ->findOneBy(
-                array('url' => $slug, 'status' => 'published')
-            );
+        $query = $request->getQueryString();
 
-        if (!$post) {
-            throw $this->createNotFoundException("The post does not exist");
-        }
-
-        // Update viewCount for post
-        $post->setViewCounts($post->getViewCounts() + 1);
-        $this->getDoctrine()->getManager()->flush();
-
-        $categoryPrimary = $request->query->get('cat');
-
-        if (!$categoryPrimary) {
-            if ($post->getCategoryPrimary() > 0) {
-                $categoryPrimary = $post->getCategoryPrimary();
-            } else {
-                if (!$post->getCategory()->isEmpty()) {
-                    $categoryPrimary = $post->getCategory()[0]->getId();
-                }
-            }
-        } else {
-            $catPrimary = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->findOneByUrl($categoryPrimary);
-
-            $categoryPrimary = $catPrimary->getId();
-        }
-
-        if ($categoryPrimary > 0) {
-            $category = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->find($categoryPrimary);
-
-            // Get news related
-            $relatedNews = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('r')
-                ->leftJoin('r.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->andWhere('r.id <> :id')
-                ->andWhere('r.postType = :postType')
-                ->andWhere('r.status = :status')
-                ->setParameter('newscategory_id', $categoryPrimary)
-                ->setParameter('id', $post->getId())
-                ->setParameter('postType', $post->getPostType())
-                ->setParameter('status', 'published')
-                ->setMaxResults(8)
-                ->orderBy('r.createdAt', 'DESC')
-                ->getQuery()
-                ->getResult();
-        }
-
-        // Get the list comment for post
-        $comments = $this->getDoctrine()
-            ->getRepository(Comment::class)
-            ->createQueryBuilder('c')
-            ->where('c.news = :news')
-            ->andWhere('c.approved = :approved')
-            ->setParameter('news', $post)
-            ->setParameter('approved', 1)
-            ->getQuery()->getResult();
-
-        // Get rating of the post
-        $repositoryRating = $this->getDoctrine()->getManager();
-
-        $queryRating = $repositoryRating->createQuery(
-            'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
-            FROM App\Entity\Rating r
-            WHERE r.news_id = :news_id'
-        )->setParameter('news_id', $post->getId());
-
-        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
-
-        // Init breadcrum for the post
-        $breadcrumbs = $this->buildBreadcrums(null, $post, null);
-
-        // Filter content to support Lazy Loading
-        $contentsAmp = $this->amploadContent($post);
-
-        $qAs = $post->getQa();
-
-        return $this->render('amp/amp-theme/index.html.twig', [
-            'post' => $post,
-            'qAs' => !empty($qAs) ? json_decode($qAs) : NULL,
-            'contentsAmp' => $contentsAmp,
-            'relatedNews' => !empty($relatedNews) ? $relatedNews : NULL,
-            'category' => !empty($category) ? $category : NULL,
-            'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-            'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-            'ratingValue' => round($rating['ratingValue']),
-            'ratingCount' => round($rating['ratingCount']),
-            'comments' => $comments
-        ]);
-    }
-
-    private function amploadContent($post)
-    {
-        $html = $post->getContents();
-        preg_match_all("#<img(.*?)\\/?>#", $html, $img_matches);
-
-        foreach ($img_matches[1] as $key => $img_tag) {
-            preg_match_all('/(alt|src|width|height)=["\'](.*?)["\']/i', $img_tag, $attribute_matches);
-            $attributes = array_combine($attribute_matches[1], $attribute_matches[2]);
-
-            if (!array_key_exists('width', $attributes) || !array_key_exists('height', $attributes)) {
-                if (array_key_exists('src', $attributes)) {
-                    list($width, $height) = @getimagesize(substr($attributes['src'], 1));
-                    $attributes['width'] = !empty($width) ? $width : 500;
-                    $attributes['height'] = !empty($height) ? $height : 500;
-                }
-            }
-
-            $amp_tag = '<amp-img ';
-            foreach ($attributes as $attribute => $val) {
-                if ($attribute == 'src') {
-                    $src = !is_bool($this->convertImages->webpConvert2($val, '')) ? '/' . $this->convertImages->webpConvert2($val, '') : $val;
-                    $amp_tag .= $attribute . '="' . $src . '" ';
-                } elseif ($attribute == 'alt') {
-                    $alt = !empty($val) ? $val : $post->getTitle();
-                    $amp_tag .= $attribute . '="' . $alt . '" ';
-                } else {
-                    $amp_tag .= $attribute . '="' . $val . '" ';
-                }
-            }
-
-            $amp_tag .= 'layout="responsive"';
-            $amp_tag .= '>';
-            $amp_tag .= '</amp-img>';
-
-            $html = str_replace($img_matches[0][$key], $amp_tag, $html);
-        }
-
-        return html_entity_decode($html);
+        return $this->redirect(
+            $request->getSchemeAndHttpHost() . "/" . $slug . ".html" . ($query ? "?" . $query : ""),
+            301
+        );
     }
 
     /**
