@@ -705,46 +705,171 @@ class NewsController extends AbstractController
 
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() && empty($request->query->get('q'))) {
-            return $this->render('news/formSearch.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        }
-
-        $q = $form->getData()['q'] ?? null;
+        $q = $form->isSubmitted() ? ($form->getData()['q'] ?? null) : null;
         if (!empty($q)) {
             return $this->redirectToRoute('news_search', array('q' => $q));
         }
 
-        $query = $this->getDoctrine()
+        $paginator = $this->get('knp_paginator');
+        $breadcrumbs = $this->get("white_october_breadcrumbs");
+        $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
+        $breadcrumbs->addItem('search');
+
+        $searchTerm = mb_substr(trim((string) $request->query->get('q', '')), 0, 200);
+        if ($searchTerm === '') {
+            return $this->render('news/search.html.twig', [
+                'baseUrl' => $this->generateUrl('news_search', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'q' => '',
+                'pagination' => $paginator->paginate([], 1, 10),
+                'highlights' => [],
+            ]);
+        }
+
+        // % và _ người dùng gõ phải được hiểu là ký tự thường, không phải wildcard.
+        $searchPattern = '%' . addcslashes($searchTerm, '%_\\') . '%';
+
+        // Tìm cả trong SEO và nội dung bài. Collation utf8mb4_unicode_ci nên gõ không dấu
+        // ("nha pho") vẫn khớp có dấu ("nhà phố").
+        $results = $this->getDoctrine()
             ->getRepository(News::class)
             ->createQueryBuilder('p')
-            ->where('p.title LIKE :q OR p.description LIKE :q')
+            ->where('p.title LIKE :q
+                    OR p.description LIKE :q
+                    OR p.pageTitle LIKE :q
+                    OR p.pageDescription LIKE :q
+                    OR p.pageKeyword LIKE :q
+                    OR p.contents LIKE :q')
             ->andWhere('p.status = :status')
             ->andWhere('p.postType = :postType')
-            ->setParameter('q', '%' . $request->query->get('q') . '%')
+            ->setParameter('q', $searchPattern)
             ->setParameter('status', 'published')
             ->setParameter('postType', 'post')
             ->orderBy('p.createdAt', 'DESC')
-            ->getQuery();
+            ->getQuery()
+            ->getResult();
 
-        $paginator = $this->get('knp_paginator');
+        $needle = $this->foldText($searchTerm);
+        $scored = [];
+        $highlights = [];
+        foreach ($results as $result) {
+            $title = (string) $result->getTitle();
+            $description = (string) $result->getDescription();
+            $plainContent = $this->plainText((string) $result->getContents());
+
+            $inTitle = str_contains($this->foldText($title . ' ' . $result->getPageTitle()), $needle);
+            $inMeta = str_contains($this->foldText($description . ' ' . $result->getPageDescription() . ' ' . $result->getPageKeyword()), $needle);
+            $inContent = str_contains($this->foldText($plainContent), $needle);
+
+            // Từ khóa chỉ nằm trong thẻ/thuộc tính HTML (class, src, alt ảnh...) — không phải nội dung người đọc thấy.
+            if (!$inTitle && !$inMeta && !$inContent && str_contains($this->foldText((string) $result->getContents()), $needle)) {
+                continue;
+            }
+
+            $highlights[$result->getId()] = [
+                'title' => $this->highlightKeyword($title, $searchTerm),
+                // Mô tả không chứa từ khóa thì trích đoạn nội dung quanh từ khóa để người đọc thấy vì sao bài khớp.
+                'description' => ($inContent && !str_contains($this->foldText($description), $needle))
+                    ? $this->highlightKeyword($this->snippet($plainContent, $searchTerm), $searchTerm)
+                    : $this->highlightKeyword($this->snippet($description, $searchTerm), $searchTerm),
+            ];
+
+            $scored[] = [$inTitle ? 3 : ($inMeta ? 2 : 1), $result];
+        }
+
+        // Trùng tiêu đề lên trước, rồi mô tả/SEO, rồi nội dung; cùng mức giữ thứ tự mới nhất (usort ổn định từ PHP 8).
+        usort($scored, static fn (array $a, array $b) => $b[0] <=> $a[0]);
+
         $pagination = $paginator->paginate(
-            $query->getResult(),
+            array_column($scored, 1),
             $page,
             $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
         );
 
-        $breadcrumbs = $this->get("white_october_breadcrumbs");
-        $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
-        $breadcrumbs->addItem('search');
-        $breadcrumbs->addItem(ucfirst($request->query->get('q')));
+        $breadcrumbs->addItem($searchTerm);
 
         return $this->render('news/search.html.twig', [
-            'baseUrl' => $this->generateUrl('news_search', array('q' => $request->query->get('q')), UrlGeneratorInterface::ABSOLUTE_URL),
-            'q' => ucfirst($request->query->get('q')),
-            'pagination' => $pagination
+            'baseUrl' => $this->generateUrl('news_search', array('q' => $searchTerm), UrlGeneratorInterface::ABSOLUTE_URL),
+            'q' => $searchTerm,
+            'pagination' => $pagination,
+            'highlights' => $highlights,
         ]);
+    }
+
+    /**
+     * Tô <mark> từ khóa trong văn bản (đã escape HTML, chỉ thẻ <mark> được render).
+     */
+    private function highlightKeyword($text, $keyword): string
+    {
+        $text = (string) $text;
+        $keyword = trim((string) $keyword);
+        $escape = static fn (string $s) => htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        if ($text === '' || $keyword === '') {
+            return $escape($text);
+        }
+
+        // So khớp trên bản bỏ dấu + chữ thường để "nha pho" tô được "Nhà phố".
+        // Bỏ dấu giữ nguyên số ký tự (văn bản NFC) nên vị trí dùng lại được cho chuỗi gốc;
+        // nếu không bằng nhau thì quay về so khớp có dấu, không phân biệt hoa thường.
+        $folded = $this->foldText($text);
+        $needle = $this->foldText($keyword);
+        if (mb_strlen($folded) !== mb_strlen($text)) {
+            $folded = mb_strtolower($text);
+            $needle = mb_strtolower($keyword);
+        }
+
+        $out = '';
+        $cursor = 0;
+        $length = mb_strlen($needle);
+        while ($length > 0 && ($pos = mb_strpos($folded, $needle, $cursor)) !== false) {
+            $out .= $escape(mb_substr($text, $cursor, $pos - $cursor)) . '<mark>' . $escape(mb_substr($text, $pos, $length)) . '</mark>';
+            $cursor = $pos + $length;
+        }
+
+        return $out . $escape(mb_substr($text, $cursor));
+    }
+
+    /** Chữ thường, bỏ dấu tiếng Việt (giữ đ) — khớp cách MySQL utf8mb4_unicode_ci so sánh. */
+    private function foldText(string $text): string
+    {
+        static $transliterator = null;
+        $transliterator ??= class_exists(\Transliterator::class)
+            ? (\Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC; Lower()') ?: false)
+            : false;
+
+        return $transliterator ? (string) $transliterator->transliterate($text) : mb_strtolower($text);
+    }
+
+    /** Chữ người đọc thấy trong HTML bài viết: bỏ thẻ, shortcode, giải mã entity. */
+    private function plainText(string $html): string
+    {
+        $html = preg_replace('#<(script|style)\b[^>]*>.*?</\1>#is', ' ', $html) ?? $html;
+        $text = strip_tags(str_replace('<', ' <', $html));
+        $text = preg_replace('/\[[a-z_]+(?:\s[^\]]*)?\]/i', ' ', $text) ?? $text;
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return trim(preg_replace('/\s+/u', ' ', $text) ?? $text);
+    }
+
+    /** Đoạn trích ~200 ký tự bắt đầu ngay trước lần xuất hiện đầu tiên của từ khóa. */
+    private function snippet(string $text, string $keyword, int $radius = 100): string
+    {
+        $folded = $this->foldText($text);
+        $pos = mb_strlen($folded) === mb_strlen($text) ? mb_strpos($folded, $this->foldText($keyword)) : false;
+        if ($pos === false) {
+            return mb_strimwidth($text, 0, $radius * 2, '…');
+        }
+
+        // Phía trước chỉ lấy ít chữ: card cắt mô tả còn vài dòng, từ khóa phải nằm ở đầu.
+        $start = max(0, $pos - 50);
+        if ($start > 0 && ($space = mb_strpos($text, ' ', $start)) !== false && $space < $pos) {
+            $start = $space + 1; // không cắt giữa chữ
+        }
+        $piece = mb_substr($text, $start, $radius * 2 + mb_strlen($keyword));
+        if ($start + mb_strlen($piece) < mb_strlen($text) && ($space = mb_strrpos($piece, ' ')) !== false && $space > $pos - $start + mb_strlen($keyword)) {
+            $piece = mb_substr($piece, 0, $space);
+        }
+
+        return ($start > 0 ? '…' : '') . $piece . ($start + mb_strlen($piece) < mb_strlen($text) ? '…' : '');
     }
 
     /**

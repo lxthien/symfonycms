@@ -127,6 +127,10 @@ abstract class AbstractCache implements CacheInterface
         $result = [];
 
         foreach ($this->cache as $object) {
+            if (!is_array($object)) {
+                continue;
+            }
+
             if ($object['dirname'] === $dirname) {
                 $result[] = $object;
             } elseif ($recursive && $this->pathIsInDirectory($dirname, $object['path'])) {

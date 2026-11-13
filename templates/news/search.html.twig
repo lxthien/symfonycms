@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}
+{% block title %}{% if q %}{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% else %}Tìm kiếm | {{ get_setting('siteName') }}{% endif %}{% endblock %}
 
 {% block robots %}
     <meta name="robots" content="noindex,follow" />
@@ -31,11 +31,32 @@
 
 {% block body %}
     {# breadcrumbs #}
-    {{ include('news/components/breadcrumbs.html.twig',
-        { type: 'category', title: 'Kết quả tìm kiếm cho từ khoá: "' ~ q ~ '"', description: 'Vui lòng tìm lại nếu không đúng kết quả cần tìm' })
-    }}
+    {{ include('news/components/breadcrumbs.html.twig', {
+        type: 'category',
+        title: q ? 'Kết quả tìm kiếm cho từ khoá: "' ~ q ~ '"' : 'Tìm kiếm',
+        description: (q ? 'Tìm thấy ' ~ pagination.getTotalItemCount ~ ' bài viết phù hợp với từ khoá “' ~ q ~ '”.' : 'Tìm dịch vụ, báo giá và kinh nghiệm xây nhà bạn cần.')|e
+    }) }}
+
+    <style>
+        .search-page__form { max-width: 720px; margin: 20px auto 30px; }
+        .search-page__form label { display: block; font-weight: 600; margin-bottom: 8px; }
+        .search-page__fields { display: flex; gap: 10px; }
+        .search-page__fields input { flex: 1; min-width: 0; height: 46px; padding: 0 14px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+        .search-page__fields button { height: 46px; padding: 0 22px; border: 0; border-radius: 6px; background: #f39c12; color: #fff; font-weight: 600; }
+        .search-page__empty { text-align: center; padding: 30px 15px 50px; }
+        .search-page__empty h2 { font-size: 22px; margin-bottom: 10px; }
+        .search-view mark, .list-news-items mark { background: #fff3a3; color: inherit; padding: 0 2px; border-radius: 2px; }
+    </style>
 
     <div class="container wrapper-container">
+        <form class="search-page__form" action="{{ path('news_search') }}" method="get" role="search">
+            <label for="search-query">Bạn muốn tìm nội dung gì?</label>
+            <div class="search-page__fields">
+                <input id="search-query" type="search" name="q" value="{{ q }}" placeholder="Ví dụ: chi phí xây nhà" required maxlength="200" enterkeyhint="search">
+                <button type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+            </div>
+        </form>
+
         <div class="row category-list-items">
             <div class="col-12 col-md-12 col-lg-12">
                 {# List item on this page #}
@@ -55,8 +76,12 @@
 
                     {# Pagination #}
                     {{ include('news/components/pagination.html.twig') }}
-                {% else %}
-                    {{ include('news/components/noRecord.html.twig') }}
+                {% elseif q %}
+                    <div class="search-page__empty">
+                        <h2>Chưa tìm thấy nội dung phù hợp</h2>
+                        <p>Hãy thử từ khóa ngắn hơn, kiểm tra chính tả hoặc tìm theo chủ đề như “xây nhà”, “báo giá”, “thiết kế”.</p>
+                        <a class="btn btn-primary" href="{{ path('homepage') }}">Về trang chủ</a>
+                    </div>
                 {% endif %}
             </div>
         </div>

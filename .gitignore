@@ -28,5 +28,9 @@
 /web/google33e2b6000dc649d2.html
 /public/build/
 /public/media/
+/public/uploads/
 *.sql
 *.webp
+/web/
+/migrate-vps/
+/public/uploads/

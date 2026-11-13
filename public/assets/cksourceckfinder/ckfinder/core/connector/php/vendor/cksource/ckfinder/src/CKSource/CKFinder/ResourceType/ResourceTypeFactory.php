@@ -23,6 +23,7 @@ class ResourceTypeFactory extends Container
     protected $config;
     protected $backendFactory;
     protected $thumbnailRepository;
+    protected $resizedImageRepository;
 
     public function __construct(CKFinder $app)
     {

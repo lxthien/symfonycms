@@ -39,8 +39,15 @@
                 </div>
             </div>
             <div class="card-content">
-                <h3 class="card-title">{{ row.getTitle() }}</h3>
-                <p class="card-desc">{{ row.getDescription()|slice(0, 100) }}</p>
+                {% set highlight = highlights[row.getId()] ?? null %}
+                {% if highlight %}
+                    {# Chuỗi đã escape trong NewsController::highlightKeyword, chỉ thẻ <mark> được render #}
+                    <h3 class="card-title">{{ highlight.title|raw }}</h3>
+                    <p class="card-desc">{{ highlight.description|raw }}</p>
+                {% else %}
+                    <h3 class="card-title">{{ row.getTitle() }}</h3>
+                    <p class="card-desc">{{ row.getDescription()|slice(0, 100) }}</p>
+                {% endif %}
                 <span class="card-more">
                     <span>Xem chi tiết</span>
                     <i class="fas fa-arrow-right"></i>
