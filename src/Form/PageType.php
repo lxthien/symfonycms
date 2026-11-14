@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\News;
 use App\Form\Type\LocalDateTimeType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -21,6 +23,9 @@ class PageType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $data = $builder->getData();
+        $currentId = ($data instanceof News && $data->getId()) ? (int) $data->getId() : 0;
+
         $builder
             ->add('title', null, [
                 'attr' => ['class' => 'sluggable'],
@@ -29,6 +34,25 @@ class PageType extends AbstractType
             ->add('url', TextType::class, [
                 'attr' => ['class' => 'url slug-field'],
                 'label' => 'label.url',
+            ])
+            ->add('parent', EntityType::class, [
+                'class' => News::class,
+                'required' => false,
+                'placeholder' => '-- Không có trang cha --',
+                'label' => 'Trang cha',
+                'choice_label' => 'title',
+                'query_builder' => static function (EntityRepository $er) use ($currentId) {
+                    $qb = $er->createQueryBuilder('p')
+                        ->where('p.postType = :postType')
+                        ->setParameter('postType', 'page')
+                        ->orderBy('p.title', 'ASC');
+                    if ($currentId > 0) {
+                        $qb->andWhere('p.id != :currentId')
+                            ->setParameter('currentId', $currentId);
+                    }
+
+                    return $qb;
+                },
             ])
             ->add('status', ChoiceType::class, [
                 'choices' => [

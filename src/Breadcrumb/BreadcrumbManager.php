@@ -6,7 +6,7 @@ class BreadcrumbManager
 {
     private $items = [];
 
-    public function addItem($text, $url = null, array $translationParameters = [], $translate = false)
+    public function addItem($text, $url = null, array $translationParameters = [], $translate = true)
     {
         $this->items[] = [
             'text' => $text,

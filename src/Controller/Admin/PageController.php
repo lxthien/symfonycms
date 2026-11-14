@@ -147,6 +147,16 @@ class PageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $news->setUrl($this->normalizeSlug($news->getUrl(), $slugger));
 
+            if ($this->hasCircularParent($news)) {
+                $form->get('parent')->addError(new FormError('Trang cha không hợp lệ (gây vòng lặp).'));
+
+                return $this->render('admin/page/edit.html.twig', [
+                    'object' => $news,
+                    'form' => $form->createView(),
+                    'album_json' => $form->get('albumItems')->getData() ?: '[]',
+                ]);
+            }
+
             if ($this->hasDuplicateNewsSlug($news)) {
                 $form->get('url')->addError(new FormError('URL này đã được dùng bởi bài viết hoặc page khác.'));
 
@@ -283,6 +293,29 @@ class PageController extends AbstractController
         $this->addFlash('success', 'Đã xử lý ' . count($pages) . ' trang.');
 
         return $this->redirectToRoute('admin_page_index', $request->query->all());
+    }
+
+    private function hasCircularParent(News $page): bool
+    {
+        $pageId = $page->getId();
+        if (!$pageId) {
+            return false;
+        }
+
+        $visited = [$pageId => true];
+        $cursor = $page->getParent();
+        while ($cursor !== null) {
+            $cursorId = $cursor->getId();
+            if ($cursorId && isset($visited[$cursorId])) {
+                return true;
+            }
+            if ($cursorId) {
+                $visited[$cursorId] = true;
+            }
+            $cursor = $cursor->getParent();
+        }
+
+        return false;
     }
 
     private function findPage($id)

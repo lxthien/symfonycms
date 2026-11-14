@@ -5,7 +5,12 @@
                 {% if b.url and not loop.last %}
                 <a href="{{ b.url }}"{% if linkRel is defined and linkRel|length %} rel="{{ linkRel }}"{% endif %}>
                     {% endif %}
-                    <span>{% if b.translate is defined and b.translate == true %}{{- b.text | trans(b.translationParameters, translation_domain, locale) -}}{% else %}{{- b.text -}}{% endif %}</span>
+                    {% if b.text == 'home' %}
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                        <span class="sr-only">{% if b.translate is defined and b.translate == true %}{{- b.text | trans(b.translationParameters, translation_domain, locale) -}}{% else %}{{- b.text -}}{% endif %}</span>
+                    {% else %}
+                        <span>{% if b.translate is defined and b.translate == true %}{{- b.text | trans(b.translationParameters, translation_domain, locale) -}}{% else %}{{- b.text -}}{% endif %}</span>
+                    {% endif %}
                     {% if b.url and not loop.last %}
                 </a>
                 {% endif %}

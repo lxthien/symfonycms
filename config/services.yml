@@ -36,6 +36,9 @@ services:
     App\Utils\:
         resource: '../src/Utils'
 
+    App\Service\:
+        resource: '../src/Service'
+
     App\Media\:
         resource: '../src/Media'
 

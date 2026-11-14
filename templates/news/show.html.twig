@@ -7,6 +7,10 @@
     <meta name="robots" content="{{ post.getIsIndex() ? 'index' : 'noindex' }}, {{ post.getIsFollow() ? 'follow' : 'nofollow' }}">
 {% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('build/css/list.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
 {% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
 
@@ -153,7 +157,7 @@
                     <div class="landing-content-wrapper">
                         <article class="landing-article">
                             <div class="landing-article-content news-container">
-                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|render_shortcodes(post.getId())|raw }}
                                 {% if post.getAutoFulfillAddress() %}
                                     {{ get_setting('addressInPost')|raw }}
                                 {% endif %}
@@ -233,7 +237,7 @@
 
                             {# Post Content #}
                             <div class="post-content news-container">
-                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|raw }}
+                                {{ contentsLazy|replace({'10E3 Đường 30, P. Tân Phong, Quận 7, TP.HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM', 'A45 Đường Số 2, KDC Kim Sơn, P. Tân Phong, Quận 7, TP HCM': '95/121 Đường Lê Văn Lương, P. Tân Hưng, TP.HCM'})|render_shortcodes(post.getId())|raw }}
                                 {% if post.getAutoFulfillAddress() %}
                                     {{ get_setting('addressInPost')|raw }}
                                 {% endif %}

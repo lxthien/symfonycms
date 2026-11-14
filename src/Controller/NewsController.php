@@ -1025,8 +1025,36 @@ class NewsController extends AbstractController
             }
         }
 
-        // Breadcrum for post page
+        // Breadcrum for post / page
         if (!empty($post)) {
+            if ($post->isPage()) {
+                $ancestors = [];
+                $visited = $post->getId() ? [$post->getId() => true] : [];
+                $cursor = $post->getParent();
+                while ($cursor !== null) {
+                    $cursorId = $cursor->getId();
+                    if ($cursorId && isset($visited[$cursorId])) {
+                        break;
+                    }
+                    if ($cursorId) {
+                        $visited[$cursorId] = true;
+                    }
+                    $ancestors[] = $cursor;
+                    $cursor = $cursor->getParent();
+                }
+
+                foreach (array_reverse($ancestors) as $ancestor) {
+                    $ancestorUrl = $ancestor->getStatus() === News::STATUS_PUBLISHED
+                        ? $this->generateUrl('news_show', ['slug' => $ancestor->getUrl()])
+                        : null;
+                    $breadcrumbs->addItem($ancestor->getTitle(), $ancestorUrl);
+                }
+
+                $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', ['slug' => $post->getUrl()]));
+
+                return $breadcrumbs;
+            }
+
             $category;
 
             if (!$categoryPrimary) {

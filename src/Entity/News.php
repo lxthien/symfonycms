@@ -287,6 +287,21 @@ class News
      */
     private $mediaItems;
 
+    /**
+     * @var News|null
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\News", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    private $parent;
+
+    /**
+     * @var News[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\News", mappedBy="parent")
+     */
+    private $children;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -298,6 +313,7 @@ class News
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->mediaItems = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId()
@@ -742,5 +758,22 @@ class News
     public function getMediaItems()
     {
         return $this->mediaItems;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
     }
 }

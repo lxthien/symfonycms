@@ -114,6 +114,7 @@
         </style>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
         <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}"></noscript>
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
         {% if app.environment == 'prod' %}

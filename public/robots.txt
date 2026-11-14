@@ -34,4 +34,3 @@ User-agent: ChatGPT-User
 Allow: /
 
 Sitemap: https://xaydungminhduy.com/sitemap.xml
-Sitemap: https://xaydungminhduy.com/images_sitemap.xml

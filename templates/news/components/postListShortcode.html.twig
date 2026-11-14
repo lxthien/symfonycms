@@ -1,0 +1,14 @@
+{#
+    Danh sách bài viết chèn vào nội dung bằng shortcode:
+      [bai_viet danh_muc="3,4,5" so_luong="6"]
+      [bai_viet bai_viet="10,12,15"]
+    Tham số: posts (News[])
+#}
+<div class="list-news-items post-list-shortcode">
+    <div class="row">
+        {% for row in posts %}
+            {{ include('news/components/itemsGrid.html.twig', { row: row }, with_context = false) }}
+        {% endfor %}
+    </div>
+</div>
+

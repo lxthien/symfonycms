@@ -31,6 +31,7 @@ Encore
     .addEntry('js/login', './public/assets/js/admin/login.js')
     .addStyleEntry('css/app', ['./public/assets/scss/front/app.scss'])
     .addStyleEntry('css/first', ['./public/assets/scss/front/first.scss'])
+    .addStyleEntry('css/list', ['./public/assets/scss/front/list.scss'])
     .addStyleEntry('css/admin', ['./public/assets/scss/admin/admin.scss'])
     .addStyleEntry('css/ckeditor-content', ['./public/assets/scss/admin/ckeditor-content.scss'])
 ;

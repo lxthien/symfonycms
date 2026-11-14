@@ -6,6 +6,10 @@
     <meta name="robots" content="noindex,follow" />
 {% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('build/css/list.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
