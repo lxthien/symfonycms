@@ -4,22 +4,53 @@ namespace App\Utils;
 
 class ConvertImages
 {
-    public function webpConvert2($file, $prifexPath, $filter = false, $compression_quality = 70)
+    private function resolvePaths($file, $prifexPath, $filter, $stripResolve = false)
     {
         if ($filter) {
             $strpos = strpos($file, 'media/cache');
             if (false === $strpos) {
-                return false;
+                return null;
             }
-            $file = mb_substr($file, $strpos, strlen($file), 'UTF-8');
+            $webPath = mb_substr($file, $strpos, strlen($file), 'UTF-8');
+            if ($stripResolve) {
+                $webPath = str_replace('/resolve', '', $webPath);
+            }
         } else {
-            $file = substr($file, 1);
+            if (preg_match('#^https?://#i', $file)) {
+                $parsedPath = parse_url($file, PHP_URL_PATH);
+                $file = $parsedPath !== null ? $parsedPath : $file;
+            }
+            $webPath = ltrim((string) $file, '/');
         }
 
-        // check if file exists
-        if (!@file_exists($file)) {
+        if ($webPath === '') {
+            return null;
+        }
+
+        if (@file_exists($webPath)) {
+            $diskFile = $webPath;
+            $diskPrefix = '';
+        } elseif (@file_exists('public/' . $webPath)) {
+            $diskFile = 'public/' . $webPath;
+            $diskPrefix = 'public/';
+        } else {
+            return null;
+        }
+
+        $outputWebPath = $prifexPath . $webPath . '.webp';
+        $outputDiskPath = $diskPrefix . $outputWebPath;
+
+        return array($diskFile, $outputWebPath, $outputDiskPath);
+    }
+
+    public function webpConvert2($file, $prifexPath, $filter = false, $compression_quality = 70)
+    {
+        $paths = $this->resolvePaths($file, $prifexPath, (bool) $filter, false);
+        if ($paths === null) {
             return false;
         }
+
+        list($file, $output_file, $output_disk_file) = $paths;
 
         $file_type = exif_imagetype($file);
 
@@ -32,9 +63,7 @@ class ConvertImages
         // 15   IMAGETYPE_WBMP
         // 16   IMAGETYPE_XBM
 
-        $output_file = $prifexPath . $file . '.webp';
-
-        if (@file_exists($output_file)) {
+        if (@file_exists($output_disk_file)) {
             return $output_file;
         }
 
@@ -66,7 +95,7 @@ class ConvertImages
             }
             
             // Save the image
-            $result = imagewebp($image, $output_file, $compression_quality);
+            $result = imagewebp($image, $output_disk_file, $compression_quality);
             if (false === $result) {
                 return false;
             }
@@ -84,7 +113,7 @@ class ConvertImages
                 $image->setOption('webp:lossless', 'true');
             }
             
-            $image->writeImage($output_file);
+            $image->writeImage($output_disk_file);
             return $output_file;
         }
         return false;
@@ -92,26 +121,16 @@ class ConvertImages
 
     public function webpConvert($file, $prifexPath, $filter = false, $compression_quality = 70)
     {
-        if ($filter) {
-            $strpos = strpos($file, 'media/cache');
-            if (false === $strpos) {
-                return false;
-            }
-            $file = str_replace('/resolve' ,'', mb_substr($file, $strpos, strlen($file), 'UTF-8'));
-        } else {
-            $file = substr($file, 1);
-        }
-
-        // check if file exists
-        if (!@file_exists($file)) {
+        $paths = $this->resolvePaths($file, $prifexPath, (bool) $filter, true);
+        if ($paths === null) {
             return false;
         }
 
+        list($file, $output_file, $output_disk_file) = $paths;
+
         $file_type = exif_imagetype($file);
 
-        $output_file = $prifexPath . $file . '.webp';
-
-        if (@file_exists($output_file)) {
+        if (@file_exists($output_disk_file)) {
             return $output_file;
         }
 
@@ -143,7 +162,7 @@ class ConvertImages
             }
             
             // Save the image
-            $result = imagewebp($image, $output_file, $compression_quality);
+            $result = imagewebp($image, $output_disk_file, $compression_quality);
             if (false === $result) {
                 return false;
             }

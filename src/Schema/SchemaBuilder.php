@@ -231,8 +231,10 @@ class SchemaBuilder
         $description = $this->replaceYear($this->first($category->getPageDescription(), $category->getDescription(), $category->getName()));
         $image = isset($context['image']) ? $context['image'] : $this->imageUrl($category, 'imageFile');
 
+        $isLanding = !empty($context['isLanding']) || trim((string) $category->getContent()) !== '';
+
         $collection = array(
-            '@type' => 'CollectionPage',
+            '@type' => $isLanding ? 'WebPage' : 'CollectionPage',
             '@id' => $url . '#webpage',
             'url' => $url,
             'name' => $title,
@@ -245,33 +247,35 @@ class SchemaBuilder
             $collection['primaryImageOfPage'] = array('@id' => $image);
         }
 
-        $items = array();
-        if (isset($context['pagination'])) {
-            $position = 1;
-            foreach ($context['pagination'] as $post) {
-                if (!$post instanceof News) {
-                    continue;
-                }
+        if (!$isLanding) {
+            $items = array();
+            if (isset($context['pagination'])) {
+                $position = 1;
+                foreach ($context['pagination'] as $post) {
+                    if (!$post instanceof News) {
+                        continue;
+                    }
 
-                $items[] = array(
-                    '@type' => 'ListItem',
-                    'position' => $position++,
-                    'url' => $this->routeUrl('news_show', array('slug' => $post->getUrl())),
-                    'name' => $post->getTitle(),
+                    $items[] = array(
+                        '@type' => 'ListItem',
+                        'position' => $position++,
+                        'url' => $this->routeUrl('news_show', array('slug' => $post->getUrl())),
+                        'name' => $post->getTitle(),
+                    );
+                }
+            }
+
+            if (!empty($items)) {
+                $collection['mainEntity'] = array(
+                    '@type' => 'ItemList',
+                    'itemListElement' => $items,
                 );
             }
         }
 
-        if (!empty($items)) {
-            $collection['mainEntity'] = array(
-                '@type' => 'ItemList',
-                'itemListElement' => $items,
-            );
-        }
-
         $graph = array($collection);
 
-        if ($category->getContent()) {
+        if ($isLanding) {
             $graph[] = $this->serviceForCategory($category, $url, $image);
         }
 

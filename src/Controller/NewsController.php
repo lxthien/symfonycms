@@ -93,6 +93,26 @@ class NewsController extends AbstractController
         // Init breadcrum for category page
         $breadcrumbs = $this->buildBreadcrums($currentCategory, null, null);
 
+        $baseUrl = !empty($level2)
+            ? $this->generateUrl('list_category', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL)
+            : $this->generateUrl('news_category', array('level1' => $level1), UrlGeneratorInterface::ABSOLUTE_URL);
+
+        // Nếu danh mục có nội dung landing page, render template landing riêng biệt (không phân trang / rel=prev,next)
+        if (trim((string) $currentCategory->getContent()) !== '') {
+            if ((int) $page > 1) {
+                return $this->redirect($baseUrl, 301);
+            }
+
+            return $this->render('news/landing.html.twig', [
+                'baseUrl' => $baseUrl,
+                'category' => $currentCategory,
+                'contentsLazy' => $this->lazyloadHtmlContent(
+                    (string) $currentCategory->getContent(),
+                    (string) ($currentCategory->getTitleLandingPage() ?: $currentCategory->getName())
+                ),
+            ]);
+        }
+
         $ordering = $this->resolveCategoryOrdering($currentCategory, $category);
 
         $query = $em->getRepository(News::class)
@@ -116,7 +136,7 @@ class NewsController extends AbstractController
         );
 
         return $this->render('news/list.html.twig', [
-            'baseUrl' => !empty($level2) ? $this->generateUrl('list_category', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL) : $this->generateUrl('news_category', array('level1' => $level1), UrlGeneratorInterface::ABSOLUTE_URL),
+            'baseUrl' => $baseUrl,
             'category' => $currentCategory,
             'listCategories' => count($listCategories) > 0 ? $listCategories : NULL,
             'pagination' => $pagination
@@ -439,8 +459,11 @@ class NewsController extends AbstractController
 
     private function lazyloadContent($post)
     {
-        $content = $post->getContents();
-        
+        return $this->lazyloadHtmlContent((string) $post->getContents(), (string) $post->getTitle());
+    }
+
+    private function lazyloadHtmlContent($content, $fallbackAlt = '')
+    {
         // Return early if no content
         if (empty($content)) {
             return '';
@@ -478,23 +501,38 @@ class NewsController extends AbstractController
         foreach ($imgs as $img) {
             $src = $img->getAttribute('src');
             $alt = $img->getAttribute('alt');
+            $width = null;
+            $height = null;
 
-            list($width, $height) = @getimagesize(substr($src, 1));
+            if (preg_match('#^/(?!/)#', $src)) {
+                $path = parse_url($src, PHP_URL_PATH) ?: $src;
+                $relPath = ltrim((string) $path, '/');
+                $diskPath = @file_exists($relPath) ? $relPath : (@file_exists('public/' . $relPath) ? 'public/' . $relPath : $relPath);
+                $imageSize = @getimagesize($diskPath);
+                $width = $imageSize[0] ?? null;
+                $height = $imageSize[1] ?? null;
 
-            $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
+                $webpSrc = $this->convertImages->webpConvert2($path, '');
+                if (!is_bool($webpSrc) && $webpSrc !== '') {
+                    $img->setAttribute('src', '/' . ltrim($webpSrc, '/'));
+                }
+            }
 
-            $img->setAttribute('src', $src);
             $img->setAttribute('loading', 'lazy');
-            $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
+            $img->setAttribute('alt', !empty($alt) ? $alt : $fallbackAlt);
             $img->setAttribute('width', !empty($width) ? ($width > 900 ? 900 : $width) : 500);
             $img->setAttribute('height', !empty($height) ? ($width > 900 ? round(($height * 900) / $width) : $height) : 500);
         }
 
-        $newContent = $dom->saveHTML();
-        
-        // Remove the wrapper div we added
-        $newContent = preg_replace('/<div id="lazyload-wrapper">/', '', $newContent);
-        $newContent = preg_replace('/<\/div>$/', '', $newContent);
+        // Xuất từng node con của div bọc ngoài bằng saveHTML($node) để giữ nguyên UTF-8,
+        // tránh DOMDocument::saveHTML() mã hóa tiếng Việt có dấu thành &oacute; / &#7855;...
+        $wrapper = (new \DOMXPath($dom))->query('//div[@id="lazyload-wrapper"]')->item(0);
+        $newContent = '';
+        if ($wrapper) {
+            foreach ($wrapper->childNodes as $child) {
+                $newContent .= $dom->saveHTML($child);
+            }
+        }
         
         // Clean up any remaining DOCTYPE, html, head, body tags
         $newContent = preg_replace('/^<!DOCTYPE[^>]*>/i', '', $newContent);

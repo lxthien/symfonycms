@@ -13,6 +13,10 @@
     <meta name="robots" content="{{ post.getIsIndex() ? 'index' : 'noindex' }}, {{ post.getIsFollow() ? 'follow' : 'nofollow' }}">
 {% endblock %}
 
+{% block stylesheets %}
+    <link href="{{ asset('build/css/show.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
 {% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
 

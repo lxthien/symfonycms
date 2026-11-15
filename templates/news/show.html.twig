@@ -8,7 +8,10 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <link href="{{ asset('build/css/list.css') }}" rel="stylesheet">
+    <link href="{{ asset('build/css/show.css') }}" rel="stylesheet">
+    {% if post.getTemplate() == '1_column' %}
+        <link href="{{ asset('build/css/list.css') }}" rel="stylesheet">
+    {% endif %}
 {% endblock %}
 
 {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
