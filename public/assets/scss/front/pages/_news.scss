@@ -3674,26 +3674,26 @@ ul li i:after {
 
         // Table of Contents - Collapsible
         .table-of-contents {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid $gray300;
             border-radius: 12px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba($primaryColor, 0.06);
             overflow: hidden;
 
             .toc-header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 16px 24px;
-                background: #f8fafc;
-                color: #1e3a5f;
+                padding: 15px 22px;
+                background: $gradientPrimary;
+                color: $white;
                 cursor: pointer;
-                border-bottom: 1px solid #e2e8f0;
-                transition: all 0.2s;
+                border-bottom: none;
+                transition: all $transitionFast;
 
                 &:hover {
-                    background: #f1f5f9;
+                    opacity: 0.96;
                 }
 
                 .toc-title {
@@ -3704,24 +3704,41 @@ ul li i:after {
                     font-size: 16px;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
+                    font-family: $robotoCondesed;
+                    color: $white;
 
                     i {
-                        color: #f97316;
+                        color: $secondaryColor;
                         font-size: 16px;
                     }
                 }
 
                 .toc-toggle {
-                    font-size: 14px;
-                    color: #64748b;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 13px;
+                    color: rgba($white, 0.85);
+
+                    .toggle-icon {
+                        transition: transform $transitionFast;
+                    }
+
+                    &.collapsed .toggle-icon {
+                        transform: rotate(-90deg);
+                    }
                 }
             }
 
             .toc-content {
-                padding: 24px;
+                padding: 20px 24px;
                 background: #fff;
-                max-height: 600px;
+                max-height: 500px;
                 overflow-y: auto;
+
+                @media only screen and (max-width: 767.98px) {
+                    padding: 15px 16px;
+                }
 
                 &.collapsed {
                     display: none;
@@ -3729,54 +3746,71 @@ ul li i:after {
 
                 ul,
                 ol {
-                    padding-left: 0;
-                    /* Added */
+                    padding-left: 18px;
                     margin: 0;
                     list-style: none;
-                    /* Added */
 
                     li {
                         margin-bottom: 8px;
                         list-style: none;
                         position: relative;
-                        line-height: 1.5;
+                        line-height: 1.55;
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
 
                         &::before {
                             content: "•";
-                            color: #f97316;
+                            color: $secondaryColor;
+                            font-weight: 700;
                             position: absolute;
                             left: -15px;
                             top: 0;
                         }
 
                         a {
-                            color: #475569;
+                            color: $primaryColor;
+                            font-weight: 600;
                             text-decoration: none;
+                            border-bottom: none;
                             font-size: 15px;
-                            transition: all 0.2s;
+                            transition: color 0.2s ease;
 
                             &:hover {
-                                color: #1e3a5f;
-                                text-decoration: underline;
+                                color: $secondaryColor;
+                                text-decoration: none;
+                                border-bottom: none;
                             }
                         }
 
                         // Nested lists
                         ul,
                         ol {
-                            margin-top: 5px;
+                            margin-top: 6px;
+                            margin-bottom: 4px;
+                            padding-left: 18px;
                             list-style: none;
-                            /* Added */
 
                             li {
                                 font-size: 14px;
                                 margin-bottom: 5px;
                                 list-style: none;
-                                /* Added */
 
                                 &::before {
                                     content: "-";
                                     color: #94a3b8;
+                                    font-weight: 400;
+                                }
+
+                                a {
+                                    color: #475569;
+                                    font-weight: 400;
+                                    font-size: 14px;
+
+                                    &:hover {
+                                        color: $primaryColor2;
+                                    }
                                 }
                             }
                         }

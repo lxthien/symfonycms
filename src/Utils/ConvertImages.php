@@ -199,9 +199,9 @@ class ConvertImages
 
     public function fileExists($file)
     {
-        $file = substr($file, 1);
-        
-        if (@file_exists($file)) {
+        $file = ltrim((string) $file, '/');
+
+        if ($file !== '' && (@file_exists($file) || @file_exists('public/' . $file))) {
             return true;
         }
 

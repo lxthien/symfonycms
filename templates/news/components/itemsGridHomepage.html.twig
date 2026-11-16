@@ -4,9 +4,9 @@
 {% set imagePathFilterTablet = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_224_169') %}
                         
 {% if convert_images.fileExists(imagePath) == false %}
-    {% set imagePath = imagePath | imagine_filter('news_290_220') %}
-    {% set imagePathMobile = imagePath | imagine_filter('news_382_298') %}
-    {% set imagePathTablet = imagePath | imagine_filter('news_224_169') %}
+    {% set imagePath = imagePathFilter %}
+    {% set imagePathMobile = imagePathFilterMobile %}
+    {% set imagePathTablet = imagePathFilterTablet %}
 {% else %}
     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
     {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}

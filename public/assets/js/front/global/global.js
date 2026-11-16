@@ -272,8 +272,132 @@ function initTypewriterEffect() {
     }
 }
 
+function slugifyHeading(text, fallbackIndex) {
+    var slug = $.trim(text || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    return slug || ('muc-' + fallbackIndex);
+}
+
+function buildAutoTableOfContents($container) {
+    var $headings = $container.find('h2, h3, h4').filter(function () {
+        var $el = $(this);
+        if ($el.closest('.table-of-contents, .key-takeaways, .post-list-shortcode, .cta-box').length > 0) {
+            return false;
+        }
+        return $.trim($el.text()).length > 0;
+    });
+
+    if ($headings.length < 2) {
+        return $();
+    }
+
+    // Xóa id cũ (vd: id tiếng Việt có dấu còn sót từ plugin TOC cũ) và tạo lại id slug sạch
+    $headings.removeAttr('id');
+
+    var usedIds = {};
+    $('[id]').each(function () {
+        usedIds[this.id] = true;
+    });
+
+    var $rootList = $('<ul></ul>');
+    var $lastH2Item = null;
+    var $lastH3Item = null;
+
+    $headings.each(function (index) {
+        var $heading = $(this);
+        var tag = this.tagName.toLowerCase();
+        var text = $.trim($heading.text());
+        var baseSlug = slugifyHeading(text, index + 1);
+        var id = baseSlug;
+        var suffix = 2;
+
+        while (usedIds[id]) {
+            id = baseSlug + '-' + suffix;
+            suffix++;
+        }
+        usedIds[id] = true;
+        $heading.attr('id', id);
+
+        var $link = $('<a></a>').attr('href', '#' + id).text(text);
+        var $item = $('<li></li>').append($link);
+
+        if (tag === 'h2') {
+            $rootList.append($item);
+            $lastH2Item = $item;
+            $lastH3Item = null;
+        } else if (tag === 'h3') {
+            if ($lastH2Item) {
+                var $subList = $lastH2Item.children('ul');
+                if ($subList.length === 0) {
+                    $subList = $('<ul></ul>').appendTo($lastH2Item);
+                }
+                $subList.append($item);
+            } else {
+                $rootList.append($item);
+            }
+            $lastH3Item = $item;
+        } else {
+            var $parentItem = $lastH3Item || $lastH2Item;
+            if ($parentItem) {
+                var $nestedList = $parentItem.children('ul');
+                if ($nestedList.length === 0) {
+                    $nestedList = $('<ul></ul>').appendTo($parentItem);
+                }
+                $nestedList.append($item);
+            } else {
+                $rootList.append($item);
+            }
+        }
+    });
+
+    var $toc = $('<div class="table-of-contents"></div>');
+    var $tocHeader = $('<div class="toc-header">' +
+        '<span class="toc-title"><i class="fas fa-list-ul"></i> Nội dung bài viết</span>' +
+        '<span class="toc-toggle collapsed">' +
+        '<span class="toggle-text">Hiện</span>' +
+        '<i class="fas fa-chevron-down toggle-icon"></i>' +
+        '</span>' +
+        '</div>');
+    var $tocContent = $('<div class="toc-content collapsed"></div>').append($rootList);
+
+    $toc.append($tocHeader).append($tocContent);
+
+    var $firstH2 = $headings.filter('h2').first();
+    if ($firstH2.length > 0) {
+        $firstH2.before($toc);
+    } else {
+        $container.prepend($toc);
+    }
+
+    if (window.location.hash && window.location.hash.length > 1) {
+        var hashTarget = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+        if (hashTarget) {
+            setTimeout(function () {
+                $('html, body').animate({ scrollTop: Math.max(0, $(hashTarget).offset().top - 90) }, 300);
+            }, 50);
+        }
+    }
+
+    return $toc;
+}
+
 function initTableOfContents() {
     var $toc = $('.table-of-contents');
+
+    // Nếu bài viết/landing chưa chèn sẵn TOC thủ công, tự động tạo từ các thẻ heading
+    if ($toc.length === 0) {
+        var $articleContainer = $('.post-content.news-container, .landing-article-content').first();
+        if ($articleContainer.length === 1) {
+            $toc = buildAutoTableOfContents($articleContainer);
+        }
+    }
 
     // Only process if there is exactly 1 table of contents
     if ($toc.length !== 1) return;
@@ -315,6 +439,18 @@ function initTableOfContents() {
         } else {
             $toggle.find('.toggle-text').text('Ẩn');
         }
+    });
+
+    // Smooth scroll có bù chiều cao menu cố định khi bấm mục lục
+    $this.find('.toc-content a[href^="#"]').off('click.tocScroll').on('click.tocScroll', function (e) {
+        var targetId = $(this).attr('href');
+        if (!targetId || targetId === '#') return;
+        var targetEl = document.getElementById(targetId.slice(1));
+        if (!targetEl) return;
+
+        e.preventDefault();
+        var topOffset = $(targetEl).offset().top - 90;
+        $('html, body').animate({ scrollTop: Math.max(0, topOffset) }, 300);
     });
 }
 

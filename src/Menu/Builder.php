@@ -60,9 +60,14 @@ class Builder implements ContainerAwareInterface
         ->setLinkAttribute('data-toggle', 'dropdown')
         ->setChildrenAttribute('class', 'dropdown-menu');
 
-        $menu['Bảng giá']->addChild('Báo giá xây nhà trọn gói', [
+        /* $menu['Bảng giá']->addChild('Báo giá xây nhà trọn gói', [
             'route' => 'news_show',
             'routeParameters' => ['slug' => 'bao-gia-xay-nha-tron-goi']
+        ]); */
+
+        $menu['Bảng giá']->addChild('Báo giá xây nhà trọn gói', [
+            'route' => 'list_category',
+            'routeParameters' => ['level1' => 'xay-dung', 'level2' => 'xay-nha-tron-goi', '_fragment' => 'bang-gia-xay-nha-tron-goi-2026']
         ]);
 
         $menu['Bảng giá']->addChild('Báo giá xây nhà phần thô', [
