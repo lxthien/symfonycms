@@ -2285,3 +2285,61 @@ body.modal-open .modal-backdrop + .modal-backdrop {
         }
     }
 }
+
+.page-tree-guide {
+    font-size: 13px;
+}
+
+.page-row--child {
+    background-color: rgba(248, 250, 252, 0.7);
+}
+
+.page-node {
+    position: relative;
+
+    &.page-node--child {
+        padding-left: calc(var(--page-level, 1) * 26px);
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: calc((var(--page-level, 1) - 1) * 26px + 8px);
+            top: 4px;
+            width: 12px;
+            height: 14px;
+            border-left: 2px solid #cbd5e1;
+            border-bottom: 2px solid #cbd5e1;
+            border-bottom-left-radius: 3px;
+        }
+    }
+
+    .page-node-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .page-title {
+        font-weight: 600;
+        padding: 0;
+    }
+
+    .page-level {
+        display: inline-block;
+        padding: 2px 8px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #1e3a5f;
+        background: #e2e8f0;
+        border-radius: 10px;
+    }
+
+    .page-parent {
+        color: #64748b;
+
+        a {
+            color: #2563a8;
+        }
+    }
+}

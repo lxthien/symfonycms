@@ -1,0 +1,60 @@
+{% set seen = seen|default([]) %}
+{% if page.id not in seen %}
+    {% set seen = seen|merge([page.id]) %}
+    {% set children = page.children|filter(child => child.isPage and child.status != 'trash') %}
+    <tr class="{{ level > 0 ? 'page-row page-row--child' : 'page-row' }}">
+        <td><input type="checkbox" name="ids[]" value="{{ page.id }}" form="admin-page-bulk-form" data-bulk-check></td>
+        <td>
+            {% if page.images %}
+                <img src="{{ vich_uploader_asset(page, 'imageFile')|imagine_filter('admin_thumb') }}" alt="{{ page.title }}" class="img-fluid img-thumbnail" style="max-height: 50px;">
+            {% else %}
+                <span class="text-muted"><i class="fa fa-picture-o"></i></span>
+            {% endif %}
+        </td>
+        <td>
+            <div class="page-node {{ level > 0 ? 'page-node--child' : '' }}" style="--page-level: {{ min(level, 6) }};">
+                <div class="page-node-content">
+                    <div class="page-node-header">
+                        <a class="btn-link page-title" href="{{ path('admin_page_edit', {id: page.id}) }}">{{ page.getTitle() }}</a>
+                        <span class="page-level">{{ level == 0 ? 'Trang gốc' : 'Cấp ' ~ (level + 1) }}{% if children|length > 0 %} · {{ children|length }} trang con{% endif %}</span>
+                    </div>
+                    <small class="d-block text-muted">URL: {{ page.getUrl() }}</small>
+                    {% if page.parent %}
+                        <small class="d-block page-parent">Thuộc: <a href="{{ path('admin_page_edit', {id: page.parent.id}) }}">{{ page.parent.title }}</a></small>
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+        <td>
+            {% if page.status == 'published' %}
+                <span class="badge badge-success">Đã xuất bản</span>
+            {% elseif page.status == 'pending_review' %}
+                <span class="badge badge-warning">Chờ duyệt</span>
+            {% elseif page.status == 'scheduled' %}
+                <span class="badge badge-info">Đặt lịch</span>
+                <small class="d-block text-muted">{{ page.scheduledAt ? page.scheduledAt|localizeddate('short', 'short', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY HH:mm') : '' }}</small>
+            {% elseif page.status == 'archived' %}
+                <span class="badge badge-secondary">Lưu trữ</span>
+            {% elseif page.status == 'trash' %}
+                <span class="badge badge-danger">Thùng rác</span>
+            {% else %}
+                <span class="badge badge-light">Bản nháp</span>
+            {% endif %}
+        </td>
+        <td>{{ page.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+        <td>
+            <div class="item-actions">
+                <a href="{{ path('admin_page_edit', {id: page.id}) }}" class="btn-sm">
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                </a>
+
+                {{ include('admin/page/_delete_form.html.twig', {news: page}, with_context = false) }}
+            </div>
+        </td>
+    </tr>
+    {% if render_children is not defined or render_children %}
+        {% for child in children %}
+            {{ include('admin/page/_tree_row.html.twig', {page: child, level: level + 1, render_children: true, seen: seen}, with_context = false) }}
+        {% endfor %}
+    {% endif %}
+{% endif %}

@@ -34,21 +34,30 @@ class PageController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $q = trim((string) $request->query->get('q'));
         $status = $request->query->get('status', '');
+        $isTreeMode = ($q === '' && $status === '');
+        $pageLevels = [];
 
         $qb = $em->getRepository(News::class)->createQueryBuilder('n')
             ->where('n.postType = :postType')
             ->setParameter('postType', 'page');
 
-        if ($q !== '') {
-            $qb->andWhere('n.title LIKE :q OR n.url LIKE :q OR n.description LIKE :q')
-                ->setParameter('q', '%' . $q . '%');
-        }
-
-        if ($status !== '') {
-            $qb->andWhere('n.status = :status')->setParameter('status', $status);
+        if ($isTreeMode) {
+            // Hiển thị dạng cây theo trang gốc (parent IS NULL); trang con được render đệ quy bên dưới
+            $qb->andWhere('n.parent IS NULL')
+                ->andWhere('n.status != :trashStatus')
+                ->setParameter('trashStatus', News::STATUS_TRASH);
         } else {
-            // Default to NOT showing trashed items if no status is explicitly requested
-            $qb->andWhere('n.status != :trashStatus')->setParameter('trashStatus', News::STATUS_TRASH);
+            if ($q !== '') {
+                $qb->andWhere('n.title LIKE :q OR n.url LIKE :q OR n.description LIKE :q')
+                    ->setParameter('q', '%' . $q . '%');
+            }
+
+            if ($status !== '') {
+                $qb->andWhere('n.status = :status')->setParameter('status', $status);
+            } else {
+                // Default to NOT showing trashed items if no status is explicitly requested
+                $qb->andWhere('n.status != :trashStatus')->setParameter('trashStatus', News::STATUS_TRASH);
+            }
         }
 
         $qb->orderBy('n.createdAt', 'DESC');
@@ -59,13 +68,36 @@ class PageController extends AbstractController
             20
         );
 
+        if (!$isTreeMode) {
+            foreach ($pagination as $page) {
+                $pageLevels[$page->getId()] = $this->getPageLevel($page);
+            }
+        }
+
         return $this->render('admin/page/index.html.twig', [
             'pagination' => $pagination,
+            'page_levels' => $pageLevels,
+            'is_tree_mode' => $isTreeMode,
             'filters' => [
                 'q' => $q,
                 'status' => $status,
             ],
         ]);
+    }
+
+    private function getPageLevel(News $page): int
+    {
+        $level = 0;
+        $visited = [$page->getId() => true];
+        $current = $page->getParent();
+
+        while ($current !== null && !isset($visited[$current->getId()]) && $level < 10) {
+            $visited[$current->getId()] = true;
+            $level++;
+            $current = $current->getParent();
+        }
+
+        return $level;
     }
 
     /**

@@ -51,7 +51,7 @@ class NewsType extends AbstractType
             ])
             ->add('editorialNotes', TextareaType::class, [
                 'required' => false,
-                'label' => 'Ghi chú biên tập',
+                'label' => 'Ghi chú biên tập (Ví dụ: [ignore-outdated:all] hoặc [ignore-outdated:2018,2019])',
                 'attr' => ['rows' => 3],
             ])
             ->add('imageFile', VichFileType::class, [

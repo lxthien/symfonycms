@@ -13,7 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class PageType extends AbstractType
@@ -71,7 +72,7 @@ class PageType extends AbstractType
             ])
             ->add('editorialNotes', TextareaType::class, [
                 'required' => false,
-                'label' => 'Ghi chú biên tập',
+                'label' => 'Ghi chú biên tập (Ví dụ: [ignore-outdated:all] hoặc [ignore-outdated:2018,2019])',
                 'attr' => ['rows' => 3],
             ])
             ->add('imageFile', VichFileType::class, [

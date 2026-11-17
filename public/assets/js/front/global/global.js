@@ -391,9 +391,9 @@ function buildAutoTableOfContents($container) {
 function initTableOfContents() {
     var $toc = $('.table-of-contents');
 
-    // Nếu bài viết/landing chưa chèn sẵn TOC thủ công, tự động tạo từ các thẻ heading
+    // Nếu bài viết/landing/page chưa chèn sẵn TOC thủ công, tự động tạo từ các thẻ heading
     if ($toc.length === 0) {
-        var $articleContainer = $('.post-content.news-container, .landing-article-content').first();
+        var $articleContainer = $('.post-content.news-container, .landing-article-content, .page-article-content').first();
         if ($articleContainer.length === 1) {
             $toc = buildAutoTableOfContents($articleContainer);
         }

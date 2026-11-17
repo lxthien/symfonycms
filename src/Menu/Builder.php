@@ -67,7 +67,7 @@ class Builder implements ContainerAwareInterface
 
         $menu['Bảng giá']->addChild('Báo giá xây nhà trọn gói', [
             'route' => 'list_category',
-            'routeParameters' => ['level1' => 'xay-dung', 'level2' => 'xay-nha-tron-goi', '_fragment' => 'bang-gia-xay-nha-tron-goi-2026']
+            'routeParameters' => ['level1' => 'xay-dung', 'level2' => 'xay-nha-tron-goi', '_fragment' => 'bang-bao-gia-xay-nha-tron-goi-chi-tiet-theo-tung-loai-hinh-cong-trinh']
         ]);
 
         $menu['Bảng giá']->addChild('Báo giá xây nhà phần thô', [
