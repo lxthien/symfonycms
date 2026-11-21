@@ -40,12 +40,29 @@ class NewsController extends AbstractController
      */
     public function indexAction(Request $request)
     {
+        return $this->renderNewsIndex($request);
+    }
+
+    /**
+     * Lists all News entities by category.
+     *
+     * @Route("/list/{categoryId}", name="admin_news_list_by_category", methods={"GET"})
+     */
+    public function listAction(Request $request, $categoryId)
+    {
+        return $this->renderNewsIndex($request, $categoryId);
+    }
+
+    private function renderNewsIndex(Request $request, $defaultCategoryId = null)
+    {
         $this->denyAccessUnlessGranted('CMS_CONTENT_VIEW');
 
         $em = $this->getDoctrine()->getManager();
         $q = trim((string) $request->query->get('q'));
         $status = $request->query->get('status', '');
-        $categoryId = $request->query->get('category', '');
+        $categoryId = $request->query->has('category')
+            ? $request->query->get('category', '')
+            : ($defaultCategoryId !== null ? (string) $defaultCategoryId : '');
 
         $qb = $em->getRepository(News::class)->createQueryBuilder('n')
             ->leftJoin('n.category', 'c')
@@ -75,40 +92,20 @@ class NewsController extends AbstractController
         );
 
         $categories = $em->getRepository(NewsCategory::class)->findBy([], ['name' => 'ASC']);
+        $filterAction = $defaultCategoryId !== null
+            ? $this->generateUrl('admin_news_list_by_category', ['categoryId' => $defaultCategoryId])
+            : $this->generateUrl('admin_news_index');
 
         return $this->render('admin/news/index.html.twig', [
             'pagination' => $pagination,
             'categories' => $categories,
+            'filterAction' => $filterAction,
             'filters' => [
                 'q' => $q,
                 'status' => $status,
                 'category' => $categoryId,
             ],
         ]);
-    }
-
-    /**
-     * Lists all News entities by category.
-     *
-     * @Route("/list/{categoryId}", name="admin_news_list_by_category", methods={"GET"})
-     */
-    public function listAction(Request $request, $categoryId)
-    {
-        $this->denyAccessUnlessGranted('CMS_CONTENT_VIEW');
-
-        $em = $this->getDoctrine()->getManager();
-        $news = $em->getRepository(News::class)->findAllPosts();
-
-        $news = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('n')
-                ->leftJoin('n.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->setParameter('newscategory_id', $categoryId)
-                ->orderBy('n.createdAt', 'DESC')
-                ->getQuery()->getResult();
-
-        return $this->render('admin/news/list.html.twig', ['objects' => $news]);
     }
 
     /**

@@ -7,7 +7,9 @@
     <meta name="robots" content="{{ category.getIsIndex() ? 'index' : 'noindex' }}, {{ category.getIsFollow() ? 'follow' : 'nofollow' }}">
 {% endblock %}
 
-{% set imagePathFilter = (vich_uploader_asset(category, 'imageFile') ? vich_uploader_asset(category, 'imageFile') : asset('/assets/images/xaydungminhduy-2.jpg')) | imagine_filter('news_share_800_420') %}
+{% set coverSrc = vich_uploader_asset(category, 'imageFile') ?: asset('assets/images/xaydungminhduy-2.jpg') %}
+{% set share = share_image(coverSrc) %}
+{% set ogImageUrl = share ? absolute_url(share.url) : absolute_url(coverSrc) %}
 
 {# LCP Optimization for Landing Page #}
 {% block lcpPreload %}
@@ -19,16 +21,21 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}" />
     <meta property="og:description" content="{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}" />
-    <meta property="og:image" content="{{ absolute_url(imagePathFilter) }}" />
+    {% if share %}
+        <meta property="og:image" content="{{ absolute_url(share.url) }}" />
+        <meta property="og:image:type" content="{{ share.type }}" />
+        <meta property="og:image:width" content="{{ share.width }}" />
+        <meta property="og:image:height" content="{{ share.height }}" />
+    {% else %}
+        <meta property="og:image" content="{{ absolute_url(coverSrc) }}" />
+    {% endif %}
     <meta property="og:image:alt" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName())|replace({'%YEAR%': "now"|date('Y')}) }}" />
-    <meta property="og:image:width" content="800" />
-    <meta property="og:image:height" content="420" />
 {% endblock %}
 
 {% block structuredReview %}
     {{ schema_category(category, {
         baseUrl: baseUrl,
-        image: absolute_url(imagePathFilter),
+        image: ogImageUrl,
         isLanding: true
     }) }}
 {% endblock %}

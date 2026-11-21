@@ -14,14 +14,9 @@
     {% endif %}
 {% endblock %}
 
-{% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
-{% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
-
-{% if convert_images.fileExists(imagePath) == false %}
-    {% set imagePath = imagePath | imagine_filter('news_share_800_420') %}
-{% else %}
-    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-{% endif %}
+{% set coverSrc = vich_uploader_asset(post, 'imageFile') ?: asset('assets/images/no-image.png') %}
+{% set share = share_image(coverSrc) %}
+{% set ogImageUrl = share ? absolute_url(share.url) : absolute_url(coverSrc) %}
 {% set keywords = post.getPageKeyword() is not null ? post.getPageKeyword()|split(',') : null %}
 
 {# LCP Optimization - Preload Local Roboto Condensed Bold for post title #}
@@ -36,14 +31,19 @@
     <meta property="article:author" content="Lê Xuân Minh" />
     <meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
     <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
-    <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+    {% if share %}
+        <meta property="og:image" content="{{ absolute_url(share.url) }}" />
+        <meta property="og:image:type" content="{{ share.type }}" />
+        <meta property="og:image:width" content="{{ share.width }}" />
+        <meta property="og:image:height" content="{{ share.height }}" />
+    {% else %}
+        <meta property="og:image" content="{{ absolute_url(coverSrc) }}" />
+    {% endif %}
     <meta property="og:image:alt" content="{{ post.getTitle() }}" />
-    <meta property="og:image:width" content="800" />
-    <meta property="og:image:height" content="420" />
 {% endblock %}
 
 {% block twitterImage %}
-    <meta property="twitter:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+    <meta property="twitter:image" content="{{ ogImageUrl }}" />
 {% endblock %}
 
 {% block structuredReview %}
@@ -68,7 +68,7 @@
         category: category|default(null),
         wordCount: wordCount|default(0),
         comments: comments|default([]),
-        image: imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter)
+        image: ogImageUrl
     }) }}
 {% endblock %}
 
@@ -271,7 +271,7 @@
                                         <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}" target="_blank" class="share-btn share-linkedin" title="Chia sẻ lên LinkedIn">
                                             <i class="fab fa-linkedin-in"></i>
                                         </a>
-                                        <a href="https://pinterest.com/pin/create/button/?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&media={{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}&description={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-pinterest" title="Chia sẻ lên Pinterest">
+                                        <a href="https://pinterest.com/pin/create/button/?url={{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}&media={{ ogImageUrl }}&description={{ post.getTitle()|url_encode }}" target="_blank" class="share-btn share-pinterest" title="Chia sẻ lên Pinterest">
                                             <i class="fab fa-pinterest-p"></i>
                                         </a>
                                     </div>
